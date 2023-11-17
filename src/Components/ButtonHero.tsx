@@ -1,9 +1,11 @@
 import { cva } from 'class-variance-authority';
-import { ButtonIntent } from './constants';
+import { ButtonHeroIntent } from './constants';
+import { To, useNavigate } from 'react-router-dom';
 
 interface Props {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  intent?: ButtonIntent;
+  intent?: ButtonHeroIntent;
+  routerPath?: To;
 }
 
 const button = cva(
@@ -14,6 +16,7 @@ const button = cva(
     'transition-all',
     'm-3',
     'p-12',
+    'hover:scale-103',
   ],
   {
     variants: {
@@ -22,12 +25,11 @@ const button = cva(
           'text-background-500',
           'bg-primary-500',
           'border-primary-500',
-          'hover:scale-103'
         ],
         outline: [
           'text-primary-500',
+          'bg-transparent',
           'border-primary-500',
-          'hover:scale-103'
         ]
       },
     },
@@ -38,10 +40,11 @@ const button = cva(
 export default function ButtonHero({
   children,
   intent,
-  onClick,
+  routerPath = '',
 }: React.PropsWithChildren<Props>) {
+  const navigate = useNavigate();
   return (
-    <button onClick={onClick} className={button({ intent })}>
+    <button onClick={() => navigate(routerPath)} className={button({ intent })}>
       {children}
     </button>
   );

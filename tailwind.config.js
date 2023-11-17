@@ -1,14 +1,24 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  plugins: [],
   theme: {
     extend: {
       fontFamily: {
         sans: ["Nunito Sans"],
         roboto: ["Roboto"],
-        robotoFlex: ["Roboto Flex"]
+        robotoFlex: ["Roboto Flex"],
+        ruda: ["Ruda"],
       },
       colors: {
+        hero: {
+          500: "#A489FA",
+        },
+        ghost: {
+          500: "#BABABA",
+          900: "#505050"
+        },
         primary: {
           //purple
           50: "color(display-p3 0.969 0.961 1 / <alpha-value>)",
@@ -76,15 +86,7 @@ export default {
       spacing: {
         'condense': '-10px',
       },
-      width: {
-        '3.5/12': '28%',
-      },
-      minWidth: {
-        '1/2': '50%',
-        '1/5': '20%',
-      },
       height: {
-        '9/6': '140%',
         '18': '70px'
       }
     },
