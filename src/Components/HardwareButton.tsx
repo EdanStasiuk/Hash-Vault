@@ -4,7 +4,7 @@ interface Props {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const button = cva(
+const hardwareButton = cva(
   [
     'flex',
     'place-items-center',
@@ -24,12 +24,12 @@ const button = cva(
 );
 
 
-export default function Button({
+export default function HardwareButton({
   children,
   onClick,
 }: React.PropsWithChildren<Props>) {
   return (
-    <button onClick={onClick} className={button()}>
+    <button onClick={onClick} className={hardwareButton()}>
       {children}
     </button>
   );

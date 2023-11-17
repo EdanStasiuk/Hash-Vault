@@ -31,7 +31,6 @@ module.exports = {
             'jsx': true
         },
         'sourceType': 'module',
-        'project': ['./tsconfig.json', './tsconfig.node.json'],
         'tsconfigRootDir': __dirname,
     },
     'plugins': [
@@ -44,5 +43,7 @@ module.exports = {
        'react/jsx-uses-react': 'error',
        'react/jsx-uses-vars': 'error',
        '@typescript-eslint/no-non-null-assertion': 'off',
+       "@typescript-eslint/prefer-nullish-coalescing": "off",
+       "@typescript-eslint/no-unnecessary-condition": "off",
       }
 }
