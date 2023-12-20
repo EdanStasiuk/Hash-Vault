@@ -13,6 +13,18 @@ interface Props {
   description: Line[];
 }
 
+/**
+ * @prop curStep: a number representing the current step the component is detailing.
+ * @prop maxStep: a number representing the last step in the series.
+ * @prop title: a string used as the title of the current step.
+ * @prop description: an array of objects describing the textual content for the step.
+ *                    Each object contains:
+ *                      - text: a string representing the line of text to be displayed.
+ *                      - bold: (optional) a boolean indicating if the text should be bolded.
+ *                      - color: (optional) a string representing the color of the text.
+ * @returns a text display outlining instructions for the current step
+ * the user is on during wallet creation and import.
+ */
 export default function StepInfo({
   curStep,
   maxStep,

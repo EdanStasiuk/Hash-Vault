@@ -7,8 +7,13 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+/**
+ * @prop placeholder: an optional string that makes up the input field's placeholder; default is .
+ * @prop value: an optional string for setting a value in the field.
+ * @returns an input field.
+ */
 export default function InputField({
-  placeHolder,
+  placeHolder = "",
   value,
   onChange,
 }: React.PropsWithChildren<Props>) {

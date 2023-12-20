@@ -1,15 +1,17 @@
 import { cva } from "class-variance-authority";
-import { ButtonIntent } from "./constants";
+import { ButtonIntent } from "../constants";
 import { To, useNavigate } from "react-router-dom";
 
 interface Props {
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   intent?: ButtonIntent;
   routerPath?: To;
   disabled?: boolean;
   history: boolean;
 }
 
+/**
+ * Variant styles.
+ */
 const button = cva(
   [
     "flex",
@@ -51,9 +53,21 @@ const button = cva(
   }
 );
 
+/**
+ * DirectoryButton component for navigating to a different page.
+ * 
+ * Accepts children.
+ * @prop {string} intent - Optional style of the button; defaults to "solid".
+ * @prop {string} routerPath - Optional path to route to when the button is clicked; defaults to an empty string.
+ * @prop {boolean} disabled - Optional boolean value controlling whether the button is active; defaults to false (inactive).
+ * @prop {boolean} history - Boolean value controlling button behavior:
+ *                            If true, the button sends the user back 1 page in their browser history.
+ *                            If false, the button routes to the value passed in through the 'routerPath' prop.
+ * @returns {JSX.Element} - A button that routes the user to a different page.
+ */
 export default function DirectoryButton({
   children,
-  intent,
+  intent = "solid",
   routerPath = "",
   disabled = false,
   history,
@@ -66,7 +80,7 @@ export default function DirectoryButton({
 
   return (
     <button
-      onClick={() => decideNavigationType()}
+      onClick={() => {decideNavigationType()}}
       className={button({ intent })}
       disabled={disabled}
     >
