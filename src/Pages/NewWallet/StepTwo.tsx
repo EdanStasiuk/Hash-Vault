@@ -1,7 +1,7 @@
 import Header from "../../components/Header";
 import StepInfo from "../../components/StepInfo";
-import Button from "../../components/DirectoryButton";
-import KeyPhraseGrid from "../../components/KeyPhraseGrid";
+import Button from "../../components/Buttons/DirectoryButton";
+import SeedPhraseGrid from "../../components/SeedPhrase/SeedPhraseGrid";
 
 function NewWalletStepTwo() {
   return (
@@ -21,7 +21,7 @@ function NewWalletStepTwo() {
           ]}
         />
         <div className="my-4">
-          <KeyPhraseGrid />
+          <SeedPhraseGrid confirmationGrid={false}/>
         </div>
         <div className="grid justify-center text-white text-lg mt-6">
           If you ever switch between browsers or devices, you will need this

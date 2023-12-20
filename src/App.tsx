@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Landing from './Pages/Landing';
-import StepOne from './Pages/NewWallet/StepOne';
-import StepTwo from './Pages/NewWallet/StepTwo';
-import StepThree from './Pages/NewWallet/StepThree';
+import Landing from './pages/Landing';
+import StepOne from './pages/NewWallet/StepOne';
+import StepTwo from './pages/NewWallet/StepTwo';
+import StepThree from './pages/NewWallet/StepThree';
 
 function App() {
   return (

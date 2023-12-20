@@ -1,5 +1,5 @@
-import ButtonHero from "../components/ButtonHero";
-import Button from "../components/HardwareButton";
+import ButtonHero from "../components/Buttons/ButtonHero";
+import Button from "../components/Buttons/HardwareButton";
 import { PiDownloadSimple } from "react-icons/pi";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import ledgerIcon from "../assets/ledgerIcon.svg";

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Header from "../../components/Header";
 import InputField from "../../components/InputField";
 import StepInfo from "../../components/StepInfo";
-import Button from "../../components/DirectoryButton";
+import Button from "../../components/Buttons/DirectoryButton";
 import CheckBox from "../../components/CheckBox";
 
 function NewWalletStepOne() {
@@ -11,6 +11,14 @@ function NewWalletStepOne() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
 
+  // Check local storage for seed phrase on initial load or revisit from later stages, delete if found
+  useEffect(() => {
+    const seedPhrase = localStorage.getItem("seedPhrase");
+    if (seedPhrase) {
+      localStorage.removeItem("seedPhrase");
+    }
+  }, [history]);
+  
   const isNextButtonDisabled =
     !password ||
     !confirmPassword ||
@@ -37,17 +45,17 @@ function NewWalletStepOne() {
           <InputField
             placeHolder="Create wallet password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {setPassword(e.target.value)}}
           />
         </div>
         <div className="mt-10 mb-8">
           <InputField
             placeHolder="Confirm wallet password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => {setConfirmPassword(e.target.value)}}
           />
         </div>
-        <CheckBox checked={isChecked} onChange={() => setIsChecked(!isChecked)}>
+        <CheckBox checked={isChecked} onChange={() => {setIsChecked(!isChecked)}}>
           I agree to the{" "}
           <strong style={{ fontWeight: "bold" }}>terms and conditions</strong>{" "}
           and the <strong style={{ fontWeight: "bold" }}>privacy policy</strong>
