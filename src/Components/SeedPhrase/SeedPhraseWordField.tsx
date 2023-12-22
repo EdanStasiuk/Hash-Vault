@@ -1,11 +1,11 @@
 import { cva } from "class-variance-authority";
-import { inputFieldIntent } from "../constants";
+import { InputFieldIntent } from "../constants";
 import { ChangeEvent, useEffect, useState } from "react";
 
 interface Props {
   word: string;
   wordNumber: string;
-  intent?: inputFieldIntent;
+  intent?: InputFieldIntent;
   onWordChange: (wordIndex: number, newWord: string) => void;
   wordsArray: string[];
 }
