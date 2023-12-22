@@ -6,15 +6,15 @@ import { useEffect, useState } from "react";
 
 function NewWalletStepThree() {
   const [missingWordsAreFilledIn, setMissingWordsAreFilledIn] = useState(false);
-  const [seedPhraseArray, SeedPhraseArray] = useState<string[]>([]);
-  
+  const [seedPhraseArray, setSeedPhraseArray] = useState<string[]>([]);
+
   /**
    * Gets the seed phrase from local storage.
    */
   useEffect(() => {
     const storedWords = localStorage.getItem("seedPhrase");
     if (storedWords) {
-      SeedPhraseArray(JSON.parse(storedWords) as string[]);
+      setSeedPhraseArray(JSON.parse(storedWords) as string[]);
     } else {
       throw new Error("seedPhrase cannot be found in local storage.");
     }
@@ -33,7 +33,7 @@ function NewWalletStepThree() {
 
     setMissingWordsAreFilledIn(areAllFieldsFilled);
   };
-  
+
   return (
     <>
       <Header />
@@ -57,22 +57,22 @@ function NewWalletStepThree() {
         <form className="my-4">
           <SeedPhraseGrid
             confirmationGrid={true}
-            updateFieldValues={(fieldValues) =>
-              {checkMissingWordsFilled(fieldValues)}
-            }
+            updateFieldValues={(fieldValues) => {
+              checkMissingWordsFilled(fieldValues);
+            }}
           />
         </form>
         <div className="flex justify-center mt-8 mb-6">
           <Button
             intent="outline"
-            routerPath={"/NewWallet/StepOne"}
+            routerPath={"/NewWallet/StepTwo"}
             history={true}
           >
             Back
           </Button>
           <Button
             intent={missingWordsAreFilledIn ? "solid" : "dead"}
-            routerPath={"/NewWallet/StepThree"}
+            routerPath={"/NewWallet/StepFour"}
             disabled={!missingWordsAreFilledIn}
             history={false}
           >

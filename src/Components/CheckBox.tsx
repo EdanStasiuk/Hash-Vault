@@ -6,8 +6,8 @@ interface Props {
 /**
  * Checkbox component with customizable styles.
  *
- * @param {function} onChange - Function triggered on checkbox change.
- * @param {boolean} checked - Optional boolean to determine if the checkbox is checked.
+ * @prop {function} onChange - Function triggered on checkbox change.
+ * @prop {boolean} checked - Optional boolean to determine if the checkbox is checked.
  * @returns {JSX.Element} - A checkbox component.
  */
 export default function Checkbox({
