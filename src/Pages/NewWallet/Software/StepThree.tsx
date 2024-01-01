@@ -1,7 +1,7 @@
-import Header from "../../components/Header";
-import StepInfo from "../../components/StepInfo";
-import Button from "../../components/Buttons/DirectoryButton";
-import SeedPhraseGrid from "../../components/SeedPhrase/SeedPhraseGrid";
+import Header from "../../../components/Header";
+import StepInfo from "../../../components/StepInfo";
+import Button from "../../../components/Buttons/DirectoryButton";
+import SeedPhraseGrid from "../../../components/SeedPhrase/SeedPhraseGrid";
 import { useEffect, useState } from "react";
 
 function NewWalletStepThree() {
@@ -65,14 +65,14 @@ function NewWalletStepThree() {
         <div className="flex justify-center mt-8 mb-6">
           <Button
             intent="outline"
-            routerPath={"/NewWallet/StepTwo"}
+            routerPath={"/NewWallet/Software/StepTwo"}
             history={true}
           >
             Back
           </Button>
           <Button
             intent={missingWordsAreFilledIn ? "solid" : "dead"}
-            routerPath={"/NewWallet/StepFour"}
+            routerPath={"/NewWallet/Software/StepFour"}
             disabled={!missingWordsAreFilledIn}
             history={false}
           >

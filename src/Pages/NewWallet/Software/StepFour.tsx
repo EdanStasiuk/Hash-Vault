@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import Header from "../../components/Header";
-import InputField from "../../components/InputField";
-import StepInfo from "../../components/StepInfo";
-import Button from "../../components/Buttons/DirectoryButton";
+import Header from "../../../components/Header";
+import InputField from "../../../components/InputField";
+import StepInfo from "../../../components/StepInfo";
+import Button from "../../../components/Buttons/DirectoryButton";
 
 function NewWalletStepFour() {
   const [password, setPassword] = useState("");
@@ -40,7 +40,7 @@ function NewWalletStepFour() {
       <div className="flex justify-center mt-20">
         <Button 
           intent="outline"
-          routerPath={"/"}
+          routerPath={"/NewWallet/Software/StepThree"}
           history={true}>
           Back
         </Button>
