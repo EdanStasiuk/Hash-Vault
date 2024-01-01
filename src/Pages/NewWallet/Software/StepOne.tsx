@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import Header from "../../components/Header";
-import InputField from "../../components/InputField";
-import StepInfo from "../../components/StepInfo";
-import Button from "../../components/Buttons/DirectoryButton";
-import CheckBox from "../../components/CheckBox";
+import Header from "../../../components/Header";
+import InputField from "../../../components/InputField";
+import StepInfo from "../../../components/StepInfo";
+import Button from "../../../components/Buttons/DirectoryButton";
+import CheckBox from "../../../components/CheckBox";
 
 function NewWalletStepOne() {
   const [password, setPassword] = useState("");
@@ -67,7 +67,7 @@ function NewWalletStepOne() {
         </Button>
         <Button
           intent={isNextButtonDisabled ? "dead" : "solid"}
-          routerPath={"/NewWallet/StepTwo"}
+          routerPath={"/NewWallet/Software/StepTwo"}
           disabled={isNextButtonDisabled}
           history={false}
         >

@@ -1,7 +1,7 @@
-import Header from "../../components/Header";
-import StepInfo from "../../components/StepInfo";
-import Button from "../../components/Buttons/DirectoryButton";
-import SeedPhraseGrid from "../../components/SeedPhrase/SeedPhraseGrid";
+import Header from "../../../components/Header";
+import StepInfo from "../../../components/StepInfo";
+import Button from "../../../components/Buttons/DirectoryButton";
+import SeedPhraseGrid from "../../../components/SeedPhrase/SeedPhraseGrid";
 
 function NewWalletStepTwo() {
   return (
@@ -30,14 +30,14 @@ function NewWalletStepTwo() {
         <div className="flex justify-center mt-8 mb-6">
           <Button
             intent="outline"
-            routerPath={"/NewWallet/StepOne"}
+            routerPath={"/NewWallet/Software/StepOne"}
             history={true}
           >
             Back
           </Button>
           <Button
             intent="solid"
-            routerPath={"/NewWallet/StepThree"}
+            routerPath={"/NewWallet/Software/StepThree"}
             history={false}
           >
             Next
