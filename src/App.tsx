@@ -6,6 +6,7 @@ import StepThree from './pages/NewWallet/Software/StepThree';
 import StepFour from './pages/NewWallet/Software/StepFour';
 import ExistingWalletOptions from './pages/ImportWallet/ExistingWalletOptions';
 import NewWalletOptions from './pages/NewWallet/NewWalletOptions';
+import Dashboard from './pages/Wallet/Dashboard';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/NewWallet/Software/StepFour" element={<StepFour />} />
           <Route path="/ImportWallet/ExistingWalletOptions" element={<ExistingWalletOptions/>} />
           <Route path="/NewWallet/NewWalletOptions" element={<NewWalletOptions/>} />
+          <Route path="/Wallet/Dashboard" element={<Dashboard />} />
         </Routes>
     </BrowserRouter>
   );
