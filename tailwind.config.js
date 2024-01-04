@@ -58,6 +58,9 @@ export default {
           900: "#08090C",
           950: "#040406",
         },
+        backgroundAlt: {
+          500: "#212229",
+        },
         error: { //red
           50: "#FFE5E5",
           100: "#FFCCCC",
