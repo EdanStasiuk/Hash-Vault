@@ -12,9 +12,6 @@ export default {
         ruda: ["Ruda"],
       },
       colors: {
-        hero: {
-          500: "#A489FA",
-        },
         ghost: {
           500: "#BABABA",
           900: "#505050"
@@ -31,6 +28,9 @@ export default {
           800: "#270693",
           900: "#140349",
           950: "#0A0227",
+        },
+        primaryAlt: {
+          500: "#6E54C8",
         },
         secondary: { //blue
           50: "#F5F7FF",
