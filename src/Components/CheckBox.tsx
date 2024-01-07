@@ -14,7 +14,7 @@ export default function Checkbox({
   onChange,
   checked = false,
   children,
-}: React.PropsWithChildren<Props>) {
+}: React.PropsWithChildren<Props>): JSX.Element {
   const handleChange = () => {
     if (onChange) {
       onChange(!checked);
