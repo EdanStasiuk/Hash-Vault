@@ -1,34 +1,14 @@
 import { useEffect, useState } from "react";
 import TalkBox from "./TalkBox";
-import { copyToClipboard } from "./copyToClipboard";
+import { copyToClipboard } from "./functions";
+import { convertToFiat } from "./functions";
+import { displayCurrencySymbol } from "./functions";
 
 interface Props {
   total?: string;
   unstakedTotal?: string;
   conversionCurrency?: string;
 }
-
-/**
- * Converts an amount of HBAR to a fiat currency given a conversion rate.
- *
- * @param conversionRate - The conversion rate of hbar to the fiat passed as the conversionCurrency prop.
- * @param amount - The amount of hbar to be converted.
- * @returns
- */
-export const convertToFiat = (
-  conversionRate: number,
-  amount: string
-): string => {
-  const sanitizedAmount = amount.replace(/[',\s]/g, "");
-  const amountInHbar = parseFloat(sanitizedAmount);
-
-  if (isNaN(amountInHbar)) {
-    return "?";
-  }
-
-  const convertedTotal = amountInHbar * conversionRate;
-  return convertedTotal.toFixed(2);
-};
 
 /**
  * Renders the balance information for the wallet dashboard.
@@ -49,6 +29,8 @@ export default function Balances({
   const [copySuccessTotal, setCopySuccessTotal] = useState(false);
   const [copySuccessUnstakedTotal, setCopySuccessUnstakedTotal] = useState(false);
   const hbarSymbol = "ħ";
+
+  const currencySymbol = displayCurrencySymbol(conversionCurrency);
 
   // Fetches HBAR conversion rate and sets the total and total unstaked conversions
   useEffect(() => {
@@ -79,29 +61,6 @@ export default function Balances({
         console.error("Error fetching HBAR price:", error);
       });
   }, [conversionCurrency]);
-
-  /**
-   * @param currency - A currency ticker symbol.
-   * @returns the corresponding currency symbol for the inputted currency ticker.
-   */
-  const displayCurrencySymbol = (currency: string): string => {
-    currency = currency.toLowerCase();
-    switch (conversionCurrency) {
-      case "usd":
-      case "cad":
-        return "$";
-      case "eur":
-        return "€";
-      case "gbp":
-        return "£";
-      case "jpy":
-        return "¥";
-      default:
-        return currency.toUpperCase(); // Return the currency code suited for display if no match found
-    }
-  };
-
-  const currencySymbol = displayCurrencySymbol(conversionCurrency);
 
   return (
     <div className="text-xl font-roboto font-light text-white mr-2">

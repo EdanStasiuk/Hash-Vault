@@ -32,7 +32,17 @@ export default function Accounts({
       <AccountBar
         accountNumber = "0"
         accountName = "Chequing"
+        accountAddress="0.0.000000-aaaaaa"
+        integerDigits = "1,000"
+        fractionalDigits = "0000000"
         selected={true}
+      />
+      <AccountBar
+        accountNumber = "1"
+        accountName = "Savings"
+        accountAddress="0.0.000000-aaaaaa"
+        integerDigits = "100,000"
+        fractionalDigits = "0000000"
       />
     </div>
   );

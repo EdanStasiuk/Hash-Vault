@@ -13,7 +13,7 @@ export default function Subheader({
 }: React.PropsWithChildren<Props>): JSX.Element {
   return (
     <div className="border-b border-primary-500 text-3xl font-roboto text-white mb-3">
-        {label}
+      {label}
     </div>
   );
 }

@@ -31,4 +31,4 @@ To set up the development environment and run Hash Vault locally, follow these s
 We would like to express our gratitude to the following communities for their valuable contributions.
 - [React](https://react.dev/community)
 - [Swirlds Labs](https://swirldslabs.com/) and [Hedera Hashgraph](https://hedera.com/)
-- [Coin Gecko](https://www.coingecko.com)
+- [CoinGecko](https://www.coingecko.com)

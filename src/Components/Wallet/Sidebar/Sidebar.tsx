@@ -12,11 +12,19 @@ interface SidebarItem {
   onClickLabel: string;
 }
 
+/**
+ * Sidebar items representing different sections in the wallet dashboard.
+ * Each item has a label for display and an onClickLabel to identify the item when clicked.
+ * 
+ * @property {string} label - The display label for the sidebar item.
+ * @property {string} onClickLabel - The identifier used when the sidebar item is clicked.
+ */
 const sidebarItems: SidebarItem[] = [
   { label: "Accounts", onClickLabel: "Accounts" },
   { label: "Send", onClickLabel: "Send" },
   { label: "Receive", onClickLabel: "Receive" },
   { label: "Transactions", onClickLabel: "Transactions" },
+  { label: "Address Book", onClickLabel: "Address Book" },
   { label: "Settings", onClickLabel: "Settings" },
 ];
 
@@ -31,20 +39,23 @@ export default function Sidebar({
   activeItem,
   onItemClick,
 }: React.PropsWithChildren<Props>): JSX.Element {
+
   return (
     <div className="flex-grow p-8">
       <Badge />
       <LayoutGroup>
-        {sidebarItems.map((item: SidebarItem) => (
-          <NavItem
-            key={item.label}
-            label={item.label}
-            isActive={activeItem === item.label}
-            onClick={() => {
-              onItemClick(item.onClickLabel);
-            }}
-          />
-        ))}
+        {sidebarItems.map((item: SidebarItem) => {
+          return (
+            <NavItem
+              key={item.label}
+              label={item.label}
+              isActive={activeItem === item.label}
+              onClick={() => {
+                onItemClick(item.onClickLabel);
+              }}
+            />
+          );
+        })}
       </LayoutGroup>
     </div>
   );

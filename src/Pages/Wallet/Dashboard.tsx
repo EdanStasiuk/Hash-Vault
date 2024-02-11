@@ -1,13 +1,18 @@
 import { useState } from "react";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Wallet/Sidebar/Sidebar";
-import Accounts from "../../components/Wallet/Pages/Accounts/Accounts";
-import Send from "../../components/Wallet/Pages/Send/Send";
-import Receive from "../../components/Wallet/Pages/Receive/Receive";
-import Transactions from "../../components/Wallet/Pages/Transactions/Transactions";
-import Settings from "../../components/Wallet/Pages/Settings/Settings";
+import Accounts from "../../components/Wallet/DashboardPages/Accounts/Accounts";
+import Send from "../../components/Wallet/DashboardPages/Send/Send";
+import Receive from "../../components/Wallet/DashboardPages/Receive/Receive";
+import Transactions from "../../components/Wallet/DashboardPages/Transactions/Transactions";
+import AddressBook from "../../components/Wallet/DashboardPages/AddressBook/AddressBook";
+import Settings from "../../components/Wallet/DashboardPages/Settings/Settings";
 
-function Dashboard() {
+/**
+ * 
+ * @returns {JSX.Element}
+ */
+function Dashboard(): JSX.Element {
   const [activeItem, setActiveItem] = useState<string>("Accounts");
 
   const handleSidebarItemClick = (label: string) => {
@@ -31,6 +36,7 @@ function Dashboard() {
             {activeItem === "Send" && <Send />}
             {activeItem === "Receive" && <Receive />}
             {activeItem === "Transactions" && <Transactions />}
+            {activeItem === "Address Book" && <AddressBook />}
             {activeItem === "Settings" && <Settings />}
           </div>
         </div>

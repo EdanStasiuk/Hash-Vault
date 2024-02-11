@@ -71,7 +71,7 @@ export default function DirectoryButton({
   routerPath = "",
   disabled = false,
   history,
-}: React.PropsWithChildren<Props & { disabled?: boolean }>) {
+}: React.PropsWithChildren<Props & { disabled?: boolean }>): JSX.Element {
   const navigate = useNavigate();
 
   const decideNavigationType = () => {
