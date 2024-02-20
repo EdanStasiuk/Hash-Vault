@@ -26,7 +26,7 @@ export default function AssetInputField({
       </h2>
       <div className="relative w-[120px]">
         <button
-          className="w-[120px] h-11 pl-1 pr-3 py-3 rounded-lg rounded-l-none bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto flex justify-between items-center" // Added justify-between
+          className="w-[120px] h-11 pl-1 pr-3 py-3 rounded-lg rounded-l-none bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto flex justify-between items-center"
         >
           <div className="flex scale-95">
             {asset_logo}

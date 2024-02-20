@@ -24,9 +24,9 @@ export const copyToClipboard = (
 /**
  * Converts an amount of HBAR to a fiat currency given a conversion rate.
  *
- * @param conversionRate - The conversion rate of hbar to the fiat passed as the conversionCurrency prop.
+ * @param conversionRate - The conversion rate of HBAR to the fiat passed as the conversionCurrency prop.
  * @param amount - The amount of hbar to be converted.
- * @returns
+ * @returns the resultant amount of fiat converted from HBAR, rounded to 2 decimal places.
  */
 export const convertToFiat = (
   conversionRate: number,

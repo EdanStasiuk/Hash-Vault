@@ -9,6 +9,8 @@ import AddressBook from "../../components/Wallet/DashboardPages/AddressBook/Addr
 import Settings from "../../components/Wallet/DashboardPages/Settings/Settings";
 
 /**
+ * Renders the wallet dashboard. The dashboard is one page that calls in components that
+ * act as subpages.
  * 
  * @returns {JSX.Element}
  */
@@ -30,7 +32,7 @@ function Dashboard(): JSX.Element {
               onItemClick={handleSidebarItemClick}
             />
           </div>
-          <div className="main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 p-12">
+          <div className={`main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 ${activeItem === "Send" ? "p-6" : "p-12"}`}>
             {/* Render content based on activeItem */}
             {activeItem === "Accounts" && <Accounts />}
             {activeItem === "Send" && <Send />}

@@ -169,7 +169,7 @@ export default function SeedPhraseGrid({
    * Generates a grid of SeedPhraseWordField components based on specified parameters.
    * @returns {JSX.Element[]} An array of React components representing the grid.
    */
-  function generateGrid() {
+  function generateGrid(): JSX.Element[] {
     const grid = [];
     let wordNumber = 1;
 
