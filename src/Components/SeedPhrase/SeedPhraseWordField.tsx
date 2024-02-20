@@ -54,7 +54,7 @@ export default function SeedPhraseWordField({
   intent = "normal",
   onWordChange,
   wordsArray,
-}:  React.PropsWithChildren<Props>) {
+}:  React.PropsWithChildren<Props>): JSX.Element {
   const isEditable = intent === "error";
   const [inputWord, setInputWord] = useState(word);
 
