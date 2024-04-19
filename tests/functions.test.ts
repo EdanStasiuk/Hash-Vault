@@ -1,4 +1,4 @@
-import { convertToFiat } from "../src/components/Wallet/DashboardPages/Accounts/functions";
+import { convertToFiat } from "../src/functions";
 
 describe("convertToFiat function", () => {
   it("converts HBAR amount to fiat correctly", () => {

@@ -24,6 +24,7 @@ const button = cva(
     "text-xl",
     "font-light",
     "font-robotoFlex",
+    "transition-all duration-[0.4s]"
   ],
   {
     variants: {
@@ -54,6 +55,7 @@ export default function SendButton({
       <button 
         className={button({ intent })}
         disabled={disabled}
+        type="submit"
       >
         <span>Send</span>
         <LiaChevronCircleRightSolid className="scale-125" />

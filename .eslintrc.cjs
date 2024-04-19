@@ -38,6 +38,10 @@ module.exports = {
     "jest.config.cjs",
     "tailwind.config.js",
     "functions.test.ts",
+    "postcss.config.mjs",
+    "vite.config.ts",
+    "electron.js",
+    "preload.js",
   ],
   rules: {
     "react/react-in-jsx-scope": "off",

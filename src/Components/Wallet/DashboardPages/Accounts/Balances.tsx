@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
 import TalkBox from "./TalkBox";
-import { copyToClipboard } from "./functions";
-import { convertToFiat } from "./functions";
-import { displayCurrencySymbol } from "./functions";
+import {
+  fetchConversionRate,
+  convertToFiat,
+  copyToClipboard,
+  displayCurrencySymbol,
+} from "../../../../functions";
 
+// total and unstakedTotal can be strings just so "?" can be displayed when there
+// is an issue getting that information.
 interface Props {
-  total?: string;
-  unstakedTotal?: string;
+  total?: number | string;
+  unstakedTotal?: number | string;
   conversionCurrency?: string;
 }
 
 /**
  * Renders the balance information for the wallet dashboard.
  *
- * @prop {string} total - Optional string representing the total amount on HBAR in the wallet; defaults to "?".
- * @prop {string} unstakedTotal - Optional string representing the total amount of unstaked HBAR in the wallet; defaults to "?".
+ * @prop {number} total - Optional number or string representing the total amount on HBAR in the wallet; defaults to "?".
+ * @prop {number} unstakedTotal - Optional number or string representing the total amount of unstaked HBAR in the wallet; defaults to "?".
  * @prop {string} conversionCurrency - The abreviation of the currency that is to be converted form HBAR; defaults to "usd".
  * @returns {JSX.Element} - A component displaying balance information.
  */
@@ -23,9 +28,8 @@ export default function Balances({
   unstakedTotal = "?",
   conversionCurrency = "usd",
 }: React.PropsWithChildren<Props>): JSX.Element {
-  const [convertedUnstakedTotal, setConvertedUnstakedTotal] =
-    useState<string>("0.00");
   const [convertedTotal, setConvertedTotal] = useState<string>("0.00");
+  const [convertedUnstakedTotal, setConvertedUnstakedTotal] = useState<string>("0.00");
   const [copySuccessTotal, setCopySuccessTotal] = useState(false);
   const [copySuccessUnstakedTotal, setCopySuccessUnstakedTotal] = useState(false);
   const hbarSymbol = "ħ";
@@ -34,17 +38,9 @@ export default function Balances({
 
   // Fetches HBAR conversion rate and sets the total and total unstaked conversions
   useEffect(() => {
-    fetch("https://api.coingecko.com/api/v3/coins/hedera-hashgraph", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const conversionRate = data?.market_data?.current_price?.[
-          conversionCurrency
-        ] as number | undefined;
+    fetchConversionRate("hedera-hashgraph", conversionCurrency)
+      .then((conversionRate) => {
         if (conversionRate !== undefined) {
-          // console.log(`Current HBAR Price in ${conversionCurrency}: ${conversionRate}`);
           const convertedTotal = convertToFiat(conversionRate, total);
           const convertedUnstakedTotal = convertToFiat(
             conversionRate,
@@ -52,7 +48,6 @@ export default function Balances({
           );
           setConvertedTotal(convertedTotal);
           setConvertedUnstakedTotal(convertedUnstakedTotal);
-          // console.log("Converted:", convertedTotal);
         } else {
           console.error("Unable to fetch HBAR price.");
         }
@@ -60,7 +55,7 @@ export default function Balances({
       .catch((error) => {
         console.error("Error fetching HBAR price:", error);
       });
-  }, [conversionCurrency]);
+  }, [conversionCurrency, total, unstakedTotal]);
 
   return (
     <div className="text-xl font-roboto font-light text-white mr-2">

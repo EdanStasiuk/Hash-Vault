@@ -8,6 +8,64 @@ import Transactions from "../../components/Wallet/DashboardPages/Transactions/Tr
 import AddressBook from "../../components/Wallet/DashboardPages/AddressBook/AddressBook";
 import Settings from "../../components/Wallet/DashboardPages/Settings/Settings";
 
+// TODO: Create database to store the following data, need to refactor the schema
+// This is here to mimic the database for now
+export interface Account {
+  accountNumber: string;
+  accountName: string;
+  accountAddress: string;
+  integerDigits: string;
+  fractionalDigits: string;
+  selected?: boolean;
+}
+
+export interface Wallet {
+  total: string;
+  unstakedTotal: number;
+  assets: string[];
+}
+
+export interface Settings {
+  conversionCurrency: string,
+}
+
+const accounts: Account[] = [
+  {
+    accountNumber: "0",
+    accountName: "Chequing",
+    accountAddress: "0.0.000000-aaaaaa",
+    integerDigits: "1,000",
+    fractionalDigits: "0000000",
+    selected: true,
+  },
+  {
+    accountNumber: "1",
+    accountName: "Savings",
+    accountAddress: "0.0.000000-aaaaab",
+    integerDigits: "100,000",
+    fractionalDigits: "0000000",
+    selected: false,
+  },
+];
+
+const wallet: Wallet[] = [
+  {
+    total: "101,000",
+    unstakedTotal: 50000,
+    assets: [
+      "HBAR",
+      "SEC",
+      "THIR"
+    ]
+  }
+]
+
+const settings: Settings[] = [
+  {
+    conversionCurrency: "CAD",
+  }
+]
+
 /**
  * Renders the wallet dashboard. The dashboard is one page that calls in components that
  * act as subpages.
@@ -34,8 +92,8 @@ function Dashboard(): JSX.Element {
           </div>
           <div className={`main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 ${activeItem === "Send" ? "p-6" : "p-12"}`}>
             {/* Render content based on activeItem */}
-            {activeItem === "Accounts" && <Accounts />}
-            {activeItem === "Send" && <Send />}
+            {activeItem === "Accounts" && <Accounts accountsList={accounts} walletInfo={wallet} settings={settings}/>}
+            {activeItem === "Send" && <Send walletInfo={wallet} settings={settings}/>}
             {activeItem === "Receive" && <Receive />}
             {activeItem === "Transactions" && <Transactions />}
             {activeItem === "Address Book" && <AddressBook />}

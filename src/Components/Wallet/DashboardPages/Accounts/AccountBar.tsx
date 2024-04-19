@@ -1,7 +1,7 @@
 import { useState } from "react";
 import TalkBox from "./TalkBox";
 import { MdContentCopy } from "react-icons/md";
-import { copyToClipboard } from "./functions";
+import { copyToClipboard } from "../../../../functions";
 
 interface Props {
   accountNumber?: string;
