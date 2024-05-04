@@ -22,11 +22,18 @@ export interface Account {
 export interface Wallet {
   total: string;
   unstakedTotal: number;
-  assets: string[];
+  assets: Asset[];
 }
 
 export interface Settings {
-  conversionCurrency: string,
+  conversionCurrency: string;
+}
+
+export interface Asset {
+  name: string;
+  tokenId: string; // in the format 0.0.00000000
+  apiId: string;
+  balance: number;
 }
 
 const accounts: Account[] = [
@@ -48,28 +55,50 @@ const accounts: Account[] = [
   },
 ];
 
+// TODO: Test case: tokenIds should be unique
 const wallet: Wallet[] = [
   {
     total: "101,000",
     unstakedTotal: 50000,
     assets: [
-      "HBAR",
-      "SEC",
-      "THIR"
-    ]
-  }
-]
+      {
+        name: "HBAR",
+        tokenId: "0.0.12345678",
+        apiId: "hedera-hashgraph",
+        balance: 10000,
+      },
+      {
+        name: "HSUITE",
+        tokenId: "0.0.87654321",
+        apiId: "hsuite",
+        balance: 20000,
+      },
+      {
+        name: "WHBAR",
+        tokenId: "0.0.98765432",
+        apiId: "wrapped-hbar",
+        balance: 30000,
+      },
+      {
+        name: "HERA",
+        tokenId: "0.0.987654",
+        apiId: "hera-finance",
+        balance: 30000,
+      },
+    ],
+  },
+];
 
 const settings: Settings[] = [
   {
     conversionCurrency: "CAD",
-  }
-]
+  },
+];
 
 /**
  * Renders the wallet dashboard. The dashboard is one page that calls in components that
  * act as subpages.
- * 
+ *
  * @returns {JSX.Element}
  */
 function Dashboard(): JSX.Element {
@@ -90,10 +119,22 @@ function Dashboard(): JSX.Element {
               onItemClick={handleSidebarItemClick}
             />
           </div>
-          <div className={`main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 ${activeItem === "Send" ? "p-6" : "p-12"}`}>
+          <div
+            className={`main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 ${
+              activeItem === "Send" ? "p-6" : "p-12"
+            }`}
+          >
             {/* Render content based on activeItem */}
-            {activeItem === "Accounts" && <Accounts accountsList={accounts} walletInfo={wallet} settings={settings}/>}
-            {activeItem === "Send" && <Send walletInfo={wallet} settings={settings}/>}
+            {activeItem === "Accounts" && (
+              <Accounts
+                accountsList={accounts}
+                walletInfo={wallet}
+                settings={settings}
+              />
+            )}
+            {activeItem === "Send" && (
+              <Send walletInfo={wallet} settings={settings} />
+            )}
             {activeItem === "Receive" && <Receive />}
             {activeItem === "Transactions" && <Transactions />}
             {activeItem === "Address Book" && <AddressBook />}

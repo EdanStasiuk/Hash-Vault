@@ -39,7 +39,7 @@ export default function Send({
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isValid },
     watch,
     setValue,
   } = useForm<FormData>({ mode: "onChange" });
@@ -67,9 +67,9 @@ export default function Send({
     data.amount =
       typeof data.amount === "string" ? parseFloat(data.amount) : data.amount;
 
-    // TODO: Only need for debugging, comment out later
-    console.log(data);
-    console.log(errors.address?.message);
+    // Only need for debugging
+    // console.log(data);
+    // console.log(errors.address?.message);
   };
 
   // Fetch conversion rate on component mount
@@ -144,13 +144,13 @@ export default function Send({
             />
             <AssetInputField
               label="Select Asset"
-              setValue={setValue}
               assetOptions={walletInfo[0].assets}
+              setValue={setValue}
             />
           </div>
           <div className="conversionField text-ghost-500 ml-1 mt-1 text-xl font-roboto">
             <span>≈ </span>
-            {displayCurrencySymbol("CAD")}
+            {displayCurrencySymbol("CAD") /* TODO: dynamically change the currency via settings */}
             {convertedAmount}
             {" " + settings[0].conversionCurrency}
           </div>

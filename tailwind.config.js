@@ -12,6 +12,9 @@ export default {
         ruda: ["Ruda"],
       },
       colors: {
+        cancel: {
+          500: "#F95564",
+        },
         ghost: {
           500: "#BABABA",
           900: "#505050"
@@ -92,6 +95,8 @@ export default {
         logo: "0.3em"
       },
       scale: {
+        '35': '0.35',
+        '60': '0.6',
         '80': '0.8',
         '103': '1.03',
         '175': '1.75',
