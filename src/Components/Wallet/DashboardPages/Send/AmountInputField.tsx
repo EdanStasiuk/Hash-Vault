@@ -1,12 +1,13 @@
-import { UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { FormData } from "./Send";
+import { UseFormGetValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { SendFormData } from "../../../../config/interfaces";
+import { getTokenBalance } from "../../../../functions";
 
 interface Props {
   label: string;
   placeHolder?: string;
-  unstakedTotal: number;
-  register: UseFormRegister<FormData>;
-  setValue: UseFormSetValue<FormData>;
+  register: UseFormRegister<SendFormData>;
+  setValue: UseFormSetValue<SendFormData>;
+  getValues: UseFormGetValues<SendFormData>;
 }
 
 // Hides the toggle arrows on the number input field
@@ -29,19 +30,19 @@ const styles = `
  *
  * @prop {string} label - Label located above the input field.
  * @prop {string} placeHolder - Optional placeholder located within the input field; defaults to an empty string.
- * @prop {number} unstakedTotal - The total amount of unstaked currency that can be sent.
- * @prop {UseFormRegister<FormData>} register - Method used to register or select element and apply validation 
+ * @prop {UseFormRegister<SendFormData>} register - Method used to register or select element and apply validation 
  *                                              rules to an input with the React Hook Form.
- * @prop {UseFormSetValue<FormData>} setValue - Function that dynamically sets the value of a registered field, and
+ * @prop {UseFormSetValue<SendFormData>} setValue - Function that dynamically sets the value of a registered field, and
  *                                              has the options to validate and update the form state.
+ * @prop {UseFormGetValues<SendFormData>} getValues - Function that dynamically gets the value(s) of a registered field.
  * @returns {JSX.Element} - An amount input field.
  */
 export default function AmountInputField({
   label,
   placeHolder = "",
   register,
-  unstakedTotal = 0,
   setValue,
+  getValues,
 }: React.PropsWithChildren<Props>): JSX.Element {
   
   return (
@@ -50,10 +51,10 @@ export default function AmountInputField({
       <div className="relative w-80">
         <style>{styles}</style>
         <input
-          className="w-80 h-11 p-3 pr-16 rounded-lg rounded-r-none bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto placeholder-ghost-500"
+          className="w-80 h-11 p-3 pr-16 rounded-lg bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto placeholder-ghost-500"
           placeholder={placeHolder}
           type="number"
-          step=".01"
+          step=".0000001"
           {...register("amount", {
             required: true,
             min: 0,
@@ -64,11 +65,27 @@ export default function AmountInputField({
         <button
           type="button"
           className="text-white text-xl absolute right-3 top-[8px]"
-          onClick={() => {
-            setValue("amount", unstakedTotal, {
-              shouldValidate: true,
-              shouldDirty: true,
-            });
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onClick={async () => {
+            const accountId = localStorage.getItem("accountId");
+
+            if (!accountId) {
+              console.error("Account ID not found in localStorage");
+              // TODO: Handle the error appropriately, maybe prompt the user to select an account or provide a way to input the account ID
+            } else {
+              const currentChosenAsset = getValues("asset");
+              const balance = await getTokenBalance(currentChosenAsset, accountId);
+  
+              if (balance !== null) {
+                setValue("amount", balance, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              } else {
+                // TODO: Handle the case where balance is null
+                console.error("Error retrieving account balance");
+              }
+            }
           }}
         >
           Max.

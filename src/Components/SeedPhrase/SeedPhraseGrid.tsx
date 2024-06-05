@@ -49,7 +49,7 @@ async function generateAndGetWordsArray(): Promise<string[]> {
     const mnemonicString = mnemonic.toString();
     const wordsArray = mnemonicString.split(" ");
 
-    localStorage.setItem("seedPhrase", JSON.stringify(wordsArray));
+    localStorage.setItem("seedPhrase", JSON.stringify(wordsArray)); //TODO: encrypt
 
     return wordsArray;
   } catch (error) {

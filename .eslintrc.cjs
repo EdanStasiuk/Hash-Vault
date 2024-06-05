@@ -42,6 +42,7 @@ module.exports = {
     "vite.config.ts",
     "electron.js",
     "preload.js",
+    "server.js",
   ],
   rules: {
     "react/react-in-jsx-scope": "off",

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Subheader from "../../Subheader";
 import Balances from "./Balances";
 import EditAccountButton from "./EditAccountButton";
 import AccountBar from "./AccountBar";
-import { Account, Wallet, Settings } from "../../../../pages/Wallet/Dashboard";
+import { Account, Wallet, Settings } from "../../../../config/interfaces";
 
 interface Props {
   accountsList?: Account[];
@@ -13,8 +15,9 @@ interface Props {
 /**
  * Renders Accounts page information for dashboard.
  *
- * @prop {Account[]} accountsList - List of accounts to be displayed on the dashboard via the AccountBar component.
- * @prop {Wallet[]} walletInfo - List containing wallet information, namely total balance and total unstaked balance.
+ * @prop {Account[]} accountsList - Optional list of accounts to be displayed on the dashboard via the AccountBar component.
+ * @prop {Wallet[]} walletInfo - Optional list containing wallet information, namely balance.
+ * @prop {Settings[]} settings - Optional list containg user settings information.
  * @returns {JSX.Element} - Accounts page component.
  */
 export default function Accounts({
@@ -26,8 +29,7 @@ export default function Accounts({
     <div>
       <Subheader label="Accounts" />
       <Balances
-        total={walletInfo[0].total}
-        unstakedTotal={walletInfo[0].unstakedTotal}
+        total={walletInfo[0].balance}
         conversionCurrency={settings[0].conversionCurrency}
       />
       <div className="flex items-center text-white mt-10 justify-between">

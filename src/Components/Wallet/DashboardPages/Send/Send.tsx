@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Subheader from "../../Subheader";
@@ -8,7 +10,8 @@ import MemoInputField from "./MemoInputField";
 import SendButton from "./SendButton";
 import AddressBook from "../AddressBook/AddressBook";
 import { useForm } from "react-hook-form";
-import { Wallet, Settings } from "../../../../pages/Wallet/Dashboard";
+import { Settings } from "../../../../config/interfaces";
+import { SendFormData } from "../../../../config/interfaces";
 import {
   fetchConversionRate,
   convertToFiat,
@@ -16,24 +19,16 @@ import {
 } from "../../../../functions";
 
 interface Props {
-  walletInfo?: Wallet[];
   settings?: Settings[];
-}
-
-export interface FormData {
-  address: string;
-  amount: number;
-  asset: string;
-  memo?: string;
 }
 
 /**
  * Renders Send page information for dashboard.
  *
+ * @prop {Settings[]} settings - Optional list containg user settings information.
  * @returns {JSX.Element} - Send page component.
  */
 export default function Send({
-  walletInfo = [],
   settings = [],
 }: React.PropsWithChildren<Props>): JSX.Element {
   const {
@@ -42,7 +37,8 @@ export default function Send({
     formState: { isValid },
     watch,
     setValue,
-  } = useForm<FormData>({ mode: "onChange" });
+    getValues,
+  } = useForm<SendFormData>({ mode: "onChange" });
 
   const [showAddressBook, setShowAddressBook] = useState(false);
   const [conversionRate, setConversionRate] = useState<number | undefined>();
@@ -50,7 +46,8 @@ export default function Send({
 
   const watchFields = watch(["address", "amount", "asset"]);
   const watchAmount = watch("amount");
-
+  const watchAsset = watch("asset");
+  
   // Slides in the Address Book component
   const handleAddressBookClick = () => {
     setShowAddressBook(true);
@@ -62,13 +59,13 @@ export default function Send({
   };
 
   // Function to be executed upon send button submission
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: SendFormData) => {
     // Need to check for this because manually inputted amount values are taken as strings
     data.amount =
       typeof data.amount === "string" ? parseFloat(data.amount) : data.amount;
 
     // Only need for debugging
-    // console.log(data);
+    console.log(data);
     // console.log(errors.address?.message);
   };
 
@@ -76,7 +73,7 @@ export default function Send({
   useEffect(() => {
     const fetchConversion = async () => {
       try {
-        const rate = await fetchConversionRate("hedera-hashgraph", "CAD");
+        const rate = await fetchConversionRate(getValues("asset"), "CAD"); //TODO: conversion rate needs to depend on the asset selected
         setConversionRate(rate);
       } catch (error) {
         console.error("Error fetching conversion rate:", error);
@@ -89,7 +86,7 @@ export default function Send({
 
     // Need to set converted amount to 0.00 when the component mounts
     setConvertedAmount("0.00");
-  }, []);
+  }, [watchAsset]);
 
   // Handles fiat conversion on amount change using watchAmount
   useEffect(() => {
@@ -135,16 +132,17 @@ export default function Send({
             />
           </div>
           <div className="amountAndAssetFields flex mt-8">
-            <AmountInputField
-              label="Amount"
-              placeHolder="0.00"
-              register={register}
-              unstakedTotal={walletInfo[0].unstakedTotal}
-              setValue={setValue}
-            />
+            <div className="mr-4">
+              <AmountInputField
+                label="Amount"
+                placeHolder="0.00"
+                register={register}
+                setValue={setValue}
+                getValues={getValues}
+              />
+            </div>
             <AssetInputField
               label="Select Asset"
-              assetOptions={walletInfo[0].assets}
               setValue={setValue}
             />
           </div>

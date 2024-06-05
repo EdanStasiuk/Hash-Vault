@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { ButtonIntent } from "../constants";
+import { ButtonIntent } from "../../config/types";
 import { To, useNavigate } from "react-router-dom";
 
 interface Props {

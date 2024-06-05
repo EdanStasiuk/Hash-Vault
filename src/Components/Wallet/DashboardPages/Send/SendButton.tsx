@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { SendButtonIntent } from "../../../constants";
+import { SendButtonIntent } from "../../../../config/types";
 import { LiaChevronCircleRightSolid } from "react-icons/lia";
 
 interface Props {

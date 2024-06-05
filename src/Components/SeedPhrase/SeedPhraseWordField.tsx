@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { InputFieldIntent } from "../constants";
+import { InputFieldIntent } from "../../config/types";
 import { ChangeEvent, useEffect, useState } from "react";
 
 interface Props {

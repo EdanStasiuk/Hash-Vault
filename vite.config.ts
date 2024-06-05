@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': { // To avoid CORS error when retreiving token logos
-        target: 'https://api.coingecko.com/api/v3',
+        target: 'https://davincigraph.art/api/v1',
         changeOrigin: true,
         rewrite: (path: string) => path.replace(/^\/api/, ''),
       },

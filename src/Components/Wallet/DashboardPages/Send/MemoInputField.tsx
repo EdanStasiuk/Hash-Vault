@@ -1,14 +1,14 @@
 import { UseFormRegister } from "react-hook-form";
-import { FormData } from "./Send";
+import { SendFormData } from "../../../../config/interfaces";
 
 interface Props {
   label: string;
-  register: UseFormRegister<FormData>
+  register: UseFormRegister<SendFormData>
 }
 
 /**
  * @prop {string} label - Label for the memo field.
- * @prop {UseFormRegister<FormData>} register - Method used to register or select apply validation 
+ * @prop {UseFormRegister<SendFormData>} register - Method used to register or select apply validation 
  *                                              rules to an input with the React Hook Form. 
  * @returns {JSX.Element} - A memo input field.
 */
