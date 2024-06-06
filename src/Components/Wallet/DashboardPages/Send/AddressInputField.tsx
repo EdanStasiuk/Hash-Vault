@@ -34,7 +34,8 @@ export default function AddressInputField({
     onAddressBookClick();
   };
 
-  // TODO: Validate input for proper address format
+  const addressPattern = /^0\.0\.\d+$/;
+
   return (
     <div>
       <p className="text-white font-roboto text-xl font-light">{label}</p>
@@ -43,7 +44,13 @@ export default function AddressInputField({
           className="w-60 h-11 p-3 pr-12 rounded-lg bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto placeholder-ghost-500"
           placeholder={placeHolder}
           type="text"
-          {...register("address", { required: true })}
+          {...register("address", { 
+            required: true, 
+            pattern: {
+              value: addressPattern,
+              message: "Invalid format. Expected format: num.num.string"
+            }
+          })}
           required
         />
         <button onClick={toggleAddressBook} type="button">

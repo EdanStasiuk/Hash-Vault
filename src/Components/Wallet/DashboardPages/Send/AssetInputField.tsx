@@ -58,7 +58,7 @@ export default function AssetInputField({
 
   // Sets asset value in form and sets the chosenAsset state value
   const handleAssetClick = (symbol: string, token_id: string) => {
-    console.log("token_id: ", token_id);
+    // console.log("token_id: ", token_id);
     if (token_id === "") {
       setValue("asset", "hedera-hashgraph");
       setChosenAsset("hbar");

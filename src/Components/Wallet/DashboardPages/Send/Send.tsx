@@ -65,7 +65,7 @@ export default function Send({
       typeof data.amount === "string" ? parseFloat(data.amount) : data.amount;
 
     // Only need for debugging
-    console.log(data);
+    // console.log(data);
     // console.log(errors.address?.message);
   };
 
@@ -126,7 +126,7 @@ export default function Send({
           <div className="addressField mt-5">
             <AddressInputField
               label="Address"
-              placeHolder="0.0.000000-xxxxx"
+              placeHolder="0.0.****"
               onAddressBookClick={handleAddressBookClick}
               register={register}
             />
