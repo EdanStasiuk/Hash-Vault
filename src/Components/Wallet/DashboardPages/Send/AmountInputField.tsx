@@ -77,7 +77,7 @@ export default function AmountInputField({
               const balance = await getTokenBalance(currentChosenAsset, accountId);
   
               if (balance !== null) {
-                setValue("amount", balance, {
+                setValue("amount", balance, { // TODO: small numbers get displayed using scientific notation, ex. 2e-8, change so all decimals are shown when displayed
                   shouldValidate: true,
                   shouldDirty: true,
                 });

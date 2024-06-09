@@ -2,10 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { useEffect, useState } from "react";
-import {
-  getAccountAssets,
-  getTokenLogo,
-} from "../../../../functions";
+import { getAccountAssets, getTokenLogo } from "../../../../functions";
 import { MirrorNodeTokenInfo } from "../../../../config/interfaces";
 import { UseFormSetValue } from "react-hook-form";
 import { SendFormData } from "../../../../config/interfaces";
@@ -120,24 +117,65 @@ export default function AssetInputField({
         setAssetOptions(options);
 
         const imageMap: AssetImageMap = {};
-        await Promise.all(
-          options.map(async (option) => {
-            if (option.token_id === "") {
-              const imageUrl = await getTokenLogo("hedera", "hbar");
-              imageMap[option.token_id] = imageUrl;
-            } else {
-              try {
-                const imageUrl = await getTokenLogo("hedera", option.token_id);
-                imageMap[option.token_id] = imageUrl;
-              } catch (error) {
-                console.error(
-                  `Error fetching token photo for ${option.token_id}:`,
-                  error
-                );
+        const promises = options.map(async (option) => {
+          let logoUrl = "";
+
+          // Check if the logo exists in local storage
+          const localStorageKey = "tokenLogos";
+          const tokenLogos = JSON.parse(
+            localStorage.getItem(localStorageKey) || "[]"
+          ) as { address: string; url: string }[];
+          const existingLogo = tokenLogos.find(
+            (logo) => logo.address === option.token_id
+          );
+
+          if (existingLogo?.url) {
+            logoUrl = existingLogo.url;
+          } else {
+            // Logo doesn't exist in local storage, fetch it from API
+            try {
+              if (option.token_id === "") {
+                logoUrl = await getTokenLogo("hedera", "hbar");
+              } else {
+                logoUrl = await getTokenLogo("hedera", option.token_id);
               }
+            } catch (error) {
+              console.error(
+                `Error fetching token photo for ${option.token_id}:`,
+                error
+              );
             }
-          })
-        );
+          }
+
+          // If logoUrl is available, update the imageMap
+          if (logoUrl) {
+            imageMap[option.token_id] = logoUrl;
+          }
+
+          return { address: option.token_id, url: logoUrl };
+        });
+
+        const logoUpdates = await Promise.all(promises);
+
+        // Update local storage with all fetched logos
+        const localStorageKey = "tokenLogos";
+        const tokenLogos = JSON.parse(
+          localStorage.getItem(localStorageKey) || "[]"
+        ) as { address: string; url: string }[];
+        logoUpdates.forEach((logo) => {
+          if (logo.url) {
+            const existingIndex = tokenLogos.findIndex(
+              (l) => l.address === logo.address
+            );
+            if (existingIndex !== -1) {
+              tokenLogos[existingIndex] = logo;
+            } else {
+              tokenLogos.push(logo);
+            }
+          }
+        });
+        localStorage.setItem(localStorageKey, JSON.stringify(tokenLogos));
+
         setAssetImages(imageMap);
 
         setLoading(false);

@@ -69,14 +69,16 @@ export default function Send({
     // console.log(errors.address?.message);
   };
 
-  // Fetch conversion rate on component mount
+  // Fetch conversion rate upon asset select
   useEffect(() => {
     const fetchConversion = async () => {
-      try {
-        const rate = await fetchConversionRate(getValues("asset"), "CAD"); //TODO: conversion rate needs to depend on the asset selected
-        setConversionRate(rate);
-      } catch (error) {
-        console.error("Error fetching conversion rate:", error);
+      if (getValues("asset")) {
+        try {
+          const rate = await fetchConversionRate(getValues("asset"), "CAD"); //TODO: conversion rate needs to depend on the asset selected
+          setConversionRate(rate);
+        } catch (error) {
+          console.error("Error fetching conversion rate:", error);
+        }
       }
     };
 

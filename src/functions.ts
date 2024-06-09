@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-  MirrorNodeTokenInfo,
-  AccountResponse,
-} from "./config/interfaces.ts"
+import { MirrorNodeTokenInfo, AccountResponse } from "./config/interfaces.ts";
 
 /**
  * Copies a string to the clipboard. Copied content is converted to a string.
@@ -58,7 +55,7 @@ export const convertToFiat = (
  * Fetches the conversion rate for a given coin ID.
  *
  * @param {string} apiTokenId - The ticker symbol of the coin.
- * @param {string} conversionCurrency - The currency abbreviation for conversion.
+ * @param {string} conversionCurrency - The ticker symbol of the currency rate to be fetched.
  * @returns {Promise<number | undefined>} - The conversion rate or undefined if fetching fails.
  */
 export const fetchConversionRate = async (
@@ -67,7 +64,7 @@ export const fetchConversionRate = async (
 ): Promise<number | undefined> => {
   conversionCurrency = conversionCurrency.toLowerCase();
 
-  if (apiTokenId === "" || apiTokenId === undefined || apiTokenId === null) {
+  if (apiTokenId === "") {
     return;
   }
 
@@ -93,7 +90,7 @@ export const fetchConversionRate = async (
       ] as number | undefined;
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      conversionRate = data?.priceUsd; // TODO: need to convert to the conversionCurrency
+      conversionRate = data?.priceUsd; // TODO: need to convert to the conversionCurrency, will need to update test case when you do this
       // console.log(conversionRate); // TODO: need to show an error message to user if conversion rate was not found
     }
 
@@ -196,12 +193,12 @@ export async function getTokenBalance(
 
 /**
  * Checks if a token is an NFT for a given account.
- * Used as a supplementary function to getPositiveBalanceNonNftTokens.
+ * Used locally as a supplementary function to getPositiveBalanceNonNftTokens.
  * @param {string} accountId The account ID for which to check NFTs.
  * @param {string} tokenId The token ID to check if it's an NFT.
  * @returns {Promise<boolean>} A promise resolving to true if the token is an NFT, false otherwise.
  */
-async function isNFT(
+export async function isNFT(
   accountId: string,
   tokenId: string
 ): Promise<boolean> {
@@ -229,13 +226,13 @@ async function isNFT(
 
 /**
  * Retrieves data pairs of token IDs and amounts for all non-NFT assets with a balance > 0.
- * Used as a supplementary function to getAccountAssets.
+ * Used locally as a supplementary function to getAccountAssets.
  * @param {string} accountId The account ID for which to retrieve the data pairs.
- * @returns {Array<{id: string, amount: number}>} An array of objects containing token IDs and their balances.
+ * @returns {Array<{id: string, balance: number}>} An array of objects containing token IDs and their balances.
  */
-async function getPositiveBalanceNonNftTokens(
+export async function getPositiveBalanceNonNftTokens(
   accountId: string
-): Promise<{ id: string; amount: number }[]> {
+): Promise<{ id: string; balance: number }[]> {
   try {
     const response = await fetch(
       `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}`
@@ -245,15 +242,15 @@ async function getPositiveBalanceNonNftTokens(
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data: AccountResponse = await response.json();
-    const positiveBalances: { id: string; amount: number }[] = [];
+    const positiveBalances: { id: string; balance: number }[] = [];
 
     for (const token of data.balance.tokens) {
       if (token.balance > 0) {
         const isTokenNFT = await isNFT(accountId, token.token_id);
         if (!isTokenNFT) {
           const balance = await getTokenBalance(token.token_id, accountId);
-          if (balance !== null) {
-            positiveBalances.push({ id: token.token_id, amount: balance });
+          if (balance !== null && Number.isFinite(balance)) {
+            positiveBalances.push({ id: token.token_id, balance: balance });
           }
         }
       }
@@ -268,13 +265,13 @@ async function getPositiveBalanceNonNftTokens(
 
 /**
  * Retrieves the name and symbol of a specified token.
- * Used as a supplementary function to getAccountAssets.
+ * Used locally as a supplementary function to getAccountAssets.
  * @param {string} tokenId The token ID for which to retrieve the name, symbol, and decimals.
  * @returns {Promise<{name: string, symbol: string} | null>} An object containing the name and symbol of the token, or null if an error occurs.
  */
-async function getTokenInfo(
+export async function getTokenInfo(
   tokenId: string
-): Promise<{ name: string; symbol: string, decimals: string } | null> {
+): Promise<{ name: string; symbol: string; decimals: string } | null> {
   try {
     const response = await fetch(
       `https://mainnet.mirrornode.hedera.com/api/v1/tokens/${tokenId}`
@@ -291,7 +288,7 @@ async function getTokenInfo(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { name, symbol, decimals } = data;
 
-    if (!name || !symbol || !decimals) {
+    if (name == undefined || symbol == undefined || decimals == undefined) {
       throw new Error("Invalid token data");
     }
 
@@ -323,24 +320,24 @@ export async function getAccountAssets(
         symbol: "HBAR",
         balance: hbarBalance,
         api_id: "hedera-hashgraph",
-        type: 'FUNGIBLE_COMMON',
-        decimals: "8"
+        type: "FUNGIBLE_COMMON",
+        decimals: "8",
       });
     }
 
     // Retrieve positive token balances
     const positiveBalances = await getPositiveBalanceNonNftTokens(accountId);
-    for (const { id, amount } of positiveBalances) {
+    for (const { id, balance } of positiveBalances) {
       const tokenInfo = await getTokenInfo(id);
       if (tokenInfo) {
         assets.push({
           token_id: id,
           name: tokenInfo.name,
           symbol: tokenInfo.symbol,
-          balance: amount,
+          balance: balance,
           api_id: "",
-          type: 'FUNGIBLE_COMMON',
-          decimals: tokenInfo.decimals
+          type: "FUNGIBLE_COMMON",
+          decimals: tokenInfo.decimals,
         });
       }
     }
