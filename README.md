@@ -26,6 +26,10 @@ To set up the development environment and run Hash Vault locally, follow these s
    ```bash
    pnpm run dev
 
+## Design
+
+Check out the designs on Figma: [Hash Vault Designs](https://www.figma.com/file/OGOiTy0sWSdXz8RlGrqkYU/Hash-Vault?type=design&node-id=1%3A9&mode=design&t=zTcAGBQRgKjC4NP3-1)
+
 ## Acknowledgments
 
 We would like to express our gratitude to the following communities for their valuable contributions and resources which have made this project possible.
