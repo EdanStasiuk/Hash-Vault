@@ -104,7 +104,6 @@ export default function AssetInputField({
         );
 
         // Sort other assets alphabetically by name
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         otherOptions.sort((a, b) => a.name.localeCompare(b.name));
 
         // Combine hbar at the beginning of the list

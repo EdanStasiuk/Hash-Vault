@@ -64,7 +64,6 @@ export default function Send({
     data.amount =
       typeof data.amount === "string" ? parseFloat(data.amount) : data.amount;
 
-    // Only need for debugging
     // console.log(data);
     // console.log(errors.address?.message);
   };
