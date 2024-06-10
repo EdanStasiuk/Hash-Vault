@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { InputFieldIntent } from "../constants";
+import { InputFieldIntent } from "../../config/types";
 import { ChangeEvent, useEffect, useState } from "react";
 
 interface Props {
@@ -54,7 +54,7 @@ export default function SeedPhraseWordField({
   intent = "normal",
   onWordChange,
   wordsArray,
-}:  React.PropsWithChildren<Props>) {
+}:  React.PropsWithChildren<Props>): JSX.Element {
   const isEditable = intent === "error";
   const [inputWord, setInputWord] = useState(word);
 

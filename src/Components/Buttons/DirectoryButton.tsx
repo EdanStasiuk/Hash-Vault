@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { ButtonIntent } from "../constants";
+import { ButtonIntent } from "../../config/types";
 import { To, useNavigate } from "react-router-dom";
 
 interface Props {
@@ -71,7 +71,7 @@ export default function DirectoryButton({
   routerPath = "",
   disabled = false,
   history,
-}: React.PropsWithChildren<Props & { disabled?: boolean }>) {
+}: React.PropsWithChildren<Props & { disabled?: boolean }>): JSX.Element {
   const navigate = useNavigate();
 
   const decideNavigationType = () => {

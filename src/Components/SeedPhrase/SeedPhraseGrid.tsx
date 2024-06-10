@@ -49,7 +49,7 @@ async function generateAndGetWordsArray(): Promise<string[]> {
     const mnemonicString = mnemonic.toString();
     const wordsArray = mnemonicString.split(" ");
 
-    localStorage.setItem("seedPhrase", JSON.stringify(wordsArray));
+    localStorage.setItem("seedPhrase", JSON.stringify(wordsArray)); //TODO: encrypt
 
     return wordsArray;
   } catch (error) {
@@ -169,7 +169,7 @@ export default function SeedPhraseGrid({
    * Generates a grid of SeedPhraseWordField components based on specified parameters.
    * @returns {JSX.Element[]} An array of React components representing the grid.
    */
-  function generateGrid() {
+  function generateGrid(): JSX.Element[] {
     const grid = [];
     let wordNumber = 1;
 

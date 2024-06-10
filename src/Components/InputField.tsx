@@ -13,6 +13,7 @@ interface Props {
  * @prop {string} value - An optional string for setting a value in the field.
  * @prop {boolean} showInput - An optional boolean prop that sets visibility of input; default is false.
  *                            If false, input type is set to 'password', if true, type is set to 'text'.
+ * * @prop {(e: React.ChangeEvent<HTMLInputElement>) => void} onChange - A required function that handles the input field's change event.
  * @returns an input field.
  */
 export default function InputField({

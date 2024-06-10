@@ -1,13 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Wallet/Sidebar/Sidebar";
-import Accounts from "../../components/Wallet/Pages/Accounts/Accounts";
-import Send from "../../components/Wallet/Pages/Send/Send";
-import Receive from "../../components/Wallet/Pages/Receive/Receive";
-import Transactions from "../../components/Wallet/Pages/Transactions/Transactions";
-import Settings from "../../components/Wallet/Pages/Settings/Settings";
+import Accounts from "../../components/Wallet/DashboardPages/Accounts/Accounts";
+import Send from "../../components/Wallet/DashboardPages/Send/Send";
+import Receive from "../../components/Wallet/DashboardPages/Receive/Receive";
+import Transactions from "../../components/Wallet/DashboardPages/Transactions/Transactions";
+import AddressBook from "../../components/Wallet/DashboardPages/AddressBook/AddressBook";
+import Settings from "../../components/Wallet/DashboardPages/Settings/Settings";
+import { accounts, wallets, settings } from "../../config/constants";
 
-function Dashboard() {
+/**
+ * Renders the wallet dashboard. The dashboard is one page that calls in components that
+ * act as subpages.
+ *
+ * @returns {JSX.Element}
+ */
+function Dashboard(): JSX.Element {
   const [activeItem, setActiveItem] = useState<string>("Accounts");
 
   const handleSidebarItemClick = (label: string) => {
@@ -25,12 +34,25 @@ function Dashboard() {
               onItemClick={handleSidebarItemClick}
             />
           </div>
-          <div className="main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 p-12">
+          <div
+            className={`main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 ${
+              activeItem === "Send" ? "p-6" : "p-12"
+            }`}
+          >
             {/* Render content based on activeItem */}
-            {activeItem === "Accounts" && <Accounts />}
-            {activeItem === "Send" && <Send />}
+            {activeItem === "Accounts" && (
+              <Accounts
+                accountsList={accounts}
+                walletInfo={wallets}
+                settings={settings}
+              />
+            )}
+            {activeItem === "Send" && (
+              <Send settings={settings} />
+            )}
             {activeItem === "Receive" && <Receive />}
             {activeItem === "Transactions" && <Transactions />}
+            {activeItem === "Address Book" && <AddressBook />}
             {activeItem === "Settings" && <Settings />}
           </div>
         </div>

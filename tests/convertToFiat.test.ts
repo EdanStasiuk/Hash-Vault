@@ -1,7 +1,7 @@
-import { convertToFiat } from "../src/components/Wallet/Pages/Accounts/Balances";
+import { convertToFiat } from "../src/functions";
 
 describe("convertToFiat function", () => {
-  it("converts HBAR amount to fiat correctly", () => {
+  test("converts HBAR amount to fiat correctly", () => {
     const conversionRate = 0.25;
     const amount = "100.00";
 
@@ -13,7 +13,7 @@ describe("convertToFiat function", () => {
     expect(result).toBe(expected);
   });
 
-  it("returns '?' for invalid amount", () => {
+  test("returns '?' for invalid amount", () => {
     const conversionRate = 0.25;
     const invalidAmount = "invalidAmount";
 
@@ -22,93 +22,93 @@ describe("convertToFiat function", () => {
     expect(result).toBe("?");
   });
 
-  it("properly rounds result to two decimal places", () => {
+  test("properly rounds result to two decimal places", () => {
     const conversionRate = 0.25;
-    const amount = "100.001"
+    const amount = "100.001";
 
     const result = convertToFiat(conversionRate, amount);
     const expected = "25.00";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of commas.", () => {
+  test("properly sanitizes amount input of commas.", () => {
     const conversionRate = 0.25;
-    const amount = "1,000.0"
+    const amount = "1,000.0";
 
     const result = convertToFiat(conversionRate, amount);
     const expected = "250.00";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of apostrophes.", () => {
+  test("properly sanitizes amount input of apostrophes.", () => {
     const conversionRate = 0.25;
-    const amount = "1.000'000'0"
+    const amount = "1.000'000'0";
 
     const result = convertToFiat(conversionRate, amount);
     const expected = "0.25";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of commas and apostrophes.", () => {
+  test("properly sanitizes amount input of commas and apostrophes.", () => {
     const conversionRate = 0.25;
-    const amount = "1,000.000'000'0"
+    const amount = "1,000.000'000'0";
 
     const result = convertToFiat(conversionRate, amount);
-    const expected = "250.00"
+    const expected = "250.00";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of a leading space.", () => {
+  test("properly sanitizes amount input of a leading space.", () => {
     const conversionRate = 0.25;
-    const amount = " 1.00"
+    const amount = " 1.00";
 
     const result = convertToFiat(conversionRate, amount);
-    const expected = "0.25"
+    const expected = "0.25";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of leading spaces.", () => {
+  test("properly sanitizes amount input of leading spaces.", () => {
     const conversionRate = 0.25;
-    const amount = "  1.00"
+    const amount = "  1.00";
 
     const result = convertToFiat(conversionRate, amount);
-    const expected = "0.25"
+    const expected = "0.25";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of a tailing space.", () => {
+  test("properly sanitizes amount input of a tailing space.", () => {
     const conversionRate = 0.25;
-    const amount = "1.00 "
+    const amount = "1.00 ";
 
     const result = convertToFiat(conversionRate, amount);
-    const expected = "0.25"
+    const expected = "0.25";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of tailing spaces.", () => {
+  test("properly sanitizes amount input of tailing spaces.", () => {
     const conversionRate = 0.25;
-    const amount = "1.00  "
+    const amount = "1.00  ";
 
     const result = convertToFiat(conversionRate, amount);
-    const expected = "0.25"
+    const expected = "0.25";
 
     expect(result).toBe(expected);
-  })
+  });
 
-  it("properly sanitizes amount input of leading and tailing spaces.", () => {
+  test("properly sanitizes amount input of leading and tailing spaces.", () => {
     const conversionRate = 0.25;
-    const amount = "  1.00  "
+    const amount = "  1.00  ";
 
     const result = convertToFiat(conversionRate, amount);
-    const expected = "0.25"
+    const expected = "0.25";
 
     expect(result).toBe(expected);
-  })
+  });
 });
