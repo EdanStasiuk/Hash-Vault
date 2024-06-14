@@ -14,7 +14,7 @@ import { accounts, wallets, settings } from "../../config/constants";
  * Renders the wallet dashboard. The dashboard is one page that calls in components that
  * act as subpages.
  *
- * @returns {JSX.Element}
+ * @returns {JSX.Element} A dashboard component.
  */
 function Dashboard(): JSX.Element {
   const [activeItem, setActiveItem] = useState<string>("Accounts");
@@ -36,7 +36,7 @@ function Dashboard(): JSX.Element {
           </div>
           <div
             className={`main flex-grow w-3/4 bg-backgroundAlt-500 text-primary-500 ${
-              activeItem === "Send" ? "p-6" : "p-12"
+              activeItem === "Send" ? "px-6 py-2" : "px-12 py-8"
             }`}
           >
             {/* Render content based on activeItem */}

@@ -9,23 +9,21 @@ interface Props {
 
 interface SidebarItem {
   label: string;
-  onClickLabel: string;
 }
 
 /**
  * Sidebar items representing different sections in the wallet dashboard.
  * Each item has a label for display and an onClickLabel to identify the item when clicked.
  * 
- * @property {string} label - The display label for the sidebar item.
- * @property {string} onClickLabel - The identifier used when the sidebar item is clicked.
+ * @prop {string} label - The display label for the sidebar item.
  */
 const sidebarItems: SidebarItem[] = [
-  { label: "Accounts", onClickLabel: "Accounts" },
-  { label: "Send", onClickLabel: "Send" },
-  { label: "Receive", onClickLabel: "Receive" },
-  { label: "Transactions", onClickLabel: "Transactions" },
-  { label: "Address Book", onClickLabel: "Address Book" },
-  { label: "Settings", onClickLabel: "Settings" },
+  { label: "Accounts" },
+  { label: "Send" },
+  { label: "Receive" },
+  { label: "Transactions" },
+  { label: "Address Book" },
+  { label: "Settings" },
 ];
 
 /**
@@ -33,7 +31,7 @@ const sidebarItems: SidebarItem[] = [
  *
  * @prop {string} activeItem - The label of the currently active item in the sidebar.
  * @prop {Function} onItemClick - Function triggered when a sidebar item is clicked.
- * @returns {JSX.Element} - A sidebar component.
+ * @returns {JSX.Element} A sidebar component.
  */
 export default function Sidebar({
   activeItem,
@@ -51,7 +49,7 @@ export default function Sidebar({
               label={item.label}
               isActive={activeItem === item.label}
               onClick={() => {
-                onItemClick(item.onClickLabel);
+                onItemClick(item.label);
               }}
             />
           );

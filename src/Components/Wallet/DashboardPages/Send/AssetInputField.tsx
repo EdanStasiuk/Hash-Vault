@@ -32,7 +32,7 @@ const styles = `
  * @prop {string} label - Label located above the input field.
  * @prop {UseFormSetValue<SendFormData>} setValue - Function that dynamically sets the value of a registered field, and
  *                                              has the options to validate and update the form state.
- * @returns {JSX.Element} - An asset selection/input field.
+ * @returns {JSX.Element} An asset selection/input field.
  */
 export default function AssetInputField({
   label,
@@ -205,7 +205,7 @@ export default function AssetInputField({
           <MdOutlineArrowDropDown className="text-primary-500" />
         </div>
         <div className="flex items-center justify-between">
-          <div className="w-7 h-7 ml-1">{<img src={assetImage} alt="" />}</div>
+          <div className="w-7 h-7 ml-1">{<img src={assetImage} alt="" />}</div> {/* // TODO: the chosenLogo image isn't being pulled from local storage when offline, even though they're being pulled for the scrollable list */}
           <span className="text-white text-xl ml-[6px]">
             {chosenAssetSymbol}
           </span>

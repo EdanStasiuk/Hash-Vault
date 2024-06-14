@@ -355,7 +355,7 @@ export async function getAccountAssets(
  * @param {string} address The address of the token.
  * @returns {Promise<string>} The URL of the token's photo.
  */
-export async function getTokenLogo( // TODO: Refactor so that logos are saved in localstorage and retrieved before making any necessary api calls
+export async function getTokenLogo(
   network: string,
   address: string
 ): Promise<string> {
