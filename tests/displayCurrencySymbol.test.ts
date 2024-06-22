@@ -1,4 +1,4 @@
-import { displayCurrencySymbol } from "../src/functions";
+import { displayCurrencySymbol } from "../src/functions/functions";
 
 describe("displayCurrencySymbol function", () => {
   test("should return $ for USD", () => {

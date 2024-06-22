@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { useEffect, useState } from "react";
-import { getAccountAssets, getTokenLogo } from "../../../../functions";
+import { getAccountAssets, getTokenLogo } from "../../../../functions/functions";
 import { MirrorNodeTokenInfo } from "../../../../config/interfaces";
 import { UseFormSetValue } from "react-hook-form";
 import { SendFormData } from "../../../../config/interfaces";

@@ -1,6 +1,6 @@
 import { UseFormGetValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { SendFormData } from "../../../../config/interfaces";
-import { getTokenBalance } from "../../../../functions";
+import { getTokenBalance } from "../../../../functions/functions";
 
 interface Props {
   label: string;

@@ -1,4 +1,4 @@
-import { getTokenBalance } from "../src/functions";
+import { getTokenBalance } from "../src/functions/functions";
 
 describe("getTokenBalance function", () => {
   beforeEach(() => {

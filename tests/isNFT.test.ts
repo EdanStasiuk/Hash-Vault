@@ -1,4 +1,4 @@
-import { isNFT } from "../src/functions";
+import { isNFT } from "../src/functions/functions";
 
 describe("isNFT function", () => {
   beforeEach(() => {

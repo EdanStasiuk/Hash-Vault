@@ -16,7 +16,7 @@ import {
   fetchConversionRate,
   convertToFiat,
   displayCurrencySymbol,
-} from "../../../../functions";
+} from "../../../../functions/functions";
 
 interface Props {
   settings?: Settings[];

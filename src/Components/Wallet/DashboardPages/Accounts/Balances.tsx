@@ -5,7 +5,7 @@ import {
   convertToFiat,
   copyToClipboard,
   displayCurrencySymbol,
-} from "../../../../functions";
+} from "../../../../functions/functions";
 
 // total can be a string just so "?" can be displayed when there
 // is an issue getting that information.

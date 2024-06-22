@@ -57,3 +57,16 @@ export interface SendFormData {
   asset: string;
   memo?: string;
 }
+
+/* cryptoFunctions.ts */
+export interface EncryptedPrivateKey {
+  iv: string;
+  salt: string;
+  authTag: string;
+  data: string;
+}
+
+export interface keystoreFileInfo {
+  encryptedPrivateKey: EncryptedPrivateKey,
+  mnemonic: string,
+}

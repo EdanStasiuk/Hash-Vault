@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { copyToClipboard } from "../../../../../functions";
+import { copyToClipboard } from "../../../../../functions/functions";
 import { MdContentCopy } from "react-icons/md";
 
 interface Props {
@@ -28,25 +28,39 @@ export default function InfoBar({
   };
 
   return (
-    <div className="flex text-white border-ghost-900 border-b w-full p-4 items-baseline">
+    <div className="flex text-white border-ghost-900 border-b w-full p-4 place-items-baseline">
       <div className="w-[30%] flex items-center justify-between">
-        <div className="flex text-xl font-semibold items-baseline">
+        <div className="flex text-xl font-semibold">
           {childDescriptor}
           {copySuccess && (
-            <div className="ml-2 font-roboto font-normal text-primary-500 text-lg">Copied!</div>
-          )} {/* TODO: Display this in a better way */}
+            <div className="ml-2 font-roboto font-normal text-primary-500 text-lg">
+              Copied!
+            </div>
+          )}{" "}
+          {/* TODO: Display copied message in a better way */}
         </div>
         {copyable && (
           <button
             onClick={handleCopy}
-            className="mr-2 text-primary-500 scale-150"
+            className="mr-2 text-primary-500 scale-150 group"
           >
             <MdContentCopy />
           </button>
         )}
       </div>
       <div className="flex-1">
-        <div className="text-lg font-roboto">{childContent}</div>
+        {copyable ? (
+          <button
+            onClick={handleCopy}
+            className="text-lg font-roboto hover:text-primary-500"
+          >
+            {childContent}
+          </button>
+        ) : (
+          <div className="text-lg font-robot">
+            {childContent}
+          </div>
+        )}
       </div>
     </div>
   );

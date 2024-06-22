@@ -1,4 +1,4 @@
-import { getAccountAssets } from "../src/functions";
+import { getAccountAssets } from "../src/functions/functions";
 
 describe("getAccountAssets function", () => {
   beforeEach(() => {

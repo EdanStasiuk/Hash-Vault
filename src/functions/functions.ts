@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { MirrorNodeTokenInfo, AccountResponse } from "./config/interfaces.ts";
+import { MirrorNodeTokenInfo, AccountResponse } from "../config/interfaces.ts";
 
 /**
  * Copies a string to the clipboard. Copied content is converted to a string.
