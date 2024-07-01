@@ -23,13 +23,13 @@ export default function SettingsButton({
   borderStyle,
 }: Props): JSX.Element {
   return (
-    <button className={`flex ${borderStyle} border-ghost-900 hover:bg-background-500 w-full p-3 items-center`}>
-      <div className="ml-2 mr-6">
+    <button className={`flex ${borderStyle} border-backgroundLight-400 dark:border-ghost-900 hover:bg-backgroundLight-200 dark:hover:bg-background-500 w-full p-3 items-center`}>
+      <div className="ml-2 mr-6 text-black dark:text-primary-500">
         <Icon size={44} />
       </div>
       <div className="text-left">
-        <div className="text-2xl text-white">{mainText}</div>
-        <div className="text-ghost-500">{description}</div>
+        <div className="text-2xl text-black dark:text-white">{mainText}</div>
+        <div className="text-ghost-900 dark:text-ghost-500">{description}</div>
       </div>
     </button>
   );

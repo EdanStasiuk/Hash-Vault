@@ -22,20 +22,28 @@ const button = cva(
     "border",
     "border-solid",
     "text-xl",
-    "font-light",
+    "font-base",
     "font-robotoFlex",
-    "transition-all duration-[0.4s]"
+    "transition-all duration-[0.4s]",
   ],
   {
     variants: {
       intent: {
         active: [
-          "text-primary-500",
-          "bg-background-500",
-          "border-primary-500",
+          "text-white",
+          "dark:text-primary-500",
+          "bg-secondary-500",
+          "dark:bg-background-500",
+          "border-secondary-500",
+          "dark:border-primary-500",
           "hover:scale-103",
         ],
-        dead: ["text-ghost-500", "bg-transparent", "border-ghost-500"],
+        dead: [
+          "text-backgroundLight-500",
+          "dark:text-ghost-500",
+          "bg-transparent",
+          "border-ghost-500",
+        ],
       },
     },
   }
@@ -43,8 +51,8 @@ const button = cva(
 
 /**
  * @prop {boolean} disabled - Optional boolean value that controls the functionality and style intent
- *                            of the SendButton component; defaults to false. 
- * @returns {JSX.Element} - A send button component.
+ *                            of the SendButton component; defaults to false.
+ * @returns {JSX.Element} A send button component.
  */
 export default function SendButton({
   disabled = false,
@@ -52,11 +60,7 @@ export default function SendButton({
   const intent: SendButtonIntent = disabled ? "dead" : "active";
   return (
     <div className="flex items-center">
-      <button 
-        className={button({ intent })}
-        disabled={disabled}
-        type="submit"
-      >
+      <button className={button({ intent })} disabled={disabled} type="submit">
         <span>Send</span>
         <LiaChevronCircleRightSolid className="scale-125" />
       </button>

@@ -13,7 +13,7 @@ export default function DropdownMenu({ currencyTypes }: Props): JSX.Element {
     <div className="dropdown">
       <select
         id="currency-select"
-        className="border border-primary-500 bg-background-500 rounded-lg w-full h-8 text-white font-robotoFlex font-thin text-xl text-center pl-[6px] ml-[6px]"
+        className="border-[3px] border-t-0 border-x-0 dark:border border-secondary-400 dark:border-primary-500 bg-white dark:bg-background-500 rounded-lg w-full h-8 text-black dark:text-white font-robotoFlex font-light dark:font-thin text-xl text-center pl-[6px] ml-[6px]"
       >
         {currencyTypes.map((currency, index) => (
           <option key={index} value={currency} className="text-lg">

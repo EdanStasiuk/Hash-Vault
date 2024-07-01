@@ -2,8 +2,9 @@ import * as crypto from 'crypto';
 import * as fs from 'fs';
 import { Mnemonic } from '@hashgraph/sdk';
 import * as bcrypt from 'bcryptjs';
-import { EncryptedPrivateKey, keystoreFileInfo } from '../config/interfaces';
+import { EncryptedPrivateKey, keystoreFileInfo, Settings } from '../config/interfaces';
 
+/* Cryptography related */
 // Function to generate and encrypt a private key
 export async function generateAndEncryptPrivateKey(password: string) {
   const saltRounds = 10;
@@ -97,3 +98,14 @@ async function decryptPrivateKey(password: string, encryptedPrivateKey: Encrypte
 
   return { privateKey: decrypted, mnemonicString };
 }
+
+/* Theme and setting related */
+export const getSettingsFromLocalStorage = (): Settings | null => {
+  const settings = localStorage.getItem('settings');
+  return settings ? JSON.parse(settings) as Settings : null;
+};
+
+export const saveSettingsToLocalStorage = (settings: Settings) => {
+  localStorage.setItem('settings', JSON.stringify(settings));
+  window.dispatchEvent(new Event('storage')) // Need this so the svg cropped hbar logo in the sidebar badge switches with the selected theme
+};

@@ -1,4 +1,6 @@
 import { LayoutGroup, motion } from "framer-motion";
+import { Settings } from "../../../../config/interfaces";
+import { useEffect, useState } from "react";
 
 interface Props {
   navItems: string[];
@@ -14,16 +16,59 @@ interface Props {
  * @prop {function} setSelectedIndex - A function that updates the selected index.
  * @returns {JSX.Element} A navigational bar component with animated transitions.
  */
-export default function SettingsNavbar({ navItems, selectedIndex, setSelectedIndex }: Props): JSX.Element {
+export default function SettingsNavbar({
+  navItems,
+  selectedIndex,
+  setSelectedIndex,
+}: Props): JSX.Element {
+  const [lightTheme, setLightTheme] = useState<boolean>(false);
+
   const handleButtonClick = (index: number) => {
     setSelectedIndex(index);
   };
 
-  const textColorDefault = "#212229"; // Tailwind backgroundAlt-500
-  const textColorSelected = "#A489FA"; // Tailwind primary-500
+  const updateLightTheme = () => {
+    const settings = JSON.parse(
+      localStorage.getItem("settings") || "{}"
+    ) as Settings;
+    setLightTheme(
+      settings.lightTheme !== undefined ? settings.lightTheme : true
+    );
+  };
+
+  useEffect(() => {
+    updateLightTheme();
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      updateLightTheme();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  /**
+   * "#212229" Tailwind backgroundAlt-500
+   * "#FFFFFF" Tailwind backgroundLight-50
+   * "#A489FA" Tailwind primary-500
+   * "#888888" Tailwind backgroundLight-600
+   */
+  const textColorSelected =
+    !lightTheme || document.documentElement.classList.contains("dark")
+      ? "#212229"
+      : "#FFFFFF";
+  const textColorDefault =
+    !lightTheme || document.documentElement.classList.contains("dark")
+      ? "#A489FA"
+      : "#888888";
 
   return (
-    <div className="border rounded-xl border-primary-500 w-7/12 mx-auto">
+    <div className="border rounded-xl border-backgroundLight-500 dark:border-primary-500 w-7/12 mx-auto">
       <nav className="flex">
         <LayoutGroup>
           {navItems.map((item, index) => (
@@ -34,21 +79,21 @@ export default function SettingsNavbar({ navItems, selectedIndex, setSelectedInd
                 onClick={() => {
                   handleButtonClick(index);
                 }}
-                className={`border-primary-500 py-2 w-full overflow-visible max-w-xs relative ${
-                  index === 0 ? "rounded-l-lg" : ""
-                } ${index === navItems.length - 1 ? "rounded-r-lg" : ""} ${
+                className={`border-backgroundLight-500 dark:border-primary-500 py-2 w-full overflow-visible max-w-xs relative ${
+                  index === 0 ? "rounded-l-[10px]" : ""
+                } ${index === navItems.length - 1 ? "rounded-r[10px]" : ""} ${
                   index !== 0 ? "border-l" : ""
-                } ${selectedIndex === index ? "text-backgroundAlt-500" : ""}`}
+                }`}
               >
                 {index === selectedIndex && (
                   <motion.div
                     layout
                     layoutId="settingsnavitem-activemarker"
-                    className={`absolute border-primary-500 bg-primary-500 w-full h-full inset-0 pointer-events-none z-0 ${
-                      index === 0 ? "rounded-l-lg" : ""
-                    } ${index === navItems.length - 1 ? "rounded-r-lg" : ""} ${
-                      index !== 0 ? "border-l" : ""
-                    }`}
+                    className={`absolute border-backgroundLight-500 dark:border-primary-500 bg-backgroundLight-500 dark:bg-primary-500 w-full h-full inset-0 pointer-events-none z-0 ${
+                      index === 0 ? "rounded-l-[10px]" : ""
+                    } ${
+                      index === navItems.length - 1 ? "rounded-r-[10px]" : ""
+                    } ${index !== 0 ? "border-l" : ""}`}
                     transition={{
                       borderRadius: {
                         type: "tween",
@@ -59,12 +104,16 @@ export default function SettingsNavbar({ navItems, selectedIndex, setSelectedInd
                   />
                 )}
                 <motion.span
-                  className="relative z-10"
+                  className={`relative z-10 ${
+                    selectedIndex === index
+                      ? "text-backgroundLight-50 dark:text-backgroundAlt-500"
+                      : "text-backgroundLight-400 dark:text-primary-500"
+                  }`}
                   animate={{
                     color:
                       selectedIndex === index
-                        ? textColorDefault
-                        : textColorSelected,
+                        ? textColorSelected
+                        : textColorDefault,
                   }}
                   transition={{ duration: 0.4 }}
                 >

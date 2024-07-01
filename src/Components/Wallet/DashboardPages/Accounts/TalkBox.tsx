@@ -21,7 +21,7 @@ export default function TalkBox({
     if (copySuccess) {
       const timer = setTimeout(() => {
         setCopySuccess(false);
-      }, 2000); // Hide after 2 seconds
+      }, 2000); // Hide after 2 seconds=
 
       return () => {
         clearTimeout(timer);
@@ -33,10 +33,10 @@ export default function TalkBox({
     <div
       className="talk-box-container left-[50%] translate-x-[-50%] top-[-42px] absolute"
     >
-      <div className="talk-box tracking-normal bg-primary-500 text-white text-base font-sans font-normal py-[6px] px-[14px] rounded-lg relative inline-block">
+      <div className="talk-box tracking-normal bg-secondary-500 dark:bg-primary-500 text-white text-base font-sans font-normal py-[6px] px-[14px] rounded-lg relative inline-block">
         <span>Copied!</span>
         <div
-          className="triangle absolute w-0 h-0 border-solid border-x-8 border-x-transparent border-t-8 border-t-primary-500 -bottom-[0.4em] left-[50%] translate-x-[-50%]"
+          className="triangle absolute w-0 h-0 border-solid border-x-8 border-x-transparent border-t-8 border-t-secondary-500 dark:border-t-primary-500 -bottom-[0.4em] left-[50%] translate-x-[-50%]"
         ></div>
       </div>
     </div>

@@ -29,13 +29,8 @@
 
 @layer base {
   body {
-    /* @apply bg-surface-100 font-sans text-surface-800 dark:bg-surface-800 dark:text-surface-100; */
     @apply bg-background-500 font-sans
   }
-}
-
-:root.dark {
-  color-scheme: dark;
 }
 
 html,

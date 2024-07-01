@@ -38,20 +38,20 @@ export default function AccountBar({
 
   return (
     <div className={`flex justify-between border-l-4 border-b ${
-        selected ? "border-primaryAlt-500" : "border-ghost-900"
-      } py-3 px-2 my-4 text-white text-lg font-roboto font-light`}>
+        selected ? "border-ghost-900 dark:border-primaryAlt-500" : "border-backgroundLight-400 dark:border-ghost-900"
+      } py-3 px-2 my-4 text-black dark:text-white text-lg font-roboto font-light`}>
       <div className="flex justify-between w-6/12">
         <div className="flex">
           <div className="text-xl mr-2">#{accountNumber}</div>
           {accountName}
         </div>
         <button
-          className="relative flex items-center hover:text-primary-500"
+          className="relative flex items-center dark:hover:text-primary-500" //TODO: assign hover colour for light mode
           onClick={() => {
             copyToClipboard(accountAddress, setCopySuccessAddress);
           }}
         >
-          <div className="scale-125 text-primary-500 mr-2 ml-4">
+          <div className="scale-125 text-black dark:text-primary-500 mr-2 ml-4">
             <MdContentCopy />
           </div>
           {accountAddress}
@@ -64,7 +64,7 @@ export default function AccountBar({
         </button>
       </div>
       <button
-        className="relative font-robotoFlex font-light tracking-widest hover:text-primary-500"
+        className="relative font-robotoFlex font-light tracking-widest dark:hover:text-primary-500" //TODO: assign hover colour for light mode
         onClick={() => {
           copyToClipboard(
             `${integerDigits}.${fractionalDigits}`,

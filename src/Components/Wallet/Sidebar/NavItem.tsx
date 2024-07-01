@@ -25,8 +25,7 @@ export default function NavItem({
     <motion.button
       layout
       onClick={onClick}
-      className={`relative flex text-primary-500 text-base rounded-2xl px-4 py-3 w-full
-        ${isActive ? "border-primary-500" : ""}`}
+      className="relative flex text-black dark:text-primary-500 text-base rounded-2xl px-4 py-3 w-full"
       style={{ overflow: "visible" }}
     >
       {label}
@@ -34,7 +33,7 @@ export default function NavItem({
         <motion.div
           layout
           layoutId="navitem-activemarker"
-          className="absolute border border-primary-500 rounded-2xl inset-0 pointer-events-none"
+          className="absolute border border-backgroundLight-500 dark:border-primary-500 rounded-2xl inset-0 pointer-events-none"
         />
       )}
     </motion.button>

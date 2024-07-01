@@ -39,7 +39,7 @@ export default function Sidebar({
 }: React.PropsWithChildren<Props>): JSX.Element {
 
   return (
-    <div className="flex-grow p-8">
+    <div className="flex-grow p-8 bg-backgroundLight-100 dark:bg-background-500">
       <Badge />
       <LayoutGroup>
         {sidebarItems.map((item: SidebarItem) => {

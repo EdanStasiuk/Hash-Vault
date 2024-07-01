@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { Settings } from "../../../../../config/interfaces";
 import "./Switch.css";
 
 interface Props {
@@ -15,8 +17,50 @@ interface Props {
  * @returns {JSX.Element} The toggle switch component.
  */
 export default function Switch({ isOn, handleToggle, id }: Props): JSX.Element {
-  const textColorOff = "#3E3E45"; // Tailwind backgroundAlt-500
-  const textColorOn = "#A489FA"; // Tailwind primary-500
+  const [lightTheme, setLightTheme] = useState<boolean | null>(null); // need to init as null otherwise bg transitions on lightmode render
+
+  const updateLightTheme = () => {
+    const settings = JSON.parse(
+      localStorage.getItem("settings") || "{}"
+    ) as Settings;
+    setLightTheme(settings.lightTheme !== undefined ? settings.lightTheme : false);
+  };
+
+  useEffect(() => {
+    updateLightTheme();
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      updateLightTheme();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  // Early return if lightTheme is null to prevent flashing
+  if (lightTheme === null) {
+    return <></>;
+  }
+
+  /**
+   * "#3E3E45" Tailwind backgroundAlt-900
+   * "#B9B9B9" Tailwind backgroundLight-500
+   * "#A489FA" Tailwind primary-500
+   * "#B3C1FF" Tailwind secondary-400
+   */
+  const textColorOff =
+    !lightTheme || document.documentElement.classList.contains("dark")
+      ? "#3E3E45"
+      : "#B9B9B9";
+  const textColorOn =
+    !lightTheme || document.documentElement.classList.contains("dark")
+      ? "#A489FA"
+      : "#B3C1FF";
 
   return (
     <>

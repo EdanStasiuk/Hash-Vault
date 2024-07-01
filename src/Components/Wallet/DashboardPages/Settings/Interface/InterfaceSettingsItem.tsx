@@ -18,7 +18,7 @@ export default function InterfaceSettingsItem({
       <div className="flex items-center w-[110px]">
         {children}
       </div>
-      <div className="text-xl text-white font-robotoFlex font-thin w-10/12">
+      <div className="text-xl text-black dark:text-white font-robotoFlex font-extralight dark:font-thin w-10/12">
         {itemText}
       </div>
     </div>

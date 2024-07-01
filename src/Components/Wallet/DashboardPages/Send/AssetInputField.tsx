@@ -98,9 +98,9 @@ export default function AssetInputField({
         let options = await getAccountAssets(accountId);
 
         // Separate hbar and other assets
-        const hbarOption = options.find((option) => option.symbol === "hbar");
+        const hbarOption = options.find((option) => option.symbol.toLowerCase() === "hbar");
         const otherOptions = options.filter(
-          (option) => option.symbol !== "hbar"
+          (option) => option.symbol.toLowerCase() !== "hbar"
         );
 
         // Sort other assets alphabetically by name
@@ -192,21 +192,21 @@ export default function AssetInputField({
   return (
     <div>
       <style>{styles}</style>
-      <h2 className="text-white font-roboto text-xl font-light">{label}</h2>
+      <h2 className="text-black dark:text-white font-roboto text-xl font-normal dark:font-light">{label}</h2>
       <button
         type="button"
         aria-label="more"
         aria-controls={open ? "asset-menu" : undefined}
         aria-haspopup="true"
         onClick={handleOpen}
-        className="inline-flex items-center min-w-[125px] h-11 pl-1 pr-3 py-3 rounded-lg bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto"
+        className="inline-flex items-center min-w-[125px] h-11 pl-1 pr-3 py-3 rounded-lg bg-transparent border border-solid border-backgroundLight-600 dark:border-primary-500 outline-none text-black dark:text-white text-xl font-roboto"
       >
         <div className="w-4 h-4 flex items-center">
-          <MdOutlineArrowDropDown className="text-primary-500" />
+          <MdOutlineArrowDropDown className="text-black dark:text-primary-500" />
         </div>
         <div className="flex items-center justify-between">
           <div className="w-7 h-7 ml-1">{<img src={assetImage} alt="" />}</div> {/* // TODO: the chosenLogo image isn't being pulled from local storage when offline, even though they're being pulled for the scrollable list */}
-          <span className="text-white text-xl ml-[6px]">
+          <span className="text-black dark:text-white text-xl ml-[6px]">
             {chosenAssetSymbol}
           </span>
         </div>
@@ -218,21 +218,21 @@ export default function AssetInputField({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box className="absolute flex flex-col justify-between w-[500px] h-[520px] top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background-500 rounded-lg px-6 pt-6 pb-2 border-solid border border-ghost-900">
+        <Box className="absolute flex flex-col justify-between w-[500px] h-[520px] top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-backgroundLight-100 dark:bg-background-500 rounded-lg px-6 pt-6 pb-2 border-solid border border-backgroundLight-400 dark:border-ghost-900">
           <div className="top-components">
             <Typography
               id="modal-modal-title"
               component="h2"
-              className="border-b border-ghost-900 pb-2"
+              className="border-b border-backgroundLight-400 dark:border-ghost-900 pb-2"
             >
-              <div className="text-3xl font-medium text-white">
+              <div className="text-3xl font-medium text-black dark:text-white">
                 Select Asset
               </div>
             </Typography>
             <div style={{ maxHeight: 350, overflowY: "auto" }} className="mt-3">
               {/* Scrollable container */}
               {loading ? (
-                <div className="flex items-center justify-center h-96 text-white">
+                <div className="flex items-center justify-center h-96 text-black dark:text-white">
                   <CircularIndeterminate />
                 </div>
               ) : (
@@ -245,7 +245,7 @@ export default function AssetInputField({
                       handleAssetClick(option.symbol, option.token_id);
                     }}
                   >
-                    <div className="flex items-center text-white cursor-pointer hover:bg-backgroundAlt-500 p-3 rounded-lg">
+                    <div className="flex items-center text-black dark:text-white cursor-pointer hover:bg-backgroundLight-200 dark:hover:bg-backgroundAlt-500 p-3">
                       <div
                         className={`mr-4 ${
                           !assetImages[option.token_id] &&
@@ -269,7 +269,7 @@ export default function AssetInputField({
                         <div>Balance: {option.balance}</div>
                       </div>
                     </div>
-                    <div className="border-solid border-b border-ghost-900"></div>
+                    <div className="border-solid border-b border-backgroundLight-400 dark:border-ghost-900"></div>
                   </Typography>
                 ))
               )}

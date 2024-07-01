@@ -19,17 +19,17 @@ import {
 } from "../../../../functions/functions";
 
 interface Props {
-  settings?: Settings[];
+  settings?: Settings;
 }
 
 /**
  * Renders Send page information for dashboard.
  *
  * @prop {Settings[]} settings - Optional list containg user settings information.
- * @returns {JSX.Element} - Send page component.
+ * @returns {JSX.Element} Send page component.
  */
 export default function Send({
-  settings = [],
+  settings,
 }: React.PropsWithChildren<Props>): JSX.Element {
   const {
     register,
@@ -147,11 +147,11 @@ export default function Send({
               setValue={setValue}
             />
           </div>
-          <div className="conversionField text-ghost-500 ml-1 mt-1 text-xl font-roboto">
+          <div className="conversionField text-backgroundLight-600 dark:text-ghost-500 ml-1 mt-1 text-xl font-roboto">
             <span>≈ </span>
             {displayCurrencySymbol("CAD") /* TODO: dynamically change the currency via settings */}
             {convertedAmount}
-            {" " + settings[0].conversionCurrency}
+            {" " + settings?.conversionCurrency}
           </div>
           <div className="memoField mt-6">
             <MemoInputField label="Memo" register={register} />

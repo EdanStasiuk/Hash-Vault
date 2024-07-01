@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
 import Landing from './pages/Landing';
 import StepOne from './pages/NewWallet/Software/StepOne';
 import StepTwo from './pages/NewWallet/Software/StepTwo';
@@ -7,8 +8,18 @@ import StepFour from './pages/NewWallet/Software/StepFour';
 import ExistingWalletOptions from './pages/ImportWallet/ExistingWalletOptions';
 import NewWalletOptions from './pages/NewWallet/NewWalletOptions';
 import Dashboard from './pages/Wallet/Dashboard';
+import { getSettingsFromLocalStorage } from './functions/storageFunctions';
 
 function App() {
+
+  // Make dark mode the default
+  useEffect(() => {
+    const savedSettings = getSettingsFromLocalStorage();
+    if (savedSettings === null || !savedSettings.lightTheme) {
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
   return (
     <BrowserRouter>
         <Routes>

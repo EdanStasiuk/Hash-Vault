@@ -28,12 +28,12 @@ export default function InfoBar({
   };
 
   return (
-    <div className="flex text-white border-ghost-900 border-b w-full p-4 place-items-baseline">
+    <div className="flex text-black dark:text-white border-backgroundLight-400 dark:border-ghost-900 border-b w-full p-4 place-items-baseline">
       <div className="w-[30%] flex items-center justify-between">
         <div className="flex text-xl font-semibold">
           {childDescriptor}
           {copySuccess && (
-            <div className="ml-2 font-roboto font-normal text-primary-500 text-lg">
+            <div className="ml-2 font-roboto font-normal text-black dark:text-primary-500 text-lg">
               Copied!
             </div>
           )}{" "}
@@ -42,7 +42,7 @@ export default function InfoBar({
         {copyable && (
           <button
             onClick={handleCopy}
-            className="mr-2 text-primary-500 scale-150 group"
+            className="mr-2 text-background-200 dark:text-primary-500 scale-150 group"
           >
             <MdContentCopy />
           </button>
@@ -52,7 +52,7 @@ export default function InfoBar({
         {copyable ? (
           <button
             onClick={handleCopy}
-            className="text-lg font-roboto hover:text-primary-500"
+            className="text-lg font-roboto hover:text-background-200 dark:hover:text-primary-500"
           >
             {childContent}
           </button>

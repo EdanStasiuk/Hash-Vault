@@ -48,11 +48,11 @@ export default function Balances({
   }, [conversionCurrency, total]);
 
   return (
-    <div className="text-xl font-roboto font-light text-white mr-2">
+    <div className="text-xl font-roboto font-light text-black dark:text-white mr-2">
       <div className="flex justify-between">
         <span>Total balance:</span>
         <button
-          className="relative text-right text-lg font-robotoFlex font-light tracking-widest hover:text-primary-500"
+          className="relative text-right text-lg font-robotoFlex font-light tracking-widest dark:hover:text-primary-500" //TODO: assign hover colour for light mode
           onClick={() => {
             copyToClipboard(total, setCopySuccessTotal);
           }}
@@ -67,7 +67,7 @@ export default function Balances({
           )}
         </button>
       </div>
-      <div className="conversion text-base text-ghost-500 text-right mb-2">
+      <div className="conversion text-base text-ghost-900 dark:text-ghost-500 text-right mb-2">
         <span>≈ </span>
         {currencySymbol}
         {convertedTotal}
