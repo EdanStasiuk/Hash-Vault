@@ -9,7 +9,7 @@ import { Account, Wallet, Settings } from "../../../../config/interfaces";
 interface Props {
   accountsList?: Account[];
   walletInfo?: Wallet[];
-  settings?: Settings[];
+  settings?: Settings;
 }
 
 /**
@@ -17,22 +17,22 @@ interface Props {
  *
  * @prop {Account[]} accountsList - Optional list of accounts to be displayed on the dashboard via the AccountBar component.
  * @prop {Wallet[]} walletInfo - Optional list containing wallet information, namely balance.
- * @prop {Settings[]} settings - Optional list containg user settings information.
+ * @prop {Settings} settings - Optional list containg user settings information.
  * @returns {JSX.Element} - Accounts page component.
  */
 export default function Accounts({
   accountsList = [],
   walletInfo = [],
-  settings = [],
+  settings,
 }: React.PropsWithChildren<Props>): JSX.Element {
   return (
     <div>
       <Subheader label="Accounts" />
       <Balances
         total={walletInfo[0].balance}
-        conversionCurrency={settings[0].conversionCurrency}
+        conversionCurrency={settings?.conversionCurrency}
       />
-      <div className="flex items-center text-white mt-10 justify-between">
+      <div className="flex items-center text-black dark:text-white mt-10 justify-between">
         <span className="text-2xl font-robotoFlex font-light">
           Your Accounts
         </span>

@@ -1,4 +1,4 @@
-import { getPositiveBalanceNonNftTokens } from "../src/functions";
+import { getPositiveBalanceNonNftTokens } from "../src/functions/functions";
 
 describe("getPositiveBalanceNonNftTokens", () => {
   beforeEach(() => {

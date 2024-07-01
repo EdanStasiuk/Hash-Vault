@@ -38,10 +38,10 @@ export default function AddressInputField({
 
   return (
     <div>
-      <p className="text-white font-roboto text-xl font-light">{label}</p>
+      <p className="text-black dark:text-white font-roboto text-xl font-normal dark:font-light">{label}</p>
       <div className="relative w-60">
         <input
-          className="w-60 h-11 p-3 pr-12 rounded-lg bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto placeholder-ghost-500"
+          className="w-60 h-11 p-3 pr-12 rounded-lg bg-transparent border border-solid border-backgroundLight-600 dark:border-primary-500 outline-none text-black dark:text-white text-xl font-roboto placeholder-backgroundLight-500 dark:placeholder-ghost-500"
           placeholder={placeHolder}
           type="text"
           {...register("address", { 
@@ -54,7 +54,7 @@ export default function AddressInputField({
           required
         />
         <button onClick={toggleAddressBook} type="button">
-          <FaRegAddressBook className="text-white scale-175 absolute right-4 top-[14px]" />
+          <FaRegAddressBook className="text-black dark:text-white scale-175 absolute right-4 top-[14px]" />
         </button>
       </div>
     </div>

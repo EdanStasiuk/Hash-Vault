@@ -1,4 +1,4 @@
-import { getTokenLogo } from "../src/functions";
+import { getTokenLogo } from "../src/functions/functions";
 
 describe("getTokenLogo function", () => {
   const network = "hedera";

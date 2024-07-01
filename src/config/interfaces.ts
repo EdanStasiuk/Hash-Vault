@@ -1,16 +1,3 @@
-export interface Settings {
-  userId: number; // Primary key
-  conversionCurrency: string;
-  customDecorations: boolean;
-  checkForUpdates: boolean;
-  displayWalletNameInTitlebar: boolean;
-  hideBalance: boolean;
-  lightTheme: boolean;
-  askForPasswordBeforeSend: boolean;
-  autosavePeriod: number;
-  lockOnInactivityPeriod: number;
-}
-
 export interface Account {
   account_id: number; // Primary key
   accountNumber: string;
@@ -56,4 +43,30 @@ export interface SendFormData {
   amount: number;
   asset: string;
   memo?: string;
+}
+
+/* storageFunctions.ts */
+export interface EncryptedPrivateKey {
+  iv: string;
+  salt: string;
+  authTag: string;
+  data: string;
+}
+
+export interface keystoreFileInfo {
+  encryptedPrivateKey: EncryptedPrivateKey,
+  mnemonic: string,
+}
+
+export interface Settings {
+  customDecorations: boolean;
+  checkUpdates: boolean;
+  displayWalletName: boolean;
+  hideBalance: boolean;
+  lightTheme: boolean;
+  autosavePeriod: boolean;
+  lockOnInactivityPeriod: boolean;
+  askForPasswordBeforeSend: boolean;
+  conversionCurrency: string;
+  displayWalletNameInTitlebar: boolean;
 }

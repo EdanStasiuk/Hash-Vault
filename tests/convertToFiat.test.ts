@@ -1,4 +1,4 @@
-import { convertToFiat } from "../src/functions";
+import { convertToFiat } from "../src/functions/functions";
 
 describe("convertToFiat function", () => {
   test("converts HBAR amount to fiat correctly", () => {

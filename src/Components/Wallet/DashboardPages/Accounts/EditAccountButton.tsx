@@ -7,7 +7,7 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi"
  */
 export default function EditAccountButton(): JSX.Element {
   return (
-    <button className="text-primary-500 text-2xl">
+    <button className="text-black dark:text-primary-500 text-2xl">
       <HiOutlineDotsHorizontal />
     </button>
   );

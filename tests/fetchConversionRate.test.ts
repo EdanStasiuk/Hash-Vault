@@ -1,4 +1,4 @@
-import { fetchConversionRate } from "../src/functions";
+import { fetchConversionRate } from "../src/functions/functions";
 
 describe("fetchConversionRate function", () => {
   beforeEach(() => {

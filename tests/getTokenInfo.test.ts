@@ -1,4 +1,4 @@
-import { getTokenInfo } from "../src/functions";
+import { getTokenInfo } from "../src/functions/functions";
 
 describe("getTokenInfo function", () => {
   beforeEach(() => {
