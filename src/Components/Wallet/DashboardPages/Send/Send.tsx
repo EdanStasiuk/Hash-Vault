@@ -10,17 +10,13 @@ import MemoInputField from "./MemoInputField";
 import SendButton from "./SendButton";
 import AddressBook from "../AddressBook/AddressBook";
 import { useForm } from "react-hook-form";
-import { Settings } from "../../../../config/interfaces";
 import { SendFormData } from "../../../../config/interfaces";
 import {
-  fetchConversionRate,
+  fetchConvertedPrice,
   convertToFiat,
   displayCurrencySymbol,
 } from "../../../../functions/functions";
-
-interface Props {
-  settings?: Settings;
-}
+import { getSettingsFromLocalStorage } from "../../../../functions/storageFunctions";
 
 /**
  * Renders Send page information for dashboard.
@@ -28,9 +24,7 @@ interface Props {
  * @prop {Settings[]} settings - Optional list containg user settings information.
  * @returns {JSX.Element} Send page component.
  */
-export default function Send({
-  settings,
-}: React.PropsWithChildren<Props>): JSX.Element {
+export default function Send(): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -47,7 +41,7 @@ export default function Send({
   const watchFields = watch(["address", "amount", "asset"]);
   const watchAmount = watch("amount");
   const watchAsset = watch("asset");
-  
+
   // Slides in the Address Book component
   const handleAddressBookClick = () => {
     setShowAddressBook(true);
@@ -73,7 +67,10 @@ export default function Send({
     const fetchConversion = async () => {
       if (getValues("asset")) {
         try {
-          const rate = await fetchConversionRate(getValues("asset"), "CAD"); //TODO: conversion rate needs to depend on the asset selected
+          const rate = await fetchConvertedPrice(
+            getValues("asset"),
+            getSettingsFromLocalStorage()?.conversionCurrency ?? "USD"
+          );
           setConversionRate(rate);
         } catch (error) {
           console.error("Error fetching conversion rate:", error);
@@ -89,8 +86,8 @@ export default function Send({
     setConvertedAmount("0.00");
   }, [watchAsset]);
 
-  // Handles fiat conversion on amount change using watchAmount
   useEffect(() => {
+    // Handles fiat conversion on amount change using watchAmount and conversionRate
     const handleConversionToFiat = () => {
       if (!watchAmount || !conversionRate) {
         setConvertedAmount("0.00");
@@ -142,16 +139,15 @@ export default function Send({
                 getValues={getValues}
               />
             </div>
-            <AssetInputField
-              label="Select Asset"
-              setValue={setValue}
-            />
+            <AssetInputField label="Select Asset" setValue={setValue} />
           </div>
           <div className="conversionField text-backgroundLight-600 dark:text-ghost-500 ml-1 mt-1 text-xl font-roboto">
             <span>≈ </span>
-            {displayCurrencySymbol("CAD") /* TODO: dynamically change the currency via settings */}
+            {displayCurrencySymbol(
+              getSettingsFromLocalStorage()?.conversionCurrency ?? "USD"
+            )}
             {convertedAmount}
-            {" " + settings?.conversionCurrency}
+            {" " + (getSettingsFromLocalStorage()?.conversionCurrency ?? "USD")}
           </div>
           <div className="memoField mt-6">
             <MemoInputField label="Memo" register={register} />

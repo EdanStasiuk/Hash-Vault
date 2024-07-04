@@ -8,7 +8,10 @@ import {
   saveSettingsToLocalStorage,
 } from "../../../../../functions/storageFunctions";
 import { Settings } from "../../../../../config/interfaces";
-import { settings as settingsInit } from "../../../../../config/constants";
+import {
+  settings as settingsInit,
+  fiatCurrencyOptions,
+} from "../../../../../config/constants";
 
 type BooleanSettingsKey =
   | "customDecorations"
@@ -83,6 +86,8 @@ export default function InterfaceSettings(): JSX.Element {
       ? "#A489FA"
       : "#B3C1FF";
 
+  // Get settings config from local storage,
+  // or initialize it if config is undefined.
   const [settings, setSettings] = useState<Settings>(() => {
     const savedSettings = getSettingsFromLocalStorage();
     return savedSettings || settingsInit;
@@ -106,12 +111,26 @@ export default function InterfaceSettings(): JSX.Element {
     });
   };
 
+  const handleCurrencySwitch = (newCurrency: string) => {
+    setSettings((prevSettings) => {
+      const newSettings: Settings = {
+        ...prevSettings,
+        conversionCurrency: newCurrency,
+      };
+      saveSettingsToLocalStorage(newSettings);
+      return newSettings;
+    });
+  };
+
   return (
     <div className="flex flex-wrap mx-[10%]">
       <div className="w-full md:w-1/2">
         <div className="py-3">
           <InterfaceSettingsItem itemText="Currency display preference">
-            <DropdownMenu currencyTypes={["CAD", "USD"]} />
+            <DropdownMenu
+              currencyOptionsList={fiatCurrencyOptions}
+              onCurrencyChange={handleCurrencySwitch}
+            />
           </InterfaceSettingsItem>
         </div>
         {settingsConfig.slice(0, 5).map(({ key, label }) => (
@@ -161,7 +180,8 @@ export default function InterfaceSettings(): JSX.Element {
                         }
                       : {
                           color: sliderColor,
-                          "& .MuiSlider-thumb:hover": { //pastel purple for dark mode
+                          "& .MuiSlider-thumb:hover": {
+                            //pastel purple for dark mode
                             boxShadow: "0 0 0 8px rgba(164, 137, 250, 0.16)",
                           },
                           "& .MuiSlider-thumb.Mui-focusVisible, & .MuiSlider-thumb.Mui-active":

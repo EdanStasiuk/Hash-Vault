@@ -4,12 +4,12 @@ import Subheader from "../../Subheader";
 import Balances from "./Balances";
 import EditAccountButton from "./EditAccountButton";
 import AccountBar from "./AccountBar";
-import { Account, Wallet, Settings } from "../../../../config/interfaces";
+import { Account, Wallet } from "../../../../config/interfaces";
+import { getSettingsFromLocalStorage } from "../../../../functions/storageFunctions";
 
 interface Props {
   accountsList?: Account[];
   walletInfo?: Wallet[];
-  settings?: Settings;
 }
 
 /**
@@ -17,20 +17,20 @@ interface Props {
  *
  * @prop {Account[]} accountsList - Optional list of accounts to be displayed on the dashboard via the AccountBar component.
  * @prop {Wallet[]} walletInfo - Optional list containing wallet information, namely balance.
- * @prop {Settings} settings - Optional list containg user settings information.
  * @returns {JSX.Element} - Accounts page component.
  */
 export default function Accounts({
   accountsList = [],
   walletInfo = [],
-  settings,
 }: React.PropsWithChildren<Props>): JSX.Element {
   return (
     <div>
       <Subheader label="Accounts" />
       <Balances
         total={walletInfo[0].balance}
-        conversionCurrency={settings?.conversionCurrency}
+        conversionCurrency={
+          getSettingsFromLocalStorage()?.conversionCurrency ?? "USD"
+        }
       />
       <div className="flex items-center text-black dark:text-white mt-10 justify-between">
         <span className="text-2xl font-robotoFlex font-light">

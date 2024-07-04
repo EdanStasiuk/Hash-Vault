@@ -100,12 +100,43 @@ async function decryptPrivateKey(password: string, encryptedPrivateKey: Encrypte
 }
 
 /* Theme and setting related */
-export const getSettingsFromLocalStorage = (): Settings | null => {
+/**
+ * Retrieves the settings from local storage.
+ * 
+ * @returns {Settings | undefined} The settings object if found, otherwise undefined.
+ */
+export const getSettingsFromLocalStorage = (): Settings | undefined => {
   const settings = localStorage.getItem('settings');
-  return settings ? JSON.parse(settings) as Settings : null;
+  return settings ? JSON.parse(settings) as Settings : undefined;
 };
 
+/**
+ * Saves the provided settings object to local storage.
+ * 
+ * @param {Settings} settings - The settings object to be saved.
+ */
 export const saveSettingsToLocalStorage = (settings: Settings) => {
   localStorage.setItem('settings', JSON.stringify(settings));
   window.dispatchEvent(new Event('storage')) // Need this so the svg cropped hbar logo in the sidebar badge switches with the selected theme
+};
+
+/**
+ * Updates the settings configuration within local storage.
+ * 
+ * @param {keyof Settings} key - The key of the setting to update.
+ * @param {string | boolean} value - The new value for the specified setting.
+ */
+export const updateSettingsInLocalStorage = (key: keyof Settings, value: string | boolean) => {
+  const settings = getSettingsFromLocalStorage();
+
+  if (settings) {
+    if (typeof settings[key] == typeof value) {
+      settings[key] = value as never;
+      saveSettingsToLocalStorage(settings);
+    } else {
+      console.log(`Type of value does not match the type of settings key "${key}`);
+    }
+  } else {
+    console.log("Settings not found in local storage.");
+  }
 };

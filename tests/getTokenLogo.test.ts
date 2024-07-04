@@ -14,7 +14,7 @@ describe("getTokenLogo function", () => {
 
   test("should return the URL of the token's photo", async () => {
     global.fetch = jest.fn().mockImplementation((url) => {
-      if (url.includes(`/api/tokens/${network}/${address}`)) {
+      if (url.includes(`/api/v2/tokens/${network}/${address}`)) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve(mockData),
@@ -25,7 +25,7 @@ describe("getTokenLogo function", () => {
 
     const result = await getTokenLogo(network, address);
     expect(result).toBe(expectedURL);
-    expect(fetch).toHaveBeenCalledWith(`/api/tokens/${network}/${address}`);
+    expect(fetch).toHaveBeenCalledWith(`/api/v2/tokens/${network}/${address}`);
   });
 
   test("should throw an error if HTTP response is not OK", async () => {

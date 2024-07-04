@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TalkBox from "./TalkBox";
 import {
-  fetchConversionRate,
+  fetchConvertedPrice,
   convertToFiat,
   copyToClipboard,
   displayCurrencySymbol,
@@ -18,8 +18,8 @@ interface Props {
  * Renders the balance information for the wallet dashboard.
  *
  * @prop {number} total - Optional number or string representing the total amount of HBAR in the wallet; defaults to "?".
- * @prop {string} conversionCurrency - The abreviation of the currency that is to be converted form HBAR; defaults to "usd".
- * @returns {JSX.Element} - A component displaying balance information.
+ * @prop {string} conversionCurrency - The abreviation of the currency that is to be converted from HBAR; defaults to "usd".
+ * @returns {JSX.Element} A component displaying balance information.
  */
 export default function Balances({
   total = "?",
@@ -33,7 +33,7 @@ export default function Balances({
 
   // Fetches HBAR conversion rate and sets the total balance conversion
   useEffect(() => {
-    fetchConversionRate("hedera-hashgraph", conversionCurrency)
+    fetchConvertedPrice("hedera-hashgraph", conversionCurrency)
       .then((conversionRate) => {
         if (conversionRate !== undefined) {
           const convertedTotal = convertToFiat(conversionRate, total);

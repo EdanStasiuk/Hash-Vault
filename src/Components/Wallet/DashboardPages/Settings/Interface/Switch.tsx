@@ -42,7 +42,7 @@ export default function Switch({ isOn, handleToggle, id }: Props): JSX.Element {
     };
   }, []);
 
-  // Early return if lightTheme is null to prevent flashing
+  // Early return if lightTheme is null to prevent color flashing in components
   if (lightTheme === null) {
     return <></>;
   }

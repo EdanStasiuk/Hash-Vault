@@ -70,3 +70,33 @@ export interface Settings {
   conversionCurrency: string;
   displayWalletNameInTitlebar: boolean;
 }
+
+/* API interfaces */
+interface Image {
+  small: string;
+  medium: string;
+  large: string;
+}
+
+type CurrentPrice = Record<string, number>;
+
+interface MarketData {
+  current_price: CurrentPrice;
+}
+export interface CoinGeckoAPI {
+  id: string;
+  symbol: string;
+  name: string;
+  image: Image;
+  market_data: MarketData;
+}
+export interface SaucerSwapAPICoinContent {
+  id: string;
+  name: string;
+  decimals: number;
+  priceUsd: number;
+  symbol: string;
+}
+export interface ExchangeRateAPI {
+  conversion_rates: Record<string, number>;
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Wallet/Sidebar/Sidebar";
 import Accounts from "../../components/Wallet/DashboardPages/Accounts/Accounts";
@@ -7,7 +7,8 @@ import Receive from "../../components/Wallet/DashboardPages/Receive/Receive";
 import Transactions from "../../components/Wallet/DashboardPages/Transactions/Transactions";
 import AddressBook from "../../components/Wallet/DashboardPages/AddressBook/AddressBook";
 import Settings from "../../components/Wallet/DashboardPages/Settings/Settings";
-import { accounts, wallets, settings as settingsInit } from "../../config/constants";
+import { accounts, wallets, settings } from "../../config/constants";
+import { getSettingsFromLocalStorage } from "../../functions/storageFunctions";
 
 /**
  * Renders the wallet dashboard. The dashboard is one page that calls in components that
@@ -21,6 +22,14 @@ function Dashboard(): JSX.Element {
   const handleSidebarItemClick = (label: string) => {
     setActiveItem(label);
   };
+
+  // Initialize settings in local storage if it doesn't exist.
+  useEffect(() => {
+    if (!getSettingsFromLocalStorage()) {
+      const settingsInit = JSON.stringify(settings);
+      localStorage.setItem("settings", settingsInit);
+    }
+  }, []);
 
   return (
     <>
@@ -40,15 +49,9 @@ function Dashboard(): JSX.Element {
           >
             {/* Render content based on activeItem */}
             {activeItem === "Accounts" && (
-              <Accounts
-                accountsList={accounts}
-                walletInfo={wallets}
-                settings={settingsInit}
-              />
+              <Accounts accountsList={accounts} walletInfo={wallets} />
             )}
-            {activeItem === "Send" && (
-              <Send settings={settingsInit} />
-            )}
+            {activeItem === "Send" && <Send />}
             {activeItem === "Receive" && <Receive />}
             {activeItem === "Transactions" && <Transactions />}
             {activeItem === "Address Book" && <AddressBook />}

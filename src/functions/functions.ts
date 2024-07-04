@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { MirrorNodeTokenInfo, AccountResponse } from "../config/interfaces.ts";
+import axios from "axios";
+import {
+  MirrorNodeTokenInfo,
+  AccountResponse,
+  ExchangeRateAPI,
+  SaucerSwapAPICoinContent,
+  CoinGeckoAPI,
+} from "../config/interfaces.ts";
 
 /**
  * Copies a string to the clipboard. Copied content is converted to a string.
@@ -52,13 +59,46 @@ export const convertToFiat = (
 };
 
 /**
- * Fetches the conversion rate for a given coin ID.
+ * Fetches the conversion rate for a given fiat currency using USD as the base.
+ * Used as a supplementary function in fetchConvertedPrice.
+ * @param {string} fiat - The ticker symbol of the currency conversion rate to be fetched.
+ * @returns
+ */
+export const fetchUsdToFiatConversionRate = async (
+  fiat: string
+): Promise<number | undefined> => {
+  const fiatUpper = fiat.toUpperCase();
+  if (fiatUpper === "") {
+    return undefined;
+  }
+
+  const API_KEY = process.env.VITE_EXCHANGERATE_API_PASSWORD;
+  const API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
+
+  try {
+    const response = await axios.get<ExchangeRateAPI>(API_URL);
+    const data = response.data;
+
+    if (data.conversion_rates[fiatUpper]) {
+      return data.conversion_rates[fiatUpper];
+    } else {
+      console.error(`Conversion rate for ${fiat} not found.`);
+      return undefined;
+    }
+  } catch (error) {
+    console.error("Error fetching conversion rate:", error);
+    return undefined;
+  }
+};
+
+/**
+ * Fetches a converted price for a given coin ID.
  *
  * @param {string} apiTokenId - The ticker symbol of the coin.
- * @param {string} conversionCurrency - The ticker symbol of the currency rate to be fetched.
- * @returns {Promise<number | undefined>} - The conversion rate or undefined if fetching fails.
+ * @param {string} conversionCurrency - The ticker symbol of the currency conversion rate to be fetched.
+ * @returns {Promise<number | undefined>} The converted price, or undefined if fetching fails.
  */
-export const fetchConversionRate = async (
+export const fetchConvertedPrice = async (
   apiTokenId: string,
   conversionCurrency: string
 ): Promise<number | undefined> => {
@@ -70,33 +110,41 @@ export const fetchConversionRate = async (
 
   try {
     let url: string;
+    let convertedPrice: number;
 
     if (apiTokenId === "hedera-hashgraph") {
       url = `https://api.coingecko.com/api/v3/coins/${apiTokenId}`;
+      const response = await axios.get<CoinGeckoAPI>(url);
+      const data = response.data;
+      convertedPrice = data.market_data.current_price[conversionCurrency];
+      return convertedPrice;
     } else {
       url = `https://api.saucerswap.finance/tokens/${apiTokenId}`;
-    }
-
-    const response = await fetch(url, { method: "GET" });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data = await response.json();
-
-    let conversionRate: number | undefined;
-
-    if (apiTokenId === "hedera-hashgraph") {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      conversionRate = data?.market_data?.current_price?.[
+      const response = await axios.get<SaucerSwapAPICoinContent>(url);
+      const data = response.data;
+      const priceUsd = data.priceUsd;
+      if (conversionCurrency.toUpperCase() === "USD") {
+        return priceUsd;
+      }
+      const conversionRate = await fetchUsdToFiatConversionRate(
         conversionCurrency
-      ] as number | undefined;
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      conversionRate = data?.priceUsd; // TODO: need to convert to the conversionCurrency, will need to update test case when you do this
-      // console.log(conversionRate); // TODO: need to show an error message to user if conversion rate was not found
+      );
+      if (conversionRate) {
+        convertedPrice = priceUsd * conversionRate;
+        // console.log(
+        //   "conversionRate:",
+        //   conversionRate,
+        //   "in ",
+        //   conversionCurrency
+        // );
+        return convertedPrice;
+      }
     }
-
-    return conversionRate;
   } catch (error) {
-    console.error("Error fetching conversion rate:", error);
+    console.error(
+      `Error fetching conversion rate for ${conversionCurrency}:`,
+      error
+    );
     return undefined;
   }
 };
@@ -360,7 +408,7 @@ export async function getTokenLogo(
   address: string
 ): Promise<string> {
   // Construct the URL with the given network and address using the proxy
-  const url = `/api/tokens/${network}/${address}`;
+  const url = `/api/v2/tokens/${network}/${address}`;
 
   try {
     const response = await fetch(url);

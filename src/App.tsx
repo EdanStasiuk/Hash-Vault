@@ -15,7 +15,7 @@ function App() {
   // Make dark mode the default
   useEffect(() => {
     const savedSettings = getSettingsFromLocalStorage();
-    if (savedSettings === null || !savedSettings.lightTheme) {
+    if (savedSettings === undefined || !savedSettings.lightTheme) {
       document.documentElement.classList.add("dark");
     }
   }, []);

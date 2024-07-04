@@ -67,6 +67,14 @@ export const settings: Settings = {
   autosavePeriod: true,
   lockOnInactivityPeriod: true,
   askForPasswordBeforeSend: true,
-  conversionCurrency: "CAD",
+  conversionCurrency: "USD",
   displayWalletName: false,
 };
+
+export const fiatCurrencyOptions: string[] = [
+  "USD", 
+  "CAD", 
+  "EUR", 
+  "GBP", 
+  "JPY",
+];
