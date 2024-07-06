@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios from "axios";
 import {
   MirrorNodeTokenInfo,
-  AccountResponse,
   ExchangeRateAPI,
   SaucerSwapAPICoinContent,
   CoinGeckoAPI,
+  MirrorNodeAccountInfo,
+  MirrorNodeNftsInfo,
+  DavinicigraphPicsAPIv2,
 } from "../config/interfaces.ts";
 
 /**
@@ -77,6 +78,13 @@ export const fetchUsdToFiatConversionRate = async (
 
   try {
     const response = await axios.get<ExchangeRateAPI>(API_URL);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Failed to fetch data from ExchangeRate-API. Status: ${response.status}`
+      );
+    }
+
     const data = response.data;
 
     if (data.conversion_rates[fiatUpper]) {
@@ -115,20 +123,37 @@ export const fetchConvertedPrice = async (
     if (apiTokenId === "hedera-hashgraph") {
       url = `https://api.coingecko.com/api/v3/coins/${apiTokenId}`;
       const response = await axios.get<CoinGeckoAPI>(url);
+
+      if (response.status !== 200) {
+        throw new Error(
+          `Failed to fetch data from CoinGecko. Status: ${response.status}`
+        );
+      }
+
       const data = response.data;
       convertedPrice = data.market_data.current_price[conversionCurrency];
+
       return convertedPrice;
     } else {
       url = `https://api.saucerswap.finance/tokens/${apiTokenId}`;
       const response = await axios.get<SaucerSwapAPICoinContent>(url);
+
+      if (response.status !== 200) {
+        throw new Error(
+          `Failed to fetch data from SaucerSwap. Status: ${response.status}`
+        );
+      }
+
       const data = response.data;
       const priceUsd = data.priceUsd;
       if (conversionCurrency.toUpperCase() === "USD") {
         return priceUsd;
       }
+
       const conversionRate = await fetchUsdToFiatConversionRate(
         conversionCurrency
       );
+
       if (conversionRate) {
         convertedPrice = priceUsd * conversionRate;
         // console.log(
@@ -137,6 +162,7 @@ export const fetchConvertedPrice = async (
         //   "in ",
         //   conversionCurrency
         // );
+
         return convertedPrice;
       }
     }
@@ -182,16 +208,14 @@ export async function getTokenBalance(
   accountId: string
 ): Promise<number | null> {
   try {
-    const response = await fetch(
-      `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}`
-    );
+    const url = `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}`;
+    const response = await axios.get<MirrorNodeAccountInfo>(url);
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`Failed to fetch account balance: ${response.status}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data = await response.json();
+    const data = response.data;
 
     // If token is "hedera-hashgraph", return the account balance in hbars (hbar does not have a token id via the api)
     if (tokenId === "hedera-hashgraph") {
@@ -203,26 +227,23 @@ export async function getTokenBalance(
       return Number(accountBalance.toFixed(8));
     } else {
       // If token is not null, find the balance of the specified token
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const tokenBalance =
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         data.balance.tokens.find(
           (t: { token_id: string }) => t.token_id === tokenId
         )?.balance ?? 0;
 
       // Fetch token metadata to get the number of decimals
-      const tokenResponse = await fetch(
-        `https://mainnet.mirrornode.hedera.com/api/v1/tokens/${tokenId}`
-      );
-      if (!tokenResponse.ok) {
+      const url = `https://mainnet.mirrornode.hedera.com/api/v1/tokens/${tokenId}`;
+      const tokenResponse = await axios.get<MirrorNodeTokenInfo>(url);
+
+      if (tokenResponse.status !== 200) {
         throw new Error(
           `Failed to fetch token metadata: ${tokenResponse.status}`
         );
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const tokenData = await tokenResponse.json();
-      const decimals = tokenData.decimals as number;
+      const tokenData = tokenResponse.data;
+      const decimals = Number(tokenData.decimals);
 
       // Adjust the token balance by the number of decimals
       const adjustedTokenBalance = tokenBalance / Math.pow(10, decimals);
@@ -246,26 +267,26 @@ export async function getTokenBalance(
  * @param {string} tokenId The token ID to check if it's an NFT.
  * @returns {Promise<boolean>} A promise resolving to true if the token is an NFT, false otherwise.
  */
-export async function isNFT(
+export async function isNft(
   accountId: string,
   tokenId: string
 ): Promise<boolean> {
   try {
-    const response = await fetch(
-      `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}/nfts`
-    );
-    if (!response.ok) {
+    const url = `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}/nfts`;
+    const response = await axios.get<MirrorNodeNftsInfo>(url);
+    
+    if (response.status !== 200) {
       throw new Error("Failed to fetch NFT data");
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data = await response.json();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    
+    const data = response.data;
     const nfts = data.nfts || [];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const isNFT = nfts.some(
+
+    const isNft = nfts.some(
       (nft: { token_id: string }) => nft.token_id === tokenId
     ) as boolean;
-    return isNFT;
+
+    return isNft;
   } catch (error) {
     console.error("Error checking NFT:", error);
     return false;
@@ -282,20 +303,20 @@ export async function getPositiveBalanceNonNftTokens(
   accountId: string
 ): Promise<{ id: string; balance: number }[]> {
   try {
-    const response = await fetch(
-      `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}`
-    );
-    if (!response.ok) {
+    const url = `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}`;
+    const response = await axios.get<MirrorNodeAccountInfo>(url);
+
+    if (response.status !== 200) {
       throw new Error("Failed to fetch account data");
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data: AccountResponse = await response.json();
+
+    const data = response.data;
     const positiveBalances: { id: string; balance: number }[] = [];
 
     for (const token of data.balance.tokens) {
       if (token.balance > 0) {
-        const isTokenNFT = await isNFT(accountId, token.token_id);
-        if (!isTokenNFT) {
+        const isTokenNft = await isNft(accountId, token.token_id);
+        if (!isTokenNft) {
           const balance = await getTokenBalance(token.token_id, accountId);
           if (balance !== null && Number.isFinite(balance)) {
             positiveBalances.push({ id: token.token_id, balance: balance });
@@ -321,26 +342,21 @@ export async function getTokenInfo(
   tokenId: string
 ): Promise<{ name: string; symbol: string; decimals: string } | null> {
   try {
-    const response = await fetch(
-      `https://mainnet.mirrornode.hedera.com/api/v1/tokens/${tokenId}`
-    );
+    const url = `https://mainnet.mirrornode.hedera.com/api/v1/tokens/${tokenId}`;
+    const response = await axios.get<MirrorNodeTokenInfo>(url);
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`Failed to fetch token info: ${response.status}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data = await response.json();
+    const data = response.data;
 
-    // Extracting name, symbol, and decimals from the response
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { name, symbol, decimals } = data;
 
     if (name == undefined || symbol == undefined || decimals == undefined) {
       throw new Error("Invalid token data");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return { name, symbol, decimals };
   } catch (error) {
     console.error("Error retrieving token info:", error);
@@ -411,19 +427,16 @@ export async function getTokenLogo(
   const url = `/api/v2/tokens/${network}/${address}`;
 
   try {
-    const response = await fetch(url);
+    const response = await axios.get<DavinicigraphPicsAPIv2>(url);
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    // Parse the JSON response
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data = await response.json();
+    const data = response.data;
 
-    return data.pic as string;
+    return data.pic;
   } catch (error) {
-    // Handle and log any errors
     console.error(`Fetch error: `, error);
     throw error;
   }

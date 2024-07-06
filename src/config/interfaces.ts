@@ -10,31 +10,9 @@ export interface Account {
   tokens: MirrorNodeTokenInfo[];
 }
 
-export interface MirrorNodeTokenInfo {
-  token_id: string,
-  name: string,
-  symbol: string,
-  balance: number,
-  api_id: string,
-  type: 'FUNGIBLE_COMMON' | 'NON_FUNGIBLE_UNIQUE',
-  decimals: string,
-}
-
 export interface Wallet {
   walletId: number; // Add unique identifier for wallet
   balance: string;
-}
-
-interface MirrorNodeAccountTokenBalance {
-  balance: number,
-  token_id: string,
-}
-
-// As present in the hedera mirrornode api response
-export interface AccountResponse {
-  balance: {
-    tokens: MirrorNodeAccountTokenBalance[];
-  };
 }
 
 /* Forms */
@@ -72,6 +50,40 @@ export interface Settings {
 }
 
 /* API interfaces */
+interface MirrorNodeAccountTokenBalance {
+  token_id: string,
+  balance: number,
+}
+export interface MirrorNodeAccountInfo {
+  account: string,
+  balance: {
+    balance: number,
+    tokens: MirrorNodeAccountTokenBalance[];
+  };
+}
+
+export interface MirrorNodeTokenInfo {
+  token_id: string,
+  name: string,
+  symbol: string,
+  balance: number,
+  api_id: string,
+  type: 'FUNGIBLE_COMMON' | 'NON_FUNGIBLE_UNIQUE',
+  decimals: string,
+}
+
+interface nftsObject {
+  account_id: string,
+  token_id: string,
+}
+export interface MirrorNodeNftsInfo {
+  nfts: nftsObject[],
+}
+
+export interface DavinicigraphPicsAPIv2 {
+  pic: string;
+}
+
 interface Image {
   small: string;
   medium: string;

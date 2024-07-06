@@ -51,7 +51,7 @@ module.exports = {
     "getTokenBalance.test.ts",
     "getTokenInfo.test.ts",
     "getTokenLogo.test.ts",
-    "isNFT.test.ts",
+    "isNft.test.ts",
 
   ],
   rules: {

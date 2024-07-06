@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Subheader from "../../Subheader";
 import Balances from "./Balances";
 import EditAccountButton from "./EditAccountButton";

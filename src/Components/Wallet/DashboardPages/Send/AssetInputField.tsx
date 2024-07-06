@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { useEffect, useState } from "react";
 import { getAccountAssets, getTokenLogo } from "../../../../functions/functions";
 import { MirrorNodeTokenInfo } from "../../../../config/interfaces";

@@ -1,4 +1,7 @@
+import axios from 'axios';
 import { getTokenBalance } from "../src/functions/functions";
+
+jest.mock('axios');
 
 describe("getTokenBalance function", () => {
   beforeEach(() => {
@@ -12,10 +15,7 @@ describe("getTokenBalance function", () => {
       },
     };
 
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: jest.fn().mockResolvedValue(mockData),
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200, data: mockData });
 
     const balance = await getTokenBalance("hedera-hashgraph", "accountId");
 
@@ -32,26 +32,16 @@ describe("getTokenBalance function", () => {
       decimals: 6,
     };
 
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockAccountResponse),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockTokenResponse),
-      });
+    (axios.get as jest.Mock)
+      .mockResolvedValueOnce({ status: 200, data: mockAccountResponse })
+      .mockResolvedValueOnce({ status: 200, data: mockTokenResponse });
 
     const balance = await getTokenBalance("tokenId", "accountId");
     expect(balance).toBe(1); // 1000000 token units / 10^6 = 1 token unit
   });
 
   test("should return null if the account fetch fails", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: false,
-      status: 500,
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 500 });
 
     const balance = await getTokenBalance("hedera-hashgraph", "accountId");
     expect(balance).toBeNull();
@@ -64,16 +54,9 @@ describe("getTokenBalance function", () => {
       },
     };
 
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockAccountResponse),
-      })
-      .mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-      });
+    (axios.get as jest.Mock)
+      .mockResolvedValueOnce({ status: 200, data: mockAccountResponse })
+      .mockResolvedValueOnce({ status: 500 });
 
     const balance = await getTokenBalance("tokenId", "accountId");
     expect(balance).toBeNull();
@@ -89,16 +72,9 @@ describe("getTokenBalance function", () => {
       decimals: 6,
     };
 
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockAccountResponse),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockTokenResponse),
-      });
+    (axios.get as jest.Mock)
+      .mockResolvedValueOnce({ status: 200, data: mockAccountResponse })
+      .mockResolvedValueOnce({ status: 200, data: mockTokenResponse });
 
     const balance = await getTokenBalance("tokenId", "accountId");
     expect(balance).toBe(0);
