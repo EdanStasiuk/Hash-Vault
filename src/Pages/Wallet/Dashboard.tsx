@@ -58,9 +58,9 @@ function Dashboard(): JSX.Element {
     const account = getSelectedAccountFromLocalStorage();
     if (account && settings) {
       setHeaderTitle(
-        settings.displayWalletNameInTitlebar !== undefined &&
+        settings.displayWalletNameInTitleBar !== undefined &&
           account.accountName !== undefined &&
-          settings.displayWalletNameInTitlebar
+          settings.displayWalletNameInTitleBar
           ? account.accountName
           : "Hash Vault"
       );

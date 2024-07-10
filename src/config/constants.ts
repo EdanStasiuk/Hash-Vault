@@ -19,7 +19,7 @@ export const wallets: Wallet[] = [
 export const settings: Settings = {
   customDecorations: true,
   checkUpdates: false,
-  displayWalletNameInTitlebar: false,
+  displayWalletNameInTitleBar: false,
   hideBalance: false,
   lightTheme: false,
   autosavePeriod: true,

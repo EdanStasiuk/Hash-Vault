@@ -54,7 +54,7 @@ export interface Settings {
   lockOnInactivityPeriod: boolean;
   askForPasswordBeforeSend: boolean;
   conversionCurrency: string;
-  displayWalletNameInTitlebar: boolean;
+  displayWalletNameInTitleBar: boolean;
 }
 
 /* API interfaces */

@@ -16,7 +16,7 @@ import isElectron from "is-electron";
 type BooleanSettingsKey =
   | "customDecorations"
   | "checkUpdates"
-  | "displayWalletNameInTitlebar"
+  | "displayWalletNameInTitleBar"
   | "hideBalance"
   | "lightTheme"
   | "autosavePeriod"
@@ -27,8 +27,8 @@ const settingsConfig: { key: BooleanSettingsKey; label: string }[] = [
   { key: "customDecorations", label: "Custom decorations" },
   { key: "checkUpdates", label: "Check for updates periodically" },
   {
-    key: "displayWalletNameInTitlebar",
-    label: "Display wallet name in titlebar",
+    key: "displayWalletNameInTitleBar",
+    label: "Display wallet name in title bar",
   },
   { key: "hideBalance", label: "Hide balance" },
   { key: "lightTheme", label: "Light theme" },
