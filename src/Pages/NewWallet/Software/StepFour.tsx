@@ -46,7 +46,7 @@ function NewWalletStepFour() {
         </Button>
         <Button
           intent={isNextButtonDisabled ? "dead" : "solid"}
-          routerPath={""}
+          routerPath={"/Wallet/Dashboard"}
           disabled={isNextButtonDisabled}
           history={false}
         >

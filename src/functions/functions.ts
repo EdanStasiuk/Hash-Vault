@@ -7,6 +7,8 @@ import {
   MirrorNodeAccountInfo,
   MirrorNodeNftsInfo,
   DavinicigraphPicsAPIv2,
+  splitNumberObject,
+  Account,
 } from "../config/interfaces.ts";
 
 /**
@@ -32,6 +34,29 @@ export const copyToClipboard = (
       console.error("Failed to copy:", err);
     });
 };
+
+/**
+ * Splits a number into it's respective integer and decimal values.
+ * 
+ * @param number - The number to be split.
+ * @returns {splitNumberObject} - An object containing numbers leftOfDecimal and rightOfDecimal.
+ */
+export function splitNumber(number: number | null | undefined): splitNumberObject {  //TODO: Write test cases
+  if (number === null || number === undefined) {
+    return { leftOfDecimal: 0, rightOfDecimal: 0 };
+  }
+  
+  const numberString = number.toString();
+  const [integerPart, fractionalPart] = numberString.split('.');
+  
+  // Convert the integer part back to a number
+  const leftOfDecimal = parseInt(integerPart, 10);
+  
+  // If there's no fractional part, set it to 0
+  const rightOfDecimal = fractionalPart ? parseInt(fractionalPart, 10) : 0;
+  
+  return { leftOfDecimal, rightOfDecimal };
+}
 
 /**
  * Converts an amount of HBAR to a fiat currency given a conversion rate.
@@ -212,7 +237,8 @@ export async function getTokenBalance(
     const response = await axios.get<MirrorNodeAccountInfo>(url);
 
     if (response.status !== 200) {
-      throw new Error(`Failed to fetch account balance: ${response.status}`);
+      console.error(`Failed to fetch account balance: ${response.status}`);
+      return null;
     }
 
     const data = response.data;
@@ -237,9 +263,8 @@ export async function getTokenBalance(
       const tokenResponse = await axios.get<MirrorNodeTokenInfo>(url);
 
       if (tokenResponse.status !== 200) {
-        throw new Error(
-          `Failed to fetch token metadata: ${tokenResponse.status}`
-        );
+        console.error( `Failed to fetch token metadata: ${tokenResponse.status}`);
+        return null;
       }
 
       const tokenData = tokenResponse.data;
@@ -257,6 +282,30 @@ export async function getTokenBalance(
     console.error("Error retrieving account balance:", error);
     // TODO: Handle the error appropriately, maybe notify the user or retry the operation
     return null;
+  }
+}
+
+/**
+ * Sums up all the HBAR balances for a list of given accounts.
+ *
+ * @param {Account[]} accounts - The list of accounts for which to sum up the HBAR balances.
+ * @returns {Promise<number>} The total sum of HBAR balances for the given accounts.
+ */
+export async function sumHbarBalances(accounts: Account[]): Promise<number> { //TODO: Write test cases
+  try {
+    let totalHbarBalance = 0;
+
+    for (const account of accounts) {
+      const hbarBalance = await getTokenBalance("hedera-hashgraph", account.accountId);
+      if (hbarBalance !== null) {
+        totalHbarBalance += hbarBalance;
+      }
+    }
+
+    return totalHbarBalance;
+  } catch (error) {
+    console.error("Error summing HBAR balances:", error);
+    return 0;
   }
 }
 

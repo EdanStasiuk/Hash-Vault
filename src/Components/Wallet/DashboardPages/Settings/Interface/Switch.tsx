@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { Settings } from "../../../../../config/interfaces";
+import { useContext } from "react";
 import "./Switch.css";
+import { LightThemeContext } from "../../../../../config/contexts";
 
 interface Props {
   isOn: boolean;
@@ -16,37 +16,13 @@ interface Props {
  * @prop {string} id - The id for the switch input element.
  * @returns {JSX.Element} The toggle switch component.
  */
-export default function Switch({ isOn, handleToggle, id }: Props): JSX.Element {
-  const [lightTheme, setLightTheme] = useState<boolean | null>(null); // need to init as null otherwise bg transitions on lightmode render
-
-  const updateLightTheme = () => {
-    const settings = JSON.parse(
-      localStorage.getItem("settings") || "{}"
-    ) as Settings;
-    setLightTheme(settings.lightTheme !== undefined ? settings.lightTheme : false);
-  };
-
-  useEffect(() => {
-    updateLightTheme();
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      updateLightTheme();
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  // Early return if lightTheme is null to prevent color flashing in components
-  if (lightTheme === null) {
-    return <></>;
-  }
-
+export default function Switch({
+  isOn,
+  handleToggle,
+  id,
+}: Props): JSX.Element {
+  const lightTheme = useContext(LightThemeContext);
+  
   /**
    * "#3E3E45" Tailwind backgroundAlt-900
    * "#B9B9B9" Tailwind backgroundLight-500

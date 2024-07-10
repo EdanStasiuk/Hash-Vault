@@ -1,34 +1,39 @@
 interface Props {
-  lightMode?: boolean;
+  allowLightMode?: boolean;
+  headerTitle?: string;
 }
 
 /**
  * Renders the main header for the application.
  *
- * @prop {boolean} string - A boolean representing whether the header is allowed to go into light mode; defaults to false.
+ * @prop {boolean} allowLightMode - A boolean representing whether the header is allowed to go into light mode; defaults to false.
+ * @prop {string} headerTitle - A string to be displayed as the title of the header component.
  * @returns {JSX.Element} page header.
  */
-export default function Header({ lightMode = false }: Props): JSX.Element {
+export default function Header({
+  allowLightMode = false,
+  headerTitle = "Hash Vault",
+}: Props): JSX.Element {
   return (
     <div
       className={`Header ${
-        lightMode
+        allowLightMode
           ? "bg-backgroundLight-100 dark:bg-background-500"
           : "bg-background-500"
       }`}
     >
       <h1
         className={`font-roboto ${
-          lightMode
+          allowLightMode
             ? "text-backgroundLight-500 dark:text-primary-500"
             : "text-primary-500"
         } text-3xl tracking-logo grid justify-center py-6`}
       >
-        Hash Vault
+        {headerTitle}
       </h1>
       <hr
         className={`${
-          lightMode
+          allowLightMode
             ? "border-backgroundLight-300 dark:border-primary-500"
             : "border-primary-500"
         } w-full`}

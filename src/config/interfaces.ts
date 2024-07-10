@@ -1,18 +1,21 @@
 export interface Account {
-  account_id: number; // Primary key
-  accountNumber: string;
+  accountId: string;
+  accountNumber: number;
   accountName: string;
-  accountAddress: string;
-  integerDigits: string; // TODO: Convert to balance
-  fractionalDigits: string; // TODO: Convert to decimals
   selected?: boolean;
-  wallet_id: number; // Foreign key
-  tokens: MirrorNodeTokenInfo[];
 }
 
-export interface Wallet {
+export interface Wallet { //TODO: Don't need this, make sure it's not used anywhere before deleting
   walletId: number; // Add unique identifier for wallet
   balance: string;
+}
+
+/* GUI */
+export interface badgeValues {
+  leftOfDecimal: number | string,
+  rightOfDecimal: number | string,
+  accountNumberForDisplay: number | string,
+  accountNameForDisplay: string,
 }
 
 /* Forms */
@@ -21,6 +24,12 @@ export interface SendFormData {
   amount: number;
   asset: string;
   memo?: string;
+}
+
+/* functions.ts (non-API) */
+export interface splitNumberObject {
+  leftOfDecimal: number,
+  rightOfDecimal: number,
 }
 
 /* storageFunctions.ts */
@@ -39,7 +48,6 @@ export interface keystoreFileInfo {
 export interface Settings {
   customDecorations: boolean;
   checkUpdates: boolean;
-  displayWalletName: boolean;
   hideBalance: boolean;
   lightTheme: boolean;
   autosavePeriod: boolean;
@@ -90,10 +98,8 @@ interface Image {
   large: string;
 }
 
-type CurrentPrice = Record<string, number>;
-
 interface MarketData {
-  current_price: CurrentPrice;
+  current_price: Record<string, number>;
 }
 export interface CoinGeckoAPI {
   id: string;

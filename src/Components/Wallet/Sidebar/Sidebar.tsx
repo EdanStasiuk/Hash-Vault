@@ -14,7 +14,7 @@ interface SidebarItem {
 /**
  * Sidebar items representing different sections in the wallet dashboard.
  * Each item has a label for display and an onClickLabel to identify the item when clicked.
- * 
+ *
  * @prop {string} label - The display label for the sidebar item.
  */
 const sidebarItems: SidebarItem[] = [
@@ -37,7 +37,6 @@ export default function Sidebar({
   activeItem,
   onItemClick,
 }: React.PropsWithChildren<Props>): JSX.Element {
-
   return (
     <div className="flex-grow p-8 bg-backgroundLight-100 dark:bg-background-500">
       <Badge />

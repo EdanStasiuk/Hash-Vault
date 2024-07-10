@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import CircularIndeterminate from "../../../Miscelaneous/CircularIndeterminate";
+import { getSelectedAccountFromLocalStorage } from "../../../../functions/storageFunctions";
 
 interface Props {
   label: string;
@@ -88,7 +89,7 @@ export default function AssetInputField({
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const accountId = localStorage.getItem("accountId");
+        const accountId = getSelectedAccountFromLocalStorage()?.accountId;
         if (!accountId) {
           throw new Error("Account ID not found in local storage");
         }

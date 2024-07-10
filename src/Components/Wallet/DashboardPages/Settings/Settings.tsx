@@ -17,9 +17,9 @@ export default function Settings(): JSX.Element {
     <div>
       <Subheader label="Settings" />
       <div className="mt-8">
-        <SettingsNavbar 
-          navItems={["Wallet", "Interface", "Info"]} 
-          selectedIndex={selectedIndex} 
+        <SettingsNavbar
+          navItems={["Wallet", "Interface", "Info"]}
+          selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
         />
       </div>

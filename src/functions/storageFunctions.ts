@@ -1,8 +1,8 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
-import { Mnemonic } from '@hashgraph/sdk';
 import * as bcrypt from 'bcryptjs';
-import { EncryptedPrivateKey, keystoreFileInfo, Settings } from '../config/interfaces';
+import { Mnemonic } from '@hashgraph/sdk';
+import { Account, EncryptedPrivateKey, keystoreFileInfo, Settings } from '../config/interfaces';
 
 /* Cryptography related */
 // Function to generate and encrypt a private key
@@ -99,7 +99,7 @@ async function decryptPrivateKey(password: string, encryptedPrivateKey: Encrypte
   return { privateKey: decrypted, mnemonicString };
 }
 
-/* Theme and setting related */
+/* Settings related */
 /**
  * Retrieves the settings from local storage.
  * 
@@ -139,4 +139,88 @@ export const updateSettingsInLocalStorage = (key: keyof Settings, value: string 
   } else {
     console.log("Settings not found in local storage.");
   }
+};
+
+/* Accounts related */
+/**
+ * Returns a list of the Account objects saved in local storage.
+ * 
+ * @returns {Account[]} A list of Account objects.
+ */
+export const getAccountsFromLocalStorage = (): Account[] => { //TODO: Write test cases
+  const localStorageKey = 'accounts';
+
+  const accountsData = localStorage.getItem(localStorageKey);
+
+  return accountsData ? JSON.parse(accountsData) as Account[] : [];
+};
+
+/**
+ * Returns the Account object saved in local storage, given its accountId/address.
+ * 
+ * @param {string} accountId - The accountId/address of the account object to be returned from local storage.
+ * @returns {Account | undefined} An Account object with the given accountId, undefined otherwise.
+ */
+export const getAccountFromLocalStorage = (accountId: string): Account | undefined => { //TODO: Write test cases
+  const localStorageKey = 'accounts';
+
+  const accountsData = localStorage.getItem(localStorageKey);
+
+  if (accountsData) {
+    const accounts = JSON.parse(accountsData) as Account[];
+    const account = accounts.find(account => account.accountId === accountId); //TODO: Make sure there it handles when there is more than 1 account with the same address
+    return account || undefined;
+  }
+
+  return undefined;
+};
+
+/**
+ * Returns the Account object that is currently selected by the user.
+ * 
+ * @returns {Account | undefined} The Account object with the True selected value, undefined otherwise.
+ */
+export const getSelectedAccountFromLocalStorage = (): Account | undefined => { //TODO: Write test cases
+  const localStorageKey = 'accounts';
+
+  const accountsData = localStorage.getItem(localStorageKey);
+
+  if (accountsData) {
+    const accounts = JSON.parse(accountsData) as Account[];
+
+    return accounts.find(account => account.selected);
+  }
+
+  return undefined;
+};
+
+
+/**
+ * Initializes a new wallet's information as an Account object in local storage.
+ * 
+ * @returns {Account} The newly initialize Account object.
+ */
+export const initAccountInfoInLocalStorage = (): Account => { //TODO: Write test cases
+  const localStorageKey = 'accounts';
+
+  // Get the current accounts from local storage
+  const accountsData = localStorage.getItem(localStorageKey);
+  const accounts = accountsData ? JSON.parse(accountsData) as Account[] : [];
+
+  const accountNumber = accounts.length + 1;
+
+  const newAccount: Account = {
+    accountId: '0.0.4800372', //TODO: Get user's wallet address and place it here, this is just a random address I found for now
+    accountNumber: accountNumber,
+    accountName: 'chequing', //TODO: Get the name of the user's wallet
+    selected: accounts.length === 0,
+  };
+
+  // Add new account to accounts array
+  accounts.push(newAccount);
+
+  // Save updated accounts array back to local storage
+  localStorage.setItem(localStorageKey, JSON.stringify(accounts));
+
+  return newAccount;
 };

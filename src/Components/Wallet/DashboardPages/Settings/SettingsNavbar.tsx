@@ -1,6 +1,6 @@
 import { LayoutGroup, motion } from "framer-motion";
-import { Settings } from "../../../../config/interfaces";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { LightThemeContext } from "../../../../config/contexts";
 
 interface Props {
   navItems: string[];
@@ -21,36 +21,11 @@ export default function SettingsNavbar({
   selectedIndex,
   setSelectedIndex,
 }: Props): JSX.Element {
-  const [lightTheme, setLightTheme] = useState<boolean>(false);
+  const lightTheme = useContext(LightThemeContext);
 
   const handleButtonClick = (index: number) => {
     setSelectedIndex(index);
   };
-
-  const updateLightTheme = () => {
-    const settings = JSON.parse(
-      localStorage.getItem("settings") || "{}"
-    ) as Settings;
-    setLightTheme(
-      settings.lightTheme !== undefined ? settings.lightTheme : true
-    );
-  };
-
-  useEffect(() => {
-    updateLightTheme();
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      updateLightTheme();
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
 
   /**
    * "#212229" Tailwind backgroundAlt-500

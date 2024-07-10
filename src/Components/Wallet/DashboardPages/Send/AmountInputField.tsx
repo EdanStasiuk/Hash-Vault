@@ -1,6 +1,7 @@
 import { UseFormGetValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { SendFormData } from "../../../../config/interfaces";
 import { getTokenBalance } from "../../../../functions/functions";
+import { getSelectedAccountFromLocalStorage } from "../../../../functions/storageFunctions";
 
 interface Props {
   label: string;
@@ -67,7 +68,7 @@ export default function AmountInputField({
           className="text-black dark:text-white text-xl font-medium dark:font-normal absolute right-3 top-[8px]"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={async () => {
-            const accountId = localStorage.getItem("accountId");
+            const accountId = getSelectedAccountFromLocalStorage()?.accountId;
 
             if (!accountId) {
               console.error("Account ID not found in localStorage");
