@@ -52,7 +52,6 @@ module.exports = {
     "getTokenInfo.test.ts",
     "getTokenLogo.test.ts",
     "isNft.test.ts",
-
   ],
   rules: {
     "react/react-in-jsx-scope": "off",

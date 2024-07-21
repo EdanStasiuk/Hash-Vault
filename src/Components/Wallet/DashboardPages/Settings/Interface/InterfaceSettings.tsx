@@ -36,10 +36,10 @@ const settingsConfig: { key: BooleanSettingsKey; label: string }[] = [
     key: "askForPasswordBeforeSend",
     label: "Ask for password before sending a transaction",
   },
-  { key: "autosavePeriod", label: "Autosave every 10 minute(s)" },
+  { key: "autosavePeriod", label: "Autosave every {value} minute(s)" },
   {
     key: "lockOnInactivityPeriod",
-    label: "Lock wallet on inactivity every 10 minute(s)",
+    label: "Lock wallet on inactivity every {value} minute(s)",
   },
 ];
 
@@ -55,10 +55,22 @@ export default function InterfaceSettings(): JSX.Element {
 
   const handleToggle = (key: BooleanSettingsKey) => {
     setSettings((prevSettings) => {
-      const newSettings = {
-        ...prevSettings,
-        [key]: !prevSettings[key],
-      };
+      let newSettings;
+
+      if (key === "autosavePeriod" || key === "lockOnInactivityPeriod") {
+        newSettings = {
+          ...prevSettings,
+          [key]: {
+            ...prevSettings[key],
+            activated: !prevSettings[key].activated,
+          },
+        };
+      } else {
+        newSettings = {
+          ...prevSettings,
+          [key]: !prevSettings[key],
+        };
+      }
 
       if (key === "lightTheme") {
         if (!newSettings.lightTheme) {
@@ -69,7 +81,6 @@ export default function InterfaceSettings(): JSX.Element {
       }
 
       saveSettingsToLocalStorage(newSettings);
-
       return newSettings;
     });
   };
@@ -82,6 +93,23 @@ export default function InterfaceSettings(): JSX.Element {
       };
       saveSettingsToLocalStorage(newSettings);
       return newSettings;
+    });
+  };
+
+  const handleSliderChange = (key: BooleanSettingsKey, value: number) => {
+    setSettings((prevSettings) => {
+      if (key === "autosavePeriod" || key === "lockOnInactivityPeriod") {
+        const newSettings: Settings = {
+          ...prevSettings,
+          [key]: {
+            ...prevSettings[key],
+            period: value,
+          },
+        };
+        saveSettingsToLocalStorage(newSettings);
+        return newSettings;
+      }
+      return prevSettings;
     });
   };
 
@@ -108,11 +136,28 @@ export default function InterfaceSettings(): JSX.Element {
         {filteredSettingsConfig.slice(0, 5).map(({ key, label }) => (
           <div key={key} className="py-3">
             <InterfaceSettingsItem
-              itemText={label}
+              itemText={label.replace(
+                "{value}",
+                (key === "lockOnInactivityPeriod" &&
+                  settings[key]?.period?.toString()) ||
+                  "10"
+              )}
               hasSlider={key === "lockOnInactivityPeriod" && !!isElectron()} //TODO: just delete one negation from isElectron()
+              sliderValue={
+                key === "lockOnInactivityPeriod"
+                  ? settings[key]?.period
+                  : undefined
+              }
+              onSliderChange={(value) => {
+                handleSliderChange(key, value);
+              }}
             >
               <Switch
-                isOn={settings[key]}
+                isOn={
+                  key === "autosavePeriod" || key === "lockOnInactivityPeriod"
+                    ? settings[key].activated
+                    : settings[key]
+                }
                 handleToggle={() => {
                   handleToggle(key);
                 }}
@@ -126,15 +171,34 @@ export default function InterfaceSettings(): JSX.Element {
         {filteredSettingsConfig.slice(5).map(({ key, label }) => (
           <div key={key} className="py-3">
             <InterfaceSettingsItem
-              itemText={label}
+              itemText={label.replace(
+                "{value}",
+                ((key === "autosavePeriod" ||
+                  key === "lockOnInactivityPeriod") &&
+                  settings[key]?.period?.toString()) ||
+                  "10"
+              )}
               hasSlider={
                 (key === "autosavePeriod" ||
                   key === "lockOnInactivityPeriod") &&
+                settings[key].activated &&
                 !isElectron()
               }
+              sliderValue={
+                key === "autosavePeriod" || key === "lockOnInactivityPeriod"
+                  ? settings[key]?.period
+                  : undefined
+              }
+              onSliderChange={(value) => {
+                handleSliderChange(key, value);
+              }}
             >
               <Switch
-                isOn={settings[key]}
+                isOn={
+                  key === "autosavePeriod" || key === "lockOnInactivityPeriod"
+                    ? settings[key].activated
+                    : settings[key]
+                }
                 handleToggle={() => {
                   handleToggle(key);
                 }}

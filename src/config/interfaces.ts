@@ -3,6 +3,7 @@ export interface Account {
   accountNumber: number;
   accountName: string;
   selected?: boolean;
+  encryptedPrivateKey: EncryptedPrivateKeySerialized;
 }
 
 export interface Wallet { //TODO: Don't need this, make sure it's not used anywhere before deleting
@@ -11,7 +12,7 @@ export interface Wallet { //TODO: Don't need this, make sure it's not used anywh
 }
 
 /* GUI */
-export interface badgeValues {
+export interface BadgeValues {
   leftOfDecimal: number | string,
   rightOfDecimal: number | string,
   accountNumberForDisplay: number | string,
@@ -33,15 +34,22 @@ export interface splitNumberObject {
 }
 
 /* storageFunctions.ts */
+// EncryptedPrivateKey isnt used, just here for reference
 export interface EncryptedPrivateKey {
-  iv: string;
-  salt: string;
-  authTag: string;
-  data: string;
+  iv: Uint8Array;
+  salt: Uint8Array;
+  authTag: Uint8Array;
+  ciphertext: ArrayBuffer;
 }
 
+export interface EncryptedPrivateKeySerialized {
+  ivBase64: string;
+  saltBase64: string;
+  authTagBase64: string;
+  ciphertextBase64: string;
+}
 export interface keystoreFileInfo {
-  encryptedPrivateKey: EncryptedPrivateKey,
+  encryptedPrivateKey: EncryptedPrivateKeySerialized,
   mnemonic: string,
 }
 
@@ -50,8 +58,14 @@ export interface Settings {
   checkUpdates: boolean;
   hideBalance: boolean;
   lightTheme: boolean;
-  autosavePeriod: boolean;
-  lockOnInactivityPeriod: boolean;
+  autosavePeriod: {
+    activated: boolean;
+    period: number;
+  };
+  lockOnInactivityPeriod: {
+    activated: boolean;
+    period: number;
+  };
   askForPasswordBeforeSend: boolean;
   conversionCurrency: string;
   displayWalletNameInTitleBar: boolean;

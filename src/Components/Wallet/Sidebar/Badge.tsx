@@ -12,7 +12,7 @@ import { BadgeValuesContext, LightThemeContext } from "../../../config/contexts"
  */
 export default function Badge(): JSX.Element {
   const lightTheme = useContext(LightThemeContext);
-  const badgeValues = useContext(BadgeValuesContext); // The selected wallet's information
+  const BadgeValues = useContext(BadgeValuesContext); // The selected wallet's information
   
   // Choose logo based on lightTheme setting
   const logoSrc =
@@ -38,17 +38,17 @@ export default function Badge(): JSX.Element {
           />
           <div className="font-thin text-lg leading-6 -m-1 z-10">
             <div className="text-sm leading-4">
-              Account #{badgeValues.accountNumberForDisplay}
+              Account #{BadgeValues.accountNumberForDisplay}
             </div>
-            <div>{badgeValues.accountNameForDisplay}</div>
+            <div>{BadgeValues.accountNameForDisplay}</div>
           </div>
         </div>
         <div className="inline-block font-light text-lg absolute bottom-4 left-5 items-center">
           HBAR
           <div className="inline font-extralight text-2xl ml-1">
-            {badgeValues.leftOfDecimal}.
+            {BadgeValues.leftOfDecimal}.
             <span className="text-lg tracking-wide">
-              {badgeValues.rightOfDecimal}
+              {BadgeValues.rightOfDecimal}
             </span>
           </div>
         </div>

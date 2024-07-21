@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { getAccountAssets, getTokenLogo } from "../../../../functions/functions";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  getAccountAssets,
+  getTokenLogo,
+} from "../../../../functions/functions";
 import { MirrorNodeTokenInfo } from "../../../../config/interfaces";
 import { UseFormSetValue } from "react-hook-form";
 import { SendFormData } from "../../../../config/interfaces";
@@ -9,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import CircularIndeterminate from "../../../Miscelaneous/CircularIndeterminate";
 import { getSelectedAccountFromLocalStorage } from "../../../../functions/storageFunctions";
+import { LockedScreenActiveContext } from "../../../../config/contexts";
 
 interface Props {
   label: string;
@@ -43,6 +47,7 @@ export default function AssetInputField({
   const [assetImage, setAssetImage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [assetImages, setAssetImages] = useState<AssetImageMap>({});
+  const lockedScreenActive = useContext(LockedScreenActiveContext);
 
   const handleOpen = () => {
     setOpen(true);
@@ -50,6 +55,14 @@ export default function AssetInputField({
   const handleClose = () => {
     setOpen(false);
   };
+
+  // Closes the model if the locked screen appears.
+  // Locked screen input field doesn't recognize the user otherwise.
+  useEffect(() => {
+    if (lockedScreenActive) {
+      setOpen(false);
+    }
+  }, [lockedScreenActive]);
 
   // Sets asset value in form and sets the chosenAsset state value
   const handleAssetClick = (symbol: string, token_id: string) => {
@@ -96,7 +109,9 @@ export default function AssetInputField({
         let options = await getAccountAssets(accountId);
 
         // Separate hbar and other assets
-        const hbarOption = options.find((option) => option.symbol.toLowerCase() === "hbar");
+        const hbarOption = options.find(
+          (option) => option.symbol.toLowerCase() === "hbar"
+        );
         const otherOptions = options.filter(
           (option) => option.symbol.toLowerCase() !== "hbar"
         );
@@ -190,7 +205,9 @@ export default function AssetInputField({
   return (
     <div>
       <style>{styles}</style>
-      <h2 className="text-black dark:text-white font-roboto text-xl font-normal dark:font-light">{label}</h2>
+      <h2 className="text-black dark:text-white font-roboto text-xl font-normal dark:font-light">
+        {label}
+      </h2>
       <button
         type="button"
         aria-label="more"
@@ -203,7 +220,8 @@ export default function AssetInputField({
           <MdOutlineArrowDropDown className="text-black dark:text-primary-500" />
         </div>
         <div className="flex items-center justify-between">
-          <div className="w-7 h-7 ml-1">{<img src={assetImage} alt="" />}</div> {/* // TODO: the chosenLogo image isn't being pulled from local storage when offline, even though they're being pulled for the scrollable list */}
+          <div className="w-7 h-7 ml-1">{<img src={assetImage} alt="" />}</div>{" "}
+          {/* // TODO: the chosenLogo image isn't being pulled from local storage when offline, even though they're being pulled for the scrollable list */}
           <span className="text-black dark:text-white text-xl ml-[6px]">
             {chosenAssetSymbol}
           </span>
@@ -215,6 +233,7 @@ export default function AssetInputField({
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        style={{ zIndex: 1040 }}
       >
         <Box className="absolute flex flex-col justify-between w-[500px] h-[520px] top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-backgroundLight-100 dark:bg-background-500 rounded-lg px-6 pt-6 pb-2 border-solid border border-backgroundLight-400 dark:border-ghost-900">
           <div className="top-components">

@@ -1,132 +1,191 @@
-import * as crypto from 'crypto';
-import * as fs from 'fs';
-import * as bcrypt from 'bcryptjs';
-import { Mnemonic } from '@hashgraph/sdk';
-import { Account, EncryptedPrivateKey, keystoreFileInfo, Settings } from '../config/interfaces';
+import * as fs from "fs";
+import { Mnemonic } from "@hashgraph/sdk";
+import {
+  Account,
+  EncryptedPrivateKeySerialized,
+  keystoreFileInfo,
+  Settings,
+} from "../config/interfaces";
+import { AESGCM } from "../classes/AESGCM";
+
+//TODO: Add tests for these functions
 
 /* Cryptography related */
-// Function to generate and encrypt a private key
-export async function generateAndEncryptPrivateKey(password: string) {
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
+/**
+ * Encrypts a private key using the provided password.
+ *
+ * @async
+ * @function encryptedPrivateKey
+ * @param {string} privateKey - The private key to be encrypted.
+ * @param {string} password - The password to encrypt the private key.
+ * @returns {Promise<EncryptedPrivateKeySerialized>} The encrypted private key.
+ */
+export async function encryptPrivateKey(
+  privateKey: string,
+  password: string
+): Promise<EncryptedPrivateKeySerialized> {
+  const aesGcm: AESGCM = new AESGCM();
+  const encryptedPrivateKey = await aesGcm.encrypt(privateKey, password);
 
+  return encryptedPrivateKey;
+}
+
+/**
+ * Decrypts an encrypted private key using a password.
+ *
+ * @async
+ * @function decryptPrivateKey
+ * @param {EncryptedPrivateKeySerialized} encryptedPrivateKey - The encrypted private key object.
+ * @param {string} password - The password used to decrypt the private key.
+ * @returns {Promise<string>} The decrypted private key as a string.
+ */
+export async function decryptPrivateKey(
+  encryptedPrivateKey: EncryptedPrivateKeySerialized,
+  password: string
+): Promise<string> {
+  const aesGcm: AESGCM = new AESGCM();
+  const decryptedPrivateKey = await aesGcm.decrypt(
+    encryptedPrivateKey,
+    password
+  );
+  return decryptedPrivateKey;
+}
+
+/**
+ * Decrypts the private key of the selected account from local storage using a password.
+ *
+ * @async
+ * @function decryptSelectedAccountPrivateKey
+ * @param {string} password - The password used to decrypt the selected account's private key.
+ * @returns {Promise<string>} The decrypted private key as a string.
+ * @throws Will throw an error if no selected account or encrypted private key is found in local storage.
+ * @throws Will throw an error if the private key decryption fails.
+ */
+export async function decryptSelectedAccountPrivateKey(
+  password: string
+): Promise<string> {
+  const selectedAccount = getSelectedAccountFromLocalStorage();
+  if (!selectedAccount?.encryptedPrivateKey) {
+    throw new Error(
+      "No selected account or encrypted private key found in local storage"
+    );
+  }
+
+  try {
+    const encryptedPrivateKey = selectedAccount.encryptedPrivateKey;
+    const decryptedPrivateKey = await decryptPrivateKey(
+      encryptedPrivateKey,
+      password
+    );
+    return decryptedPrivateKey;
+  } catch (error) {
+    console.error("Error decrypting private key:", error);
+    throw new Error("Failed to recover the private key");
+  }
+}
+
+/**
+ * Generates a new private key and encrypts it using the provided password.
+ *
+ * @async
+ * @function generateAndEncryptPrivateKey
+ * @param {string} password - The password to encrypt the private key.
+ * @returns {Promise<{encryptedPrivateKey: EncryptedPrivateKeySerialized, mnemonic: Mnemonic}>} An object containing the encrypted private key and the mnemonic.
+ */
+export async function generateAndEncryptPrivateKey(password: string): Promise<{
+  encryptedPrivateKey: EncryptedPrivateKeySerialized;
+  mnemonic: Mnemonic;
+}> {
   const mnemonic = await Mnemonic.generate();
   const privateKey = await mnemonic.toLegacyPrivateKey();
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const privateKeyHex = privateKey.toString();
 
-  const aesSalt = crypto.randomBytes(16);
-
-  const key = crypto.scryptSync(hashedPassword, aesSalt, 32);
-
-  const iv = crypto.randomBytes(12);
-  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-  let encrypted = cipher.update(privateKeyHex, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-
-  const authTag = cipher.getAuthTag().toString('hex');
-
-  const encryptedPrivateKey = {
-    iv: iv.toString('hex'),
-    salt: aesSalt.toString('hex'),
-    authTag: authTag,
-    data: encrypted,
-  };
+  const encryptedPrivateKey = await encryptPrivateKey(privateKeyHex, password);
 
   return { encryptedPrivateKey, mnemonic };
 }
 
-// Function to store encrypted private key in local storage
-export function storePrivateKeyLocally(encryptedPrivateKey: object, mnemonic: Mnemonic) {
-  localStorage.setItem('encryptedPrivateKey', JSON.stringify(encryptedPrivateKey));
-  localStorage.setItem('mnemonic', mnemonic.toString());
-  console.log('Private key encrypted and stored locally.');
-}
-
-// Function to store encrypted private key in a keystore file
-export function storePrivateKeyInKeystoreFile(encryptedPrivateKey: object, mnemonic: Mnemonic, filePath: string) {
-  const dataToStore = {
+/**
+ * Stores an encrypted private key and mnemonic in a keystore file.
+ *
+ * @function storePrivateKeyInKeystoreFile
+ * @param {EncryptedPrivateKeySerialized} encryptedPrivateKey - The encrypted private key to be stored.
+ * @param {Mnemonic} mnemonic - The mnemonic associated with the private key.
+ * @param {string} filePath - The file path where the keystore file will be saved.
+ */
+export function storePrivateKeyInKeystoreFile( //TODO: Not used currently, revise when developing the feature
+  encryptedPrivateKey: EncryptedPrivateKeySerialized,
+  mnemonic: Mnemonic,
+  filePath: string
+) {
+  const dataToStore: keystoreFileInfo = {
     encryptedPrivateKey,
     mnemonic: mnemonic.toString(),
   };
   fs.writeFileSync(filePath, JSON.stringify(dataToStore));
-  console.log('Private key encrypted and stored in keystore file.');
+  console.log("Private key encrypted and stored in keystore file.");
 }
 
-// Function to recover the private key from local storage
-export async function recoverPrivateKeyFromLocalStorage(password: string) {
-  const encryptedPrivateKey = JSON.parse(localStorage.getItem('encryptedPrivateKey') || '{}') as EncryptedPrivateKey;
-  const mnemonicString = localStorage.getItem('mnemonic');
-
-  if (!encryptedPrivateKey || !mnemonicString) {
-    throw new Error('No encrypted private key found in local storage');
-  }
-
-  return await decryptPrivateKey(password, encryptedPrivateKey, mnemonicString);
-}
-
-// Function to recover the private key from a keystore file
-export async function recoverPrivateKeyFromKeystoreFile(password: string, filePath: string) {
+/**
+ * Recovers the private key from a keystore file by decrypting it with the provided password.
+ *
+ * @async
+ * @function recoverPrivateKeyFromKeystoreFile
+ * @param {string} password - The password to decrypt the private key.
+ * @param {string} filePath - The file path to the keystore file.
+ * @returns {Promise<string>} The decrypted private key.
+ * @throws Will throw an error if the keystore file is not found or if decryption fails.
+ */
+export async function recoverPrivateKeyFromKeystoreFile( //TODO: Not used currently, revise when developing the feature
+  password: string,
+  filePath: string
+): Promise<string> {
   if (!fs.existsSync(filePath)) {
-    throw new Error('Keystore file not found');
+    console.error("Keystore file not found");
   }
 
-  const data = JSON.parse(fs.readFileSync(filePath, 'utf8')) as keystoreFileInfo;
-  const { encryptedPrivateKey, mnemonic } = data;
+  const { encryptedPrivateKey } = JSON.parse(
+    fs.readFileSync(filePath, "utf8")
+  ) as keystoreFileInfo;
 
-  return await decryptPrivateKey(password, encryptedPrivateKey, mnemonic);
-}
-
-// Function to decrypt the private key
-async function decryptPrivateKey(password: string, encryptedPrivateKey: EncryptedPrivateKey, mnemonicString: string) {
-  const aesSalt = Buffer.from(encryptedPrivateKey.salt, 'hex');
-  const iv = Buffer.from(encryptedPrivateKey.iv, 'hex');
-  const authTag = Buffer.from(encryptedPrivateKey.authTag, 'hex');
-  const encryptedData = encryptedPrivateKey.data;
-
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-  const key = crypto.scryptSync(hashedPassword, aesSalt, 32);
-
-  const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-  decipher.setAuthTag(authTag);
-  let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
-
-  console.log('Successfully recovered private key:', decrypted);
-
-  return { privateKey: decrypted, mnemonicString };
+  return await decryptPrivateKey(encryptedPrivateKey, password);
 }
 
 /* Settings related */
 /**
  * Retrieves the settings from local storage.
- * 
+ *
+ * @function getSettingsFromLocalStorage
  * @returns {Settings | undefined} The settings object if found, otherwise undefined.
  */
-export const getSettingsFromLocalStorage = (): Settings | undefined => {
-  const settings = localStorage.getItem('settings');
-  return settings ? JSON.parse(settings) as Settings : undefined;
-};
+export function getSettingsFromLocalStorage(): Settings | undefined {
+  const settings = localStorage.getItem("settings");
+  return settings ? (JSON.parse(settings) as Settings) : undefined;
+}
 
 /**
  * Saves the provided settings object to local storage.
- * 
+ *
+ * @function saveSettingsToLocalStorage
  * @param {Settings} settings - The settings object to be saved.
  */
-export const saveSettingsToLocalStorage = (settings: Settings) => {
-  localStorage.setItem('settings', JSON.stringify(settings));
-  window.dispatchEvent(new Event('storage')) // Need this so the svg cropped hbar logo in the sidebar badge switches with the selected theme
-};
+export function saveSettingsToLocalStorage(settings: Settings) {
+  localStorage.setItem("settings", JSON.stringify(settings));
+  window.dispatchEvent(new Event("storage")); // Need this so the svg cropped hbar logo in the sidebar badge switches with the selected theme
+}
 
 /**
  * Updates the settings configuration within local storage.
- * 
+ *
+ * @function updateSettingsInLocalStorage
  * @param {keyof Settings} key - The key of the setting to update.
  * @param {string | boolean} value - The new value for the specified setting.
  */
-export const updateSettingsInLocalStorage = (key: keyof Settings, value: string | boolean) => {
+export function updateSettingsInLocalStorage(
+  key: keyof Settings,
+  value: string | boolean
+) {
   const settings = getSettingsFromLocalStorage();
 
   if (settings) {
@@ -134,86 +193,103 @@ export const updateSettingsInLocalStorage = (key: keyof Settings, value: string 
       settings[key] = value as never;
       saveSettingsToLocalStorage(settings);
     } else {
-      console.log(`Type of value does not match the type of settings key "${key}`);
+      console.log(
+        `Type of value does not match the type of settings key "${key}`
+      );
     }
   } else {
     console.log("Settings not found in local storage.");
   }
-};
+}
 
 /* Accounts related */
 /**
  * Returns a list of the Account objects saved in local storage.
- * 
+ *
+ * @function getAccountsFromLocalStorage
  * @returns {Account[]} A list of Account objects.
  */
-export const getAccountsFromLocalStorage = (): Account[] => { //TODO: Write test cases
-  const localStorageKey = 'accounts';
+export function getAccountsFromLocalStorage(): Account[] {
+  const localStorageKey = "accounts";
 
   const accountsData = localStorage.getItem(localStorageKey);
 
-  return accountsData ? JSON.parse(accountsData) as Account[] : [];
-};
+  return accountsData ? (JSON.parse(accountsData) as Account[]) : [];
+}
 
 /**
  * Returns the Account object saved in local storage, given its accountId/address.
- * 
+ *
+ * @function getAccountFromLocalStorage
  * @param {string} accountId - The accountId/address of the account object to be returned from local storage.
  * @returns {Account | undefined} An Account object with the given accountId, undefined otherwise.
  */
-export const getAccountFromLocalStorage = (accountId: string): Account | undefined => { //TODO: Write test cases
-  const localStorageKey = 'accounts';
+export function getAccountFromLocalStorage(
+  accountId: string
+): Account | undefined {
+  const localStorageKey = "accounts";
 
   const accountsData = localStorage.getItem(localStorageKey);
 
   if (accountsData) {
     const accounts = JSON.parse(accountsData) as Account[];
-    const account = accounts.find(account => account.accountId === accountId); //TODO: Make sure there it handles when there is more than 1 account with the same address
+    const account = accounts.find((account) => account.accountId === accountId); //TODO: Make sure there it handles when there is more than 1 account with the same address
     return account || undefined;
   }
 
   return undefined;
-};
+}
 
 /**
  * Returns the Account object that is currently selected by the user.
- * 
+ *
+ * @function getSelectedAccountFromLocalStorage
  * @returns {Account | undefined} The Account object with the True selected value, undefined otherwise.
  */
-export const getSelectedAccountFromLocalStorage = (): Account | undefined => { //TODO: Write test cases
-  const localStorageKey = 'accounts';
+export function getSelectedAccountFromLocalStorage(): Account | undefined {
+  const localStorageKey = "accounts";
 
   const accountsData = localStorage.getItem(localStorageKey);
 
   if (accountsData) {
     const accounts = JSON.parse(accountsData) as Account[];
 
-    return accounts.find(account => account.selected);
+    return accounts.find((account) => account.selected);
   }
 
   return undefined;
-};
-
+}
 
 /**
  * Initializes a new wallet's information as an Account object in local storage.
- * 
- * @returns {Account} The newly initialize Account object.
+ *
+ * @async
+ * @function initAccountInfoInLocalStorage
+ * @param {string} password - The password to encrypt the private key.
+ * @param {string} accountId - The account ID/address of the new account.
+ * @param {string} accountName - The name of the new account.
+ * @returns {Promise<Account>} The newly initialized Account object.
  */
-export const initAccountInfoInLocalStorage = (): Account => { //TODO: Write test cases
-  const localStorageKey = 'accounts';
+export async function initAccountInfoInLocalStorage(
+  password: string,
+  accountId: string,
+  accountName: string
+): Promise<Account> {
+  const localStorageKey = "accounts";
 
   // Get the current accounts from local storage
-  const accountsData = localStorage.getItem(localStorageKey);
-  const accounts = accountsData ? JSON.parse(accountsData) as Account[] : [];
+  const accounts = getAccountsFromLocalStorage() || [];
 
   const accountNumber = accounts.length + 1;
 
+  const { encryptedPrivateKey } = await generateAndEncryptPrivateKey(password);
+
   const newAccount: Account = {
-    accountId: '0.0.4800372', //TODO: Get user's wallet address and place it here, this is just a random address I found for now
+    accountId: accountId,
     accountNumber: accountNumber,
-    accountName: 'chequing', //TODO: Get the name of the user's wallet
+    accountName: accountName,
     selected: accounts.length === 0,
+    encryptedPrivateKey: encryptedPrivateKey,
   };
 
   // Add new account to accounts array
@@ -223,4 +299,4 @@ export const initAccountInfoInLocalStorage = (): Account => { //TODO: Write test
   localStorage.setItem(localStorageKey, JSON.stringify(accounts));
 
   return newAccount;
-};
+}
