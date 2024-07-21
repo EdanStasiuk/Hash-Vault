@@ -5,6 +5,7 @@ interface Props {
   description: string;
   icon: IconType;
   borderStyle: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 /**
@@ -21,9 +22,13 @@ export default function SettingsButton({
   description,
   icon: Icon,
   borderStyle,
+  onClick,
 }: Props): JSX.Element {
   return (
-    <button className={`flex ${borderStyle} border-backgroundLight-400 dark:border-ghost-900 hover:bg-backgroundLight-200 dark:hover:bg-background-500 w-full p-3 items-center`}>
+    <button
+      className={`flex ${borderStyle} border-backgroundLight-400 dark:border-ghost-900 hover:bg-backgroundLight-200 dark:hover:bg-background-500 w-full p-3 items-center`}
+      onClick={onClick}
+    >
       <div className="ml-2 mr-6 text-black dark:text-primary-500">
         <Icon size={44} />
       </div>

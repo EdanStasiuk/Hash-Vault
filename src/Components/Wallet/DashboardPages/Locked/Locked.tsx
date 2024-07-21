@@ -1,14 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import InputField from "../../../InputField";
 import {
   decryptSelectedAccountPrivateKey,
   getSelectedAccountFromLocalStorage,
 } from "../../../../functions/storageFunctions";
 import { useNavigate } from "react-router-dom";
-
-interface Props {
-  setLocked: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { SetLockedScreenActiveContext } from "../../../../config/contexts";
 
 /**
  * Locked Component
@@ -17,12 +14,12 @@ interface Props {
  * enter their wallet password after a period of inactivity. If the correct password is entered,
  * the dashboard unlocks; otherwise, an error message is displayed.
  *
- * @param {function} setLocked - A state setter function to set the locked status of the wallet.
  * @returns {JSX.Element} The rendered component.
  */
-export default function Locked({ setLocked }: Props): JSX.Element {
+export default function Locked(): JSX.Element {
   const [password, setPassword] = useState<string>("");
   const [wrongPassword, setWrongPassword] = useState<boolean>(false);
+  const setLockedScreenActive = useContext(SetLockedScreenActiveContext);
   const navigate = useNavigate();
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +27,7 @@ export default function Locked({ setLocked }: Props): JSX.Element {
   };
 
   const handleGoHome = () => {
+    sessionStorage.removeItem("walletUnlocked");
     navigate("/");
   };
 
@@ -42,6 +40,7 @@ export default function Locked({ setLocked }: Props): JSX.Element {
       })
       .catch((error) => {
         setWrongPassword(true);
+        sessionStorage.setItem("walletUnlocked", "false");
         console.error("Error unlocking wallet:", error);
       });
   };
@@ -49,14 +48,14 @@ export default function Locked({ setLocked }: Props): JSX.Element {
   const unlockWallet = async () => {
     const privateKey = await decryptSelectedAccountPrivateKey(password);
     if (privateKey) {
-      setLocked(false);
+      setLockedScreenActive(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-md z-[1050]">
+    <div className="fixed inset-0 flex items-center justify-center bg-white dark:bg-black dark:bg-opacity-30 backdrop-blur-md z-[1050]">
       <div className="text-center w-4/12">
-        <h2 className="mb-4 text-xl text-white font-semibold">
+        <h2 className="mb-4 text-xl text-black dark:text-white font-normal dark:font-semibold">
           Please enter wallet password for:{" "}
           {getSelectedAccountFromLocalStorage()?.accountName
             ? getSelectedAccountFromLocalStorage()?.accountName
@@ -68,18 +67,19 @@ export default function Locked({ setLocked }: Props): JSX.Element {
             value={password}
             invalidInput={wrongPassword}
             invalidInputMessage={"Wrong password. Try again."}
+            allowLightMode={true}
             onChange={handlePasswordChange}
           />
         </div>
         <button
           onClick={handleUnlock}
-          className="w-full p-2 mb-2 text-white bg-secondary-600 dark:bg-primary-500 rounded dark:hover:bg-primaryAlt-500"
+          className="w-full p-2 mb-2 text-black dark:text-white bg-secondary-500 dark:bg-primary-500 rounded hover:bg-secondary-400 dark:hover:bg-primaryAlt-500"
         >
           Unlock
         </button>
         <button
           onClick={handleGoHome}
-          className="w-full p-2 dark:text-white text-black bg-backgroundLight-600 rounded hover:bg-ghost-900"
+          className="w-full p-2 dark:text-white text-black bg-backgroundLight-500 dark:bg-backgroundLight-600 rounded hover:bg-backgroundLight-400 dark:hover:bg-ghost-900"
         >
           Go to Homepage
         </button>

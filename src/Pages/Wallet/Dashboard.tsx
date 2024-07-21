@@ -18,6 +18,7 @@ import {
   LightThemeContext,
   BadgeValuesContext,
   LockedScreenActiveContext,
+  SetLockedScreenActiveContext,
 } from "../../config/contexts";
 import {
   Settings as SettingsInterface,
@@ -33,9 +34,7 @@ import {
 export default function Dashboard(): JSX.Element {
   const [activeItem, setActiveItem] = useState<string>("Accounts");
   const [headerTitle, setHeaderTitle] = useState<string>("Hash Vault");
-  const [locked, setLocked] = useState<boolean>(() => {
-    return sessionStorage.getItem("walletUnlocked") === "true";
-  });
+  const [lockedScreenActive, setLockedScreenActive] = useState<boolean>(true); //Lock wallet on Dashboard mount
   const [lightTheme, setLightTheme] = useState<boolean>(false);
   const [leftOfDecimal, setLeftOfDecimal] = useState<string | number>("?");
   const [rightOfDecimal, setRightOfDecimal] = useState<string | number>("??");
@@ -141,7 +140,7 @@ export default function Dashboard(): JSX.Element {
       const resetInactivityTimeout = () => {
         clearTimeout(inactivityTimeout);
         inactivityTimeout = setTimeout(() => {
-          setLocked(true);
+          setLockedScreenActive(true);
           sessionStorage.setItem("walletUnlocked", "false");
         }, inactivityPeriod);
       };
@@ -195,39 +194,44 @@ export default function Dashboard(): JSX.Element {
 
   return (
     <>
-      <LightThemeContext.Provider value={lightTheme}>
-        <div className="relative">
-          {locked && <Locked setLocked={setLocked} />} {/* TODO: Set up backend validation */}
-        </div>
-        <div className="flex flex-col h-screen">
-          <Header allowLightMode={true} headerTitle={headerTitle} />
-          <div className="flex-grow flex">
-            <div className="sidebar flex border-r border-backgroundLight-300 dark:border-primary-500 w-1/4 overflow-hidden ">
-              <BadgeValuesContext.Provider value={BadgeValues}>
-                <Sidebar
-                  activeItem={activeItem}
-                  onItemClick={handleSidebarItemClick}
-                />
-              </BadgeValuesContext.Provider>
+      <LockedScreenActiveContext.Provider value={lockedScreenActive}>
+        <SetLockedScreenActiveContext.Provider value={setLockedScreenActive}>
+          <LightThemeContext.Provider value={lightTheme}>
+            <div className="relative bg-white">
+              {lockedScreenActive && <Locked />}{" "}
+              {/* TODO: Set up backend validation */}
             </div>
-            <div
-              className={`main flex-grow w-3/4 bg-backgroundLight-100 dark:bg-backgroundAlt-500 text-backgroundLight-500 dark:text-primary-500 ${
-                activeItem === "Send" ? "px-6 py-2" : "px-12 py-8"
-              }`}
-            >
-              {/* Render content based on activeItem */}
-              {activeItem === "Accounts" && <Accounts />}
-              <LockedScreenActiveContext.Provider value={locked}>
-                {activeItem === "Send" && <Send />}
-              </LockedScreenActiveContext.Provider>
-              {activeItem === "Receive" && <Receive />}
-              {activeItem === "Transactions" && <Transactions />}
-              {activeItem === "Address Book" && <AddressBook />}
-              {activeItem === "Settings" && <Settings />}
-            </div>
-          </div>
-        </div>
-      </LightThemeContext.Provider>
+            {!lockedScreenActive && (
+              <div className="flex flex-col h-screen">
+                <Header allowLightMode={true} headerTitle={headerTitle} />
+                <div className="flex-grow flex">
+                  <div className="sidebar flex border-r border-backgroundLight-300 dark:border-primary-500 w-1/4 overflow-hidden ">
+                    <BadgeValuesContext.Provider value={BadgeValues}>
+                      <Sidebar
+                        activeItem={activeItem}
+                        onItemClick={handleSidebarItemClick}
+                      />
+                    </BadgeValuesContext.Provider>
+                  </div>
+                  <div
+                    className={`main flex-grow w-3/4 bg-backgroundLight-100 dark:bg-backgroundAlt-500 text-backgroundLight-500 dark:text-primary-500 ${
+                      activeItem === "Send" ? "px-6 py-2" : "px-12 py-8"
+                    }`}
+                  >
+                    {/* Render content based on activeItem */}
+                    {activeItem === "Accounts" && <Accounts />}
+                    {activeItem === "Send" && <Send />}
+                    {activeItem === "Receive" && <Receive />}
+                    {activeItem === "Transactions" && <Transactions />}
+                    {activeItem === "Address Book" && <AddressBook />}
+                    {activeItem === "Settings" && <Settings />}
+                  </div>
+                </div>
+              </div>
+            )}
+          </LightThemeContext.Provider>
+        </SetLockedScreenActiveContext.Provider>
+      </LockedScreenActiveContext.Provider>
     </>
   );
 }

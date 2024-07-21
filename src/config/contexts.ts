@@ -9,3 +9,7 @@ export const BadgeValuesContext = createContext<BadgeValues>({
   accountNameForDisplay: "Account not found",
 });
 export const LockedScreenActiveContext = createContext(false);
+export const SetLockedScreenActiveContext = createContext<
+  React.Dispatch<React.SetStateAction<boolean>>
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+>(() => {});
