@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { Mnemonic } from "@hashgraph/sdk";
 import {
   Account,
-  EncryptedPrivateKeySerialized,
+  EncryptedMnemonicSerialized,
   keystoreFileInfo,
   Settings,
 } from "../config/interfaces";
@@ -12,115 +12,111 @@ import { AESGCM } from "../classes/AESGCM";
 
 /* Cryptography related */
 /**
- * Encrypts a private key using the provided password.
+ * Encrypts a mnemonic seed phrase using the provided password.
  *
  * @async
- * @function encryptedPrivateKey
- * @param {string} privateKey - The private key to be encrypted.
- * @param {string} password - The password to encrypt the private key.
- * @returns {Promise<EncryptedPrivateKeySerialized>} The encrypted private key.
+ * @function encryptMnemonic
+ * @param {string} mnemonic - The mnemonic seed phrase to be encrypted.
+ * @param {string} password - The password to encrypt the mnemonic.
+ * @returns {Promise<EncryptedMnemonicSerialized>} The encrypted mnemonic.
  */
-export async function encryptPrivateKey(
-  privateKey: string,
+export async function encryptMnemonic(
+  mnemonic: string,
   password: string
-): Promise<EncryptedPrivateKeySerialized> {
+): Promise<EncryptedMnemonicSerialized> {
   const aesGcm: AESGCM = new AESGCM();
-  const encryptedPrivateKey = await aesGcm.encrypt(privateKey, password);
+  const encryptedMnemonic = await aesGcm.encrypt(mnemonic, password);
 
-  return encryptedPrivateKey;
+  return encryptedMnemonic;
 }
 
 /**
- * Decrypts an encrypted private key using a password.
+ * Decrypts an encrypted mnemonic seed phrase using a password.
  *
  * @async
- * @function decryptPrivateKey
- * @param {EncryptedPrivateKeySerialized} encryptedPrivateKey - The encrypted private key object.
- * @param {string} password - The password used to decrypt the private key.
- * @returns {Promise<string>} The decrypted private key as a string.
+ * @function decryptMnemonic
+ * @param {EncryptedMnemonicSerialized} encryptedMnemonic - The encrypted mnemonic object.
+ * @param {string} password - The password used to decrypt the mnemonic.
+ * @returns {Promise<string>} The decrypted mnemonic as a string.
  */
-export async function decryptPrivateKey(
-  encryptedPrivateKey: EncryptedPrivateKeySerialized,
+export async function decryptMnemonic(
+  encryptedMnemonic: EncryptedMnemonicSerialized,
   password: string
 ): Promise<string> {
   const aesGcm: AESGCM = new AESGCM();
-  const decryptedPrivateKey = await aesGcm.decrypt(
-    encryptedPrivateKey,
-    password
-  );
-  return decryptedPrivateKey;
+  const decryptedMnemonic = await aesGcm.decrypt(encryptedMnemonic, password);
+  return decryptedMnemonic;
 }
 
 /**
- * Decrypts the private key of the selected account from local storage using a password.
+ * Decrypts the mnemonic seed phrase of the selected account from local storage using a password.
  *
  * @async
- * @function decryptSelectedAccountPrivateKey
- * @param {string} password - The password used to decrypt the selected account's private key.
- * @returns {Promise<string>} The decrypted private key as a string.
- * @throws Will throw an error if no selected account or encrypted private key is found in local storage.
- * @throws Will throw an error if the private key decryption fails.
+ * @function decryptSelectedAccountMnemonic
+ * @param {string} password - The password used to decrypt the selected account's mnemonic.
+ * @returns {Promise<Mnemonic>} The decrypted private key as a string.
+ * @throws Will throw an error if no selected account or encrypted mnemonic is found in local storage.
+ * @throws Will throw an error if the mnemonic decryption or private key derivation fails.
  */
-export async function decryptSelectedAccountPrivateKey(
+export async function decryptSelectedAccountMnemonic(
   password: string
-): Promise<string> {
+): Promise<Mnemonic> {
   const selectedAccount = getSelectedAccountFromLocalStorage();
-  if (!selectedAccount?.encryptedPrivateKey) {
+  if (!selectedAccount?.encryptedMnemonic) {
     throw new Error(
-      "No selected account or encrypted private key found in local storage"
+      "No selected account or encrypted mnemonic found in local storage"
     );
   }
 
   try {
-    const encryptedPrivateKey = selectedAccount.encryptedPrivateKey;
-    const decryptedPrivateKey = await decryptPrivateKey(
-      encryptedPrivateKey,
+    const encryptedMnemonic = selectedAccount.encryptedMnemonic;
+    const decryptedMnemonic = await decryptMnemonic(
+      encryptedMnemonic,
       password
     );
-    return decryptedPrivateKey;
+    const mnemonic = await Mnemonic.fromString(decryptedMnemonic);
+    return mnemonic;
   } catch (error) {
-    console.error("Error decrypting private key:", error);
+    console.error("Error decrypting mnemonic or deriving private key:", error);
     throw new Error("Failed to recover the private key");
   }
 }
 
 /**
- * Generates a new private key and encrypts it using the provided password.
+ * Generates a new mnemonic seed phrase and encrypts it using the provided password.
  *
  * @async
- * @function generateAndEncryptPrivateKey
- * @param {string} password - The password to encrypt the private key.
- * @returns {Promise<{encryptedPrivateKey: EncryptedPrivateKeySerialized, mnemonic: Mnemonic}>} An object containing the encrypted private key and the mnemonic.
+ * @function generateAndEncryptMnemonic
+ * @param {string} password - The password to encrypt the mnemonic.
+ * @returns {Promise<{encryptedMnemonic: EncryptedMnemonicSerialized, mnemonic: Mnemonic}>} An object containing the encrypted mnemonic and the mnemonic.
  */
-export async function generateAndEncryptPrivateKey(password: string): Promise<{
-  encryptedPrivateKey: EncryptedPrivateKeySerialized;
+export async function generateAndEncryptMnemonic(password: string): Promise<{
+  encryptedMnemonic: EncryptedMnemonicSerialized;
   mnemonic: Mnemonic;
 }> {
   const mnemonic = await Mnemonic.generate();
-  const privateKey = await mnemonic.toLegacyPrivateKey();
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string
-  const privateKeyHex = privateKey.toString();
+  const mnemonicString = mnemonic.toString();
 
-  const encryptedPrivateKey = await encryptPrivateKey(privateKeyHex, password);
+  const encryptedMnemonic = await encryptMnemonic(mnemonicString, password);
 
-  return { encryptedPrivateKey, mnemonic };
+  return { encryptedMnemonic, mnemonic };
 }
 
 /**
  * Stores an encrypted private key and mnemonic in a keystore file.
  *
- * @function storePrivateKeyInKeystoreFile
- * @param {EncryptedPrivateKeySerialized} encryptedPrivateKey - The encrypted private key to be stored.
+ * @function storeMnemonicInKeystoreFile
+ * @param {EncryptedMnemonicSerialized} encryptedMnemonic - The encrypted private key to be stored.
  * @param {Mnemonic} mnemonic - The mnemonic associated with the private key.
  * @param {string} filePath - The file path where the keystore file will be saved.
  */
-export function storePrivateKeyInKeystoreFile( //TODO: Not used currently, revise when developing the feature
-  encryptedPrivateKey: EncryptedPrivateKeySerialized,
+export function storeMnemonicInKeystoreFile( //TODO: Not used currently, revise when developing the feature
+  encryptedMnemonic: EncryptedMnemonicSerialized,
   mnemonic: Mnemonic,
   filePath: string
 ) {
   const dataToStore: keystoreFileInfo = {
-    encryptedPrivateKey,
+    encryptedMnemonic,
     mnemonic: mnemonic.toString(),
   };
   fs.writeFileSync(filePath, JSON.stringify(dataToStore));
@@ -131,13 +127,13 @@ export function storePrivateKeyInKeystoreFile( //TODO: Not used currently, revis
  * Recovers the private key from a keystore file by decrypting it with the provided password.
  *
  * @async
- * @function recoverPrivateKeyFromKeystoreFile
+ * @function recoverMnemonicFromKeystoreFile
  * @param {string} password - The password to decrypt the private key.
  * @param {string} filePath - The file path to the keystore file.
  * @returns {Promise<string>} The decrypted private key.
  * @throws Will throw an error if the keystore file is not found or if decryption fails.
  */
-export async function recoverPrivateKeyFromKeystoreFile( //TODO: Not used currently, revise when developing the feature
+export async function recoverMnemonicFromKeystoreFile( //TODO: Not used currently, revise when developing the feature
   password: string,
   filePath: string
 ): Promise<string> {
@@ -145,11 +141,59 @@ export async function recoverPrivateKeyFromKeystoreFile( //TODO: Not used curren
     console.error("Keystore file not found");
   }
 
-  const { encryptedPrivateKey } = JSON.parse(
+  const { encryptedMnemonic } = JSON.parse(
     fs.readFileSync(filePath, "utf8")
   ) as keystoreFileInfo;
 
-  return await decryptPrivateKey(encryptedPrivateKey, password);
+  return await decryptMnemonic(encryptedMnemonic, password);
+}
+
+/**
+ * Changes the user's password for the selected wallet.
+ *
+ * @async
+ * @function changePasswordForSelectedWallet
+ * @param {string} oldPassword - The old password for the wallet.
+ * @param {string} newPassword - The new password for the wallet.
+ * @returns {Promise<void>} Resolves when the password has been successfully changed.
+ * @throws Will throw an error if the password change process fails.
+ */
+export async function changePasswordForSelectedWallet(
+  oldPassword: string,
+  newPassword: string
+): Promise<void> {
+  const selectedAccount = getSelectedAccountFromLocalStorage();
+  if (!selectedAccount?.encryptedMnemonic) {
+    throw new Error(
+      "No selected account or encrypted mnemonic found in local storage"
+    );
+  }
+
+  try {
+    // Decrypt the mnemonic with the old password
+    const decryptedMnemonic = await decryptMnemonic(
+      selectedAccount.encryptedMnemonic,
+      oldPassword
+    );
+
+    // Encrypt the mnemonic with the new password
+    const newEncryptedMnemonic = await encryptMnemonic(
+      decryptedMnemonic,
+      newPassword
+    );
+
+    // Update the selected account's encrypted mnemonic in local storage
+    const accounts = getAccountsFromLocalStorage();
+    const updatedAccounts = accounts.map((account) =>
+      account.accountId === selectedAccount.accountId
+        ? { ...account, encryptedMnemonic: newEncryptedMnemonic }
+        : account
+    );
+    localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
+  } catch (error) {
+    console.error("Error changing password:", error);
+    throw new Error("Failed to change the wallet password");
+  }
 }
 
 /* Settings related */
@@ -265,7 +309,7 @@ export function getSelectedAccountFromLocalStorage(): Account | undefined {
  *
  * @async
  * @function initAccountInfoInLocalStorage
- * @param {string} password - The password to encrypt the private key.
+ * @param {string} password - The password to encrypt the mnemonic.
  * @param {string} accountId - The account ID/address of the new account.
  * @param {string} accountName - The name of the new account.
  * @returns {Promise<Account>} The newly initialized Account object.
@@ -282,14 +326,14 @@ export async function initAccountInfoInLocalStorage(
 
   const accountNumber = accounts.length + 1;
 
-  const { encryptedPrivateKey } = await generateAndEncryptPrivateKey(password);
+  const { encryptedMnemonic } = await generateAndEncryptMnemonic(password);
 
   const newAccount: Account = {
     accountId: accountId,
     accountNumber: accountNumber,
     accountName: accountName,
     selected: accounts.length === 0,
-    encryptedPrivateKey: encryptedPrivateKey,
+    encryptedMnemonic: encryptedMnemonic,
   };
 
   // Add new account to accounts array

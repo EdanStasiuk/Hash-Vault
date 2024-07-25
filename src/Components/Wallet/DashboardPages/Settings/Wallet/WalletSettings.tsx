@@ -1,12 +1,13 @@
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaLock } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { FaKey } from "react-icons/fa";
 import { TbPassword } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import SettingsButton from "./SettingsButton";
-import { SetLockedScreenActiveContext } from "../../../../../config/contexts";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { SetLockedScreenActiveContext } from "../../../../../config/contexts/contexts";
+import PasswordPromptModal from "../../Modals/PasswordPromptModal";
 
 /**
  * Renders wallet settings options using SettingsButton components.
@@ -14,30 +15,45 @@ import { useNavigate } from "react-router-dom";
  * @returns {JSX.Element} Wallet settings component.
  */
 export default function WalletSettings(): JSX.Element {
+  const [isSeedAndKeysPasswordPromptOpen, setIsSeedAndKeysPasswordPromptOpen] = useState(false);
+  const [isChangePasswordPasswordPromptOpen, setIsChangePasswordPasswordPromptOpen] = useState(false);
+  const [isDeleteDataPasswordPromptOpen, setIsDeleteDataPasswordPromptOpen] = useState(false);
   const setLockedScreenActive = useContext(SetLockedScreenActiveContext);
   const navigate = useNavigate();
 
   const lockWallet = () => {
-    sessionStorage.setItem("walletUnlocked", "false");
+    // sessionStorage.setItem("walletUnlocked", "false");
     setLockedScreenActive(true);
   };
 
   const closeWallet = () => {
-    sessionStorage.setItem("walletUnlocked", "false");
+    // sessionStorage.setItem("walletUnlocked", "false");
     setLockedScreenActive(true);
     navigate("/");
   };
 
   const showSeedAndKeys = () => {
-    //TODO: Implement
+    setIsSeedAndKeysPasswordPromptOpen(true);
+  };
+
+  const handleSeedAndKeysPasswordSubmit = () => {
+    setIsSeedAndKeysPasswordPromptOpen(false);
   };
 
   const changeWalletPassword = () => {
-    //TODO: Implement
+    setIsChangePasswordPasswordPromptOpen(true);
+  };
+
+  const handleChangePasswordPasswordSubmit = () => {
+    setIsChangePasswordPasswordPromptOpen(false);
   };
 
   const deleteAllWalletsAndData = () => {
-    //TODO: Implement
+    setIsDeleteDataPasswordPromptOpen(true);
+  };
+
+  const handleDeleteDataPasswordSubmit = () => {
+    setIsDeleteDataPasswordPromptOpen(false);
   };
 
   return (
@@ -76,6 +92,24 @@ export default function WalletSettings(): JSX.Element {
         icon={MdDelete}
         borderStyle="border-b"
         onClick={deleteAllWalletsAndData}
+      />
+      <PasswordPromptModal
+        isOpen={isSeedAndKeysPasswordPromptOpen}
+        onClose={() => {setIsSeedAndKeysPasswordPromptOpen(false)}}
+        onSubmit={handleSeedAndKeysPasswordSubmit}
+        onSubmitAction="showKeys"
+      />
+      <PasswordPromptModal
+        isOpen={isChangePasswordPasswordPromptOpen}
+        onClose={() => {setIsChangePasswordPasswordPromptOpen(false)}}
+        onSubmit={handleChangePasswordPasswordSubmit}
+        onSubmitAction="changePassword"
+      />
+      <PasswordPromptModal
+        isOpen={isDeleteDataPasswordPromptOpen}
+        onClose={() => {setIsDeleteDataPasswordPromptOpen(false)}}
+        onSubmit={handleDeleteDataPasswordSubmit}
+        onSubmitAction="deleteAllData"
       />
     </div>
   );

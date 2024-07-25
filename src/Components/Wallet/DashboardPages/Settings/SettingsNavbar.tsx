@@ -1,6 +1,6 @@
 import { LayoutGroup, motion } from "framer-motion";
 import { useContext } from "react";
-import { LightThemeContext } from "../../../../config/contexts";
+import { LightThemeContext } from "../../../../config/contexts/contexts";
 
 interface Props {
   navItems: string[];

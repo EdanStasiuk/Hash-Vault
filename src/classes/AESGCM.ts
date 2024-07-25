@@ -1,4 +1,4 @@
-import { EncryptedPrivateKeySerialized } from "../config/interfaces";
+import { EncryptedMnemonicSerialized } from "../config/interfaces";
 
 /**
  * This implementation of AES-GCM encryption and decryption for TypeScript is
@@ -54,7 +54,7 @@ export class AESGCM {
         );
     }
 
-    async encrypt(plaintext: string, password: string): Promise<EncryptedPrivateKeySerialized> {
+    async encrypt(plaintext: string, password: string): Promise<EncryptedMnemonicSerialized> {
         const data: Uint8Array = this.textEncoder.encode(plaintext);
         const salt: Uint8Array = window.crypto.getRandomValues(new Uint8Array(16));
         const keyMaterial: CryptoKey = await this.generateKeyMaterial(password);
@@ -84,7 +84,7 @@ export class AESGCM {
         };
     }
 
-    async decrypt(encryptedData: EncryptedPrivateKeySerialized, password: string): Promise<string> {
+    async decrypt(encryptedData: EncryptedMnemonicSerialized, password: string): Promise<string> {
         const { ivBase64, saltBase64, ciphertextBase64 } = encryptedData;
         const ciphertext = Uint8Array.from(atob(ciphertextBase64), c => c.charCodeAt(0));
         const iv = Uint8Array.from(atob(ivBase64), c => c.charCodeAt(0));
@@ -109,7 +109,7 @@ export class AESGCM {
         const plaintext = 'Hello World';
         const password = 'password_is_password';
 
-        const encryptedData: EncryptedPrivateKeySerialized = await this.encrypt(plaintext, password);
+        const encryptedData: EncryptedMnemonicSerialized = await this.encrypt(plaintext, password);
         console.log(encryptedData.ciphertextBase64);
 
         const decryptedData: string = await this.decrypt(encryptedData, password);

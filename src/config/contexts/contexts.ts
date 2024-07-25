@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { BadgeValues } from "./interfaces";
+import { BadgeValues } from "../interfaces";
 
 export const LightThemeContext = createContext(false);
 export const BadgeValuesContext = createContext<BadgeValues>({

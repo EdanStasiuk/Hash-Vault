@@ -3,7 +3,7 @@ export interface Account {
   accountNumber: number;
   accountName: string;
   selected?: boolean;
-  encryptedPrivateKey: EncryptedPrivateKeySerialized;
+  encryptedMnemonic: EncryptedMnemonicSerialized;
 }
 
 export interface Wallet { //TODO: Don't need this, make sure it's not used anywhere before deleting
@@ -42,14 +42,14 @@ export interface EncryptedPrivateKey {
   ciphertext: ArrayBuffer;
 }
 
-export interface EncryptedPrivateKeySerialized {
+export interface EncryptedMnemonicSerialized {
   ivBase64: string;
   saltBase64: string;
   authTagBase64: string;
   ciphertextBase64: string;
 }
 export interface keystoreFileInfo {
-  encryptedPrivateKey: EncryptedPrivateKeySerialized,
+  encryptedMnemonic: EncryptedMnemonicSerialized,
   mnemonic: string,
 }
 

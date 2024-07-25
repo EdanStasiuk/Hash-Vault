@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import InputField from "../../../InputField";
 import {
-  decryptSelectedAccountPrivateKey,
+  decryptSelectedAccountMnemonic,
   getSelectedAccountFromLocalStorage,
 } from "../../../../functions/storageFunctions";
 import { useNavigate } from "react-router-dom";
-import { SetLockedScreenActiveContext } from "../../../../config/contexts";
+import { SetLockedScreenActiveContext } from "../../../../config/contexts/contexts";
 
 /**
  * Locked Component
@@ -27,27 +27,26 @@ export default function Locked(): JSX.Element {
   };
 
   const handleGoHome = () => {
-    sessionStorage.removeItem("walletUnlocked");
+    // sessionStorage.removeItem("walletUnlocked");
     navigate("/");
   };
 
   const handleUnlock = () => {
     unlockWallet()
       .then(() => {
-        // Optionally handle success if needed
         setWrongPassword(false);
-        sessionStorage.setItem("walletUnlocked", "true");
+        // sessionStorage.setItem("walletUnlocked", "true");
       })
       .catch((error) => {
         setWrongPassword(true);
-        sessionStorage.setItem("walletUnlocked", "false");
+        // sessionStorage.setItem("walletUnlocked", "false");
         console.error("Error unlocking wallet:", error);
       });
   };
 
   const unlockWallet = async () => {
-    const privateKey = await decryptSelectedAccountPrivateKey(password);
-    if (privateKey) {
+    const decryptedMnemonic = await decryptSelectedAccountMnemonic(password);
+    if (decryptedMnemonic) {
       setLockedScreenActive(false);
     }
   };

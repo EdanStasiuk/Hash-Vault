@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Slider } from "@mui/material";
-import { LightThemeContext } from "../../../../../config/contexts";
+import { LightThemeContext } from "../../../../../config/contexts/contexts";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {

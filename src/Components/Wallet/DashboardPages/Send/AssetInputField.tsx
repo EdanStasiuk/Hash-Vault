@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import CircularIndeterminate from "../../../Miscelaneous/CircularIndeterminate";
 import { getSelectedAccountFromLocalStorage } from "../../../../functions/storageFunctions";
-import { LockedScreenActiveContext } from "../../../../config/contexts";
+import { LockedScreenActiveContext } from "../../../../config/contexts/contexts";
 
 interface Props {
   label: string;

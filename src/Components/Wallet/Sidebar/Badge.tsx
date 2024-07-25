@@ -3,7 +3,7 @@ import { useContext } from "react";
 import HbarLogoInverted from "../../../assets/Badge/HbarLogoInverted.svg";
 import HbarLogoCropped from "../../../assets/Badge/HbarLogoCropped.svg";
 import HbarLogoCroppedLight from "../../../assets/Badge/HbarLogoCroppedLight.svg";
-import { BadgeValuesContext, LightThemeContext } from "../../../config/contexts";
+import { BadgeValuesContext, LightThemeContext } from "../../../config/contexts/contexts";
 
 /**
  * Renders a badge for the wallet sidebar.

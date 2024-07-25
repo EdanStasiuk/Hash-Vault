@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import { LightThemeContext } from "../../config/contexts";
+import { LightThemeContext } from "../../config/contexts/contexts";
 
 /**
  * This functional component renders a circular progress indicator centered inside a flexbox container.

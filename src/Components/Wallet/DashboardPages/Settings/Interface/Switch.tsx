@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import "./Switch.css";
-import { LightThemeContext } from "../../../../../config/contexts";
+import { LightThemeContext } from "../../../../../config/contexts/contexts";
 
 interface Props {
   isOn: boolean;

@@ -19,7 +19,7 @@ import {
   BadgeValuesContext,
   LockedScreenActiveContext,
   SetLockedScreenActiveContext,
-} from "../../config/contexts";
+} from "../../config/contexts/contexts";
 import {
   Settings as SettingsInterface,
   BadgeValues,
@@ -199,7 +199,7 @@ export default function Dashboard(): JSX.Element {
           <LightThemeContext.Provider value={lightTheme}>
             <div className="relative bg-white">
               {lockedScreenActive && <Locked />}{" "}
-              {/* TODO: Set up backend validation */}
+              {/* TODO: Set up backend validation? */}
             </div>
             {!lockedScreenActive && (
               <div className="flex flex-col h-screen">
