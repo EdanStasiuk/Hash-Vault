@@ -1,26 +1,84 @@
-export interface Settings {
-  userId: number; // Primary key
-  conversionCurrency: string;
-  customDecorations: boolean;
-  checkForUpdates: boolean;
-  displayWalletNameInTitlebar: boolean;
-  hideBalance: boolean;
-  lightTheme: boolean;
-  askForPasswordBeforeSend: boolean;
-  autosavePeriod: number;
-  lockOnInactivityPeriod: number;
+export interface Account {
+  accountId: string;
+  accountNumber: number;
+  accountName: string;
+  selected?: boolean;
+  encryptedMnemonic: EncryptedMnemonicSerialized;
 }
 
-export interface Account {
-  account_id: number; // Primary key
-  accountNumber: string;
-  accountName: string;
-  accountAddress: string;
-  integerDigits: string; // TODO: Convert to balance
-  fractionalDigits: string; // TODO: Convert to decimals
-  selected?: boolean;
-  wallet_id: number; // Foreign key
-  tokens: MirrorNodeTokenInfo[];
+/* GUI */
+export interface BadgeValues {
+  leftOfDecimal: number | string,
+  rightOfDecimal: number | string,
+  accountNumberForDisplay: number | string,
+  accountNameForDisplay: string,
+}
+
+/* Forms */
+export interface SendFormData {
+  address: string;
+  amount: number;
+  asset: string;
+  memo?: string;
+}
+
+/* functions.ts (non-API) */
+export interface splitNumberObject {
+  leftOfDecimal: number,
+  rightOfDecimal: number,
+}
+
+/* storageFunctions.ts */
+// EncryptedPrivateKey isnt used, just here for reference
+export interface EncryptedPrivateKey {
+  iv: Uint8Array;
+  salt: Uint8Array;
+  authTag: Uint8Array;
+  ciphertext: ArrayBuffer;
+}
+
+export interface EncryptedMnemonicSerialized {
+  ivBase64: string;
+  saltBase64: string;
+  authTagBase64: string;
+  ciphertextBase64: string;
+}
+
+export interface keystoreFileInfo {
+  encryptedMnemonic: EncryptedMnemonicSerialized,
+  mnemonic: string,
+}
+
+export interface Settings {
+  customDecorations: boolean;
+  checkUpdates: boolean;
+  hideBalance: boolean;
+  lightTheme: boolean;
+  autosavePeriod: {
+    activated: boolean;
+    period: number;
+  };
+  lockOnInactivityPeriod: {
+    activated: boolean;
+    period: number;
+  };
+  askForPasswordBeforeSend: boolean;
+  conversionCurrency: string;
+  displayWalletNameInTitleBar: boolean;
+}
+
+/* API interfaces */
+interface MirrorNodeAccountTokenBalance {
+  token_id: string,
+  balance: number,
+}
+
+export interface MirrorNodeAccountInfo {
+  account: string,
+  balance: {
+    balance: number,
+    tokens: MirrorNodeAccountTokenBalance[];
+  };
 }
 
 export interface MirrorNodeTokenInfo {
@@ -33,27 +91,44 @@ export interface MirrorNodeTokenInfo {
   decimals: string,
 }
 
-export interface Wallet {
-  walletId: number; // Add unique identifier for wallet
-  balance: string;
-}
-
-interface MirrorNodeAccountTokenBalance {
-  balance: number,
+interface nftsObject {
+  account_id: string,
   token_id: string,
 }
-
-// As present in the hedera mirrornode api response
-export interface AccountResponse {
-  balance: {
-    tokens: MirrorNodeAccountTokenBalance[];
-  };
+export interface MirrorNodeNftsInfo {
+  nfts: nftsObject[],
 }
 
-/* Forms */
-export interface SendFormData {
-  address: string;
-  amount: number;
-  asset: string;
-  memo?: string;
+export interface DavinicigraphPicsAPIv2 {
+  pic: string;
+}
+
+interface Image {
+  small: string;
+  medium: string;
+  large: string;
+}
+
+interface MarketData {
+  current_price: Record<string, number>;
+}
+
+export interface CoinGeckoAPI {
+  id: string;
+  symbol: string;
+  name: string;
+  image: Image;
+  market_data: MarketData;
+}
+
+export interface SaucerSwapAPICoinContent {
+  id: string;
+  name: string;
+  decimals: number;
+  priceUsd: number;
+  symbol: string;
+}
+
+export interface ExchangeRateAPI {
+  conversion_rates: Record<string, number>;
 }

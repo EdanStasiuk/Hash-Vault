@@ -1,4 +1,7 @@
-import { getTokenInfo } from "../src/functions";
+import axios from 'axios';
+import { getTokenInfo } from "../src/functions/functions";
+
+jest.mock('axios');
 
 describe("getTokenInfo function", () => {
   beforeEach(() => {
@@ -12,10 +15,7 @@ describe("getTokenInfo function", () => {
       decimals: "18",
     };
 
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: jest.fn().mockResolvedValue(mockData),
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200, data: mockData });
 
     const result = await getTokenInfo("tokenId");
     expect(result).toEqual({
@@ -32,27 +32,21 @@ describe("getTokenInfo function", () => {
       decimals: "18",
     };
 
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: jest.fn().mockResolvedValue(mockData),
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200, data: mockData });
 
     const result = await getTokenInfo("tokenId");
     expect(result).toBeNull();
   });
 
   test("should return null if fetch request fails", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: false,
-      status: 500,
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 500 });
 
     const result = await getTokenInfo("tokenId");
     expect(result).toBeNull();
   });
 
   test("should return null if an error is thrown during fetch", async () => {
-    global.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
+    (axios.get as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
 
     const result = await getTokenInfo("tokenId");
     expect(result).toBeNull();

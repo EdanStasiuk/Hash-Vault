@@ -1,6 +1,7 @@
 import { UseFormGetValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { SendFormData } from "../../../../config/interfaces";
-import { getTokenBalance } from "../../../../functions";
+import { getTokenBalance } from "../../../../functions/functions";
+import { getSelectedAccountFromLocalStorage } from "../../../../functions/storageFunctions";
 
 interface Props {
   label: string;
@@ -35,7 +36,7 @@ const styles = `
  * @prop {UseFormSetValue<SendFormData>} setValue - Function that dynamically sets the value of a registered field, and
  *                                              has the options to validate and update the form state.
  * @prop {UseFormGetValues<SendFormData>} getValues - Function that dynamically gets the value(s) of a registered field.
- * @returns {JSX.Element} - An amount input field.
+ * @returns {JSX.Element} An amount input field.
  */
 export default function AmountInputField({
   label,
@@ -47,11 +48,11 @@ export default function AmountInputField({
   
   return (
     <div>
-      <p className="text-white font-roboto text-xl font-light">{label}</p>
+      <p className="text-black dark:text-white font-roboto text-xl font-normal dark:font-light">{label}</p>
       <div className="relative w-80">
         <style>{styles}</style>
         <input
-          className="w-80 h-11 p-3 pr-16 rounded-lg bg-transparent border border-solid border-primary-500 outline-none text-white text-xl font-roboto placeholder-ghost-500"
+          className="w-80 h-11 p-3 pr-16 rounded-lg bg-transparent border border-solid border-backgroundLight-600 dark:border-primary-500 outline-none text-black dark:text-white text-xl font-roboto placeholder-backgroundLight-500 dark:placeholder-ghost-500"
           placeholder={placeHolder}
           type="number"
           step=".0000001"
@@ -64,10 +65,10 @@ export default function AmountInputField({
 
         <button
           type="button"
-          className="text-white text-xl absolute right-3 top-[8px]"
+          className="text-black dark:text-white text-xl font-medium dark:font-normal absolute right-3 top-[8px]"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={async () => {
-            const accountId = localStorage.getItem("accountId");
+            const accountId = getSelectedAccountFromLocalStorage()?.accountId;
 
             if (!accountId) {
               console.error("Account ID not found in localStorage");

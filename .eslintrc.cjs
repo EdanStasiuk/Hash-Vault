@@ -44,14 +44,14 @@ module.exports = {
     "server.js",
     "convertToFiat.test.ts",
     "displayCurrencySymbol.test.ts",
-    "fetchConversionRate.test.ts",
+    "fetchConvertedPrice.test.ts",
+    "fetchUsdToFiatConversionRate.test.ts",
     "getAccountAssets.test.ts",
     "getPositiveBalanceNonNftTokens.test.ts",
     "getTokenBalance.test.ts",
     "getTokenInfo.test.ts",
     "getTokenLogo.test.ts",
-    "isNFT.test.ts",
-
+    "isNft.test.ts",
   ],
   rules: {
     "react/react-in-jsx-scope": "off",

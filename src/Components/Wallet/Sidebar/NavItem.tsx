@@ -14,7 +14,7 @@ interface Props {
  * @prop {string} label - Button label.
  * @prop {boolean} isActive – Optional boolean stating whether the user has clicked on the NavItem;
  *                            defaults to false, and changes to false when the user clicks on a different NavItem.
- * @returns {JSX.Element} - A navigation item button component.
+ * @returns {JSX.Element} A navigation item button component.
  */
 export default function NavItem({
   label,
@@ -25,8 +25,7 @@ export default function NavItem({
     <motion.button
       layout
       onClick={onClick}
-      className={`relative flex text-primary-500 text-base rounded-2xl px-4 py-3 w-full
-        ${isActive ? "border-primary-500" : ""}`}
+      className="relative flex text-black dark:text-primary-500 text-base rounded-2xl px-4 py-3 w-full"
       style={{ overflow: "visible" }}
     >
       {label}
@@ -34,11 +33,7 @@ export default function NavItem({
         <motion.div
           layout
           layoutId="navitem-activemarker"
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            border: "1px solid",
-            borderRadius: "16px",
-          }}
+          className="absolute border border-backgroundLight-500 dark:border-primary-500 rounded-2xl inset-0 pointer-events-none"
         />
       )}
     </motion.button>

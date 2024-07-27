@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+Hash-Vault.code-workspace
 
 designs

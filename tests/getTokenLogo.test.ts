@@ -1,4 +1,7 @@
-import { getTokenLogo } from "../src/functions";
+import axios from 'axios';
+import { getTokenLogo } from "../src/functions/functions";
+
+jest.mock('axios');
 
 describe("getTokenLogo function", () => {
   const network = "hedera";
@@ -13,28 +16,15 @@ describe("getTokenLogo function", () => {
   });
 
   test("should return the URL of the token's photo", async () => {
-    global.fetch = jest.fn().mockImplementation((url) => {
-      if (url.includes(`/api/tokens/${network}/${address}`)) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(mockData),
-        });
-      }
-      return Promise.reject(new Error("Unknown URL"));
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200, data: mockData });
 
     const result = await getTokenLogo(network, address);
     expect(result).toBe(expectedURL);
-    expect(fetch).toHaveBeenCalledWith(`/api/tokens/${network}/${address}`);
+    expect(axios.get).toHaveBeenCalledWith(`/api/v2/tokens/${network}/${address}`);
   });
 
   test("should throw an error if HTTP response is not OK", async () => {
-    global.fetch = jest.fn().mockImplementation(() =>
-      Promise.resolve({
-        ok: false,
-        status: 404,
-      })
-    );
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 404 });
 
     await expect(getTokenLogo(network, address)).rejects.toThrow(
       "HTTP error! status: 404"
@@ -42,9 +32,7 @@ describe("getTokenLogo function", () => {
   });
 
   test("should throw an error if fetch throws an error", async () => {
-    global.fetch = jest
-      .fn()
-      .mockImplementation(() => Promise.reject(new Error("Network error")));
+    (axios.get as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
 
     await expect(getTokenLogo(network, address)).rejects.toThrow(
       "Network error"

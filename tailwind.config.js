@@ -2,6 +2,7 @@
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'class',
   plugins: [],
   theme: {
     extend: {
@@ -62,7 +63,17 @@ export default {
           950: "#040406",
         },
         backgroundAlt: {
+          300: "#3E3E45",
           500: "#212229",
+        },
+        backgroundLight: { //grey
+          50: '#FFFFFF', 
+          100: '#FBFBFB',
+          200: '#F0F0F0',
+          300: '#DEDEDE',
+          400: '#CACACA',
+          500: '#B9B9B9',
+          600: '#888888',
         },
         error: { //red
           50: "#FFE5E5",

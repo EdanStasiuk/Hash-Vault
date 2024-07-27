@@ -1,75 +1,27 @@
-import { Account, Wallet, Settings } from "./interfaces";
+import { Settings } from "./interfaces";
 
-export const accounts: Account[] = [
-    {
-      account_id: 1,
-      accountNumber: "0",
-      accountName: "Chequing",
-      accountAddress: "0.0.000000-aaaaaa",
-      integerDigits: "1,000",
-      fractionalDigits: "0000000",
-      selected: true,
-      wallet_id: 1,
-      tokens: [
-        {
-          token_id: "",
-          name: "HBAR",
-          symbol: "HBAR",
-          api_id: "hedera-hashgraph",
-          balance: 5000,
-          type: 'FUNGIBLE_COMMON',
-          decimals: "8",
-        },
-        {
-          token_id: "0.0.1079680",
-          name: "HSUITE",
-          symbol: "HSUITE",
-          api_id: "hsuite",
-          balance: 5000,
-          type: 'FUNGIBLE_COMMON',
-          decimals: "8",
-        },
-        {
-          token_id: "0.0.98765432",
-          name: "WHBAR",
-          symbol: "WHBAR",
-          api_id: "wrapped-hbar",
-          balance: 5000,
-          type: 'FUNGIBLE_COMMON',
-          decimals: "8",
-        },
-        {
-          token_id: "0.0.987654",
-          name: "HERA",
-          symbol: "HERA",
-          api_id: "hera-finance",
-          balance: 5000,
-          type: 'FUNGIBLE_COMMON',
-          decimals: "8",
-        },
-      ],
-    },
-  ];
-  
-  export const wallets: Wallet[] = [
-    {
-      walletId: 1,
-      balance: "101,000",
-    },
-  ];
-  
-  export const settings: Settings[] = [
-    {
-      userId: 1, // Primary key
-      conversionCurrency: "CAD",
-      customDecorations: true,
-      checkForUpdates: true,
-      displayWalletNameInTitlebar: false,
-      hideBalance: false,
-      lightTheme: true,
-      askForPasswordBeforeSend: true,
-      autosavePeriod: 10,
-      lockOnInactivityPeriod: 5,
-    },
-  ];
-  
+export const settings: Settings = {
+  customDecorations: true,
+  checkUpdates: false,
+  displayWalletNameInTitleBar: false,
+  hideBalance: false,
+  lightTheme: false,
+  autosavePeriod: {
+    activated: true,
+    period: 10,
+  },
+  lockOnInactivityPeriod: {
+    activated: true,
+    period: 10,
+  },
+  askForPasswordBeforeSend: true,
+  conversionCurrency: "USD",
+};
+
+export const fiatCurrencyOptions: string[] = [
+  "USD", 
+  "CAD", 
+  "EUR", 
+  "GBP", 
+  "JPY",
+];

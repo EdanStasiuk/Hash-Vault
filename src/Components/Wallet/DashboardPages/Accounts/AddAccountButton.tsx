@@ -7,7 +7,7 @@ import { AiOutlinePlus } from "react-icons/ai";
  */
 export default function AddAccountButton(): JSX.Element {
   return (
-    <button className="text-primary-500 border border-primary-500 rounded-lg p-2 transform hover:scale-105 transition duration-100">
+    <button className="text-black dark:text-primary-500 border border-black dark:border-primary-500 rounded-lg p-2 transform hover:scale-105 transition duration-100">
       <div className="scale-125">
         <AiOutlinePlus />
       </div>

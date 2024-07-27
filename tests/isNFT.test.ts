@@ -1,6 +1,9 @@
-import { isNFT } from "../src/functions";
+import axios from 'axios';
+import { isNft } from "../src/functions/functions";
 
-describe("isNFT function", () => {
+jest.mock('axios');
+
+describe("isNft function", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -10,12 +13,9 @@ describe("isNFT function", () => {
       nfts: [{ token_id: "tokenId" }],
     };
 
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: jest.fn().mockResolvedValue(mockData),
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200, data: mockData });
 
-    const result = await isNFT("accountId", "tokenId");
+    const result = await isNft("accountId", "tokenId");
     expect(result).toBe(true);
   });
 
@@ -24,12 +24,9 @@ describe("isNFT function", () => {
       nfts: [{ token_id: "otherTokenId" }],
     };
 
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: jest.fn().mockResolvedValue(mockData),
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200, data: mockData });
 
-    const result = await isNFT("accountId", "tokenId");
+    const result = await isNft("accountId", "tokenId");
     expect(result).toBe(false);
   });
 
@@ -38,28 +35,23 @@ describe("isNFT function", () => {
       nfts: [],
     };
 
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: jest.fn().mockResolvedValue(mockData),
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200, data: mockData });
 
-    const result = await isNFT("accountId", "tokenId");
+    const result = await isNft("accountId", "tokenId");
     expect(result).toBe(false);
   });
 
   test("should return false if the fetch request fails", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: false,
-    });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 500 });
 
-    const result = await isNFT("accountId", "tokenId");
+    const result = await isNft("accountId", "tokenId");
     expect(result).toBe(false);
   });
 
   test("should return false if an error is thrown during fetch", async () => {
-    global.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
+    (axios.get as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
 
-    const result = await isNFT("accountId", "tokenId");
+    const result = await isNft("accountId", "tokenId");
     expect(result).toBe(false);
   });
 });

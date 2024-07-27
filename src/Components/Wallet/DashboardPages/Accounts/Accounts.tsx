@@ -1,38 +1,61 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Subheader from "../../Subheader";
 import Balances from "./Balances";
 import EditAccountButton from "./EditAccountButton";
 import AccountBar from "./AccountBar";
-import { Account, Wallet, Settings } from "../../../../config/interfaces";
-
-interface Props {
-  accountsList?: Account[];
-  walletInfo?: Wallet[];
-  settings?: Settings[];
-}
+import {
+  getAccountsFromLocalStorage,
+  getSettingsFromLocalStorage,
+} from "../../../../functions/storageFunctions";
+import { getTokenBalance } from "../../../../functions/functions";
+import { useEffect, useState } from "react";
 
 /**
  * Renders Accounts page information for dashboard.
  *
- * @prop {Account[]} accountsList - Optional list of accounts to be displayed on the dashboard via the AccountBar component.
- * @prop {Wallet[]} walletInfo - Optional list containing wallet information, namely balance.
- * @prop {Settings[]} settings - Optional list containg user settings information.
- * @returns {JSX.Element} - Accounts page component.
+ * @returns {JSX.Element} Accounts page component.
  */
-export default function Accounts({
-  accountsList = [],
-  walletInfo = [],
-  settings = [],
-}: React.PropsWithChildren<Props>): JSX.Element {
+export default function Accounts(): JSX.Element {
+  const [accountBalances, setAccountBalances] = useState<
+    Record<string, number | null>
+  >({});
+  const [totalBalance, setTotalBalance] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchBalances = async () => {
+      const accounts = getAccountsFromLocalStorage();
+      const balances: Record<string, number | null> = {};
+      let aggregateBalance = 0;
+
+      for (const account of accounts) {
+        const balance = await getTokenBalance(
+          "hedera-hashgraph",
+          account.accountId
+        );
+        balances[account.accountId] = balance;
+        if (balance !== null) {
+          aggregateBalance += balance;
+        }
+      }
+
+      setAccountBalances(balances);
+      setTotalBalance(aggregateBalance);
+    };
+
+    fetchBalances().catch((error) => {
+      console.error("Error in fetchBalances:", error);
+    });
+  }, []);
+
   return (
     <div>
       <Subheader label="Accounts" />
       <Balances
-        total={walletInfo[0].balance}
-        conversionCurrency={settings[0].conversionCurrency}
+        total={totalBalance}
+        conversionCurrency={
+          getSettingsFromLocalStorage()?.conversionCurrency ?? "USD"
+        }
       />
-      <div className="flex items-center text-white mt-10 justify-between">
+      <div className="flex items-center text-black dark:text-white mt-10 justify-between">
         <span className="text-2xl font-robotoFlex font-light">
           Your Accounts
         </span>
@@ -40,14 +63,13 @@ export default function Accounts({
           <EditAccountButton />
         </div>
       </div>
-      {accountsList.map((account) => (
+      {getAccountsFromLocalStorage().map((account) => (
         <AccountBar
           key={account.accountNumber}
           accountNumber={account.accountNumber}
           accountName={account.accountName}
-          accountAddress={account.accountAddress}
-          integerDigits={account.integerDigits}
-          fractionalDigits={account.fractionalDigits}
+          accountId={account.accountId}
+          balance={accountBalances[account.accountId]}
           selected={account.selected}
         />
       ))}
