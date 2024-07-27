@@ -20,7 +20,8 @@ export default function MemoInputField({
     <div>
       <p className="text-black dark:text-white font-roboto text-xl font-normal dark:font-light">{label}</p>
       <textarea
-        className="resize-none w-[600px] h-28 px-3 py-2 rounded-lg bg-transparent border border-solid border-backgroundLight-600 dark:border-primary-500 outline-none text-black dark:text-white text-lg font-normal dark:font-light font-roboto placeholder-backgroundLight-500 dark:placeholder-ghost-500" //TODO: any need for placeholder?
+        //TODO: any need for placeholder? //TODO: The background of the scrollbar doesn't have border radius
+        className="resize-none w-[600px] h-28 px-3 py-2 rounded-lg bg-transparent border border-solid border-backgroundLight-600 dark:border-primary-500 outline-none text-black dark:text-white text-lg font-normal dark:font-light font-roboto placeholder-backgroundLight-500 dark:placeholder-ghost-500"
         {...register("memo", { required: false })}
       />
     </div>

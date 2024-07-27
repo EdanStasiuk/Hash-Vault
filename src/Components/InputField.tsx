@@ -85,7 +85,7 @@ export default function InputField({
       <label
         className={`before:content[' '] after:content[' '] pointer-events-none absolute flex -top-[6.6px] h-full w-full select-none text-[12px] font-sans font-extra-thin leading-tight transition-all before:pointer-events-none before:mt-[6.6px] before:mr-1 before:box-border before:block before:w-2.5 before:rounded-tl-[9px] before:rounded-bl-[2px] before:border-t before:border-l ${
           invalidInput
-            ? "before:border-error-500 after:border-error-500 peer-focus:text-error-500 peer-focus:before:border-error-500 peer-focus:after:border-error-500"
+            ? "text-black dark:text-ghost-500 before:border-error-500 after:border-error-500 peer-focus:text-error-500 peer-focus:before:border-error-500 peer-focus:after:border-error-500"
             : `${
                 allowLightMode
                   ? "text-black dark:text-ghost-500 peer-placeholder-shown:text-black dark:peer-placeholder-shown:text-ghost-500 before:border-black dark:before:border-primary-500 after:border-black dark:after:border-primary-500 peer-focus:text-black dark:peer-focus:text-primary-500 peer-focus:before:border-black dark:peer-focus:before:border-primary-500 peer-focus:after:border-black dark:peer-focus:after:border-primary-500"

@@ -15,6 +15,8 @@ import {
   displayCurrencySymbol,
 } from "../../../../functions/functions";
 import { getSettingsFromLocalStorage } from "../../../../functions/storageFunctions";
+import PasswordPromptModal from "../Modals/PasswordPromptModal";
+import ConfirmSendModal from "../Modals/ConfirmSendModal";
 
 /**
  * Renders Send page information for dashboard.
@@ -35,6 +37,9 @@ export default function Send(): JSX.Element {
   const [showAddressBook, setShowAddressBook] = useState(false);
   const [conversionRate, setConversionRate] = useState<number | undefined>();
   const [convertedAmount, setConvertedAmount] = useState<string>("");
+  const [isPasswordPromptOpen, setIsPasswordPasswordPromptOpen] = useState<boolean>(false);
+  const [isConfirmSendModalOpen, setIsConfirmSendModalOpen] = useState<boolean>(false);
+  const [sendFormData, setSendFormData] = useState<SendFormData | null>(null);
 
   const watchFields = watch(["address", "amount", "asset"]);
   const watchAmount = watch("amount");
@@ -55,9 +60,27 @@ export default function Send(): JSX.Element {
     // Need to check for this because manually inputted amount values are taken as strings
     data.amount =
       typeof data.amount === "string" ? parseFloat(data.amount) : data.amount;
+    
+    setSendFormData(data);
+
+    if (getSettingsFromLocalStorage()?.askForPasswordBeforeSend) {
+      setIsPasswordPasswordPromptOpen(true);
+    } else {
+      setIsConfirmSendModalOpen(true);
+    }
 
     // console.log(data);
     // console.log(errors.address?.message);
+  };
+
+  const handlePasswordSubmit = () => {
+    setIsPasswordPasswordPromptOpen(false);
+  };
+  
+
+  const handleConfirmSend = () => {
+    setIsConfirmSendModalOpen(false);
+    // TODO: Implement send logic here after confirmation, also need to implement this in PasswordPromptModal.tsx if you don't refactor first
   };
 
   // Fetch conversion rate upon asset select
@@ -157,6 +180,21 @@ export default function Send(): JSX.Element {
           </div>
         </form>
       </motion.div>
+      
+      <PasswordPromptModal
+        isOpen={isPasswordPromptOpen}
+        onClose={() => {setIsPasswordPasswordPromptOpen(false)}}
+        onSubmit={handlePasswordSubmit}
+        onSubmitAction="confirmSend"
+        formData={sendFormData}
+      />
+
+      <ConfirmSendModal
+        isOpen={isConfirmSendModalOpen}
+        onClose={() => {setIsConfirmSendModalOpen(false)}}
+        onConfirm={handleConfirmSend}
+        sendFormData={sendFormData}
+      />
     </div>
   );
 }

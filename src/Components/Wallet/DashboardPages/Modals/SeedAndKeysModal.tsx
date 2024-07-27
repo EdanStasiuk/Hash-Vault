@@ -24,7 +24,7 @@ interface Props {
  *
  * @returns {JSX.Element} The modal dialog with the public key, private key, and mnemonic seed phrase.
  */
-export default function KeyModal({
+export default function SeedAndKeysModal({
   isOpen,
   onClose,
   publicKey,
