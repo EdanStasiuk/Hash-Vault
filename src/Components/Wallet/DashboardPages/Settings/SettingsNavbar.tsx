@@ -84,6 +84,7 @@ export default function SettingsNavbar({
                       ? "text-backgroundLight-50 dark:text-backgroundAlt-500"
                       : "text-backgroundLight-400 dark:text-primary-500"
                   }`}
+                  initial={false}
                   animate={{
                     color:
                       selectedIndex === index
