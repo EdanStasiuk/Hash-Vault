@@ -37,29 +37,27 @@ export default function InfoBar({
               Copied!
             </div>
           )}{" "}
-          {/* TODO: Display copied message in a better way */}
+          {/* TODO: Display copied message in a more aesthetic way */}
         </div>
-        {copyable && (
-          <button
-            onClick={handleCopy}
-            className="mr-2 text-background-200 dark:text-primary-500 scale-150 group"
-          >
-            <MdContentCopy />
-          </button>
-        )}
       </div>
-      <div className="flex-1">
+      <div className="flex">
         {copyable ? (
           <button
             onClick={handleCopy}
             className="text-lg font-roboto hover:text-background-200 dark:hover:text-primary-500"
           >
-            {childContent}
+            <div className="flex">
+              <button
+                onClick={handleCopy}
+                className="relative right-6 text-background-200 dark:text-primary-500 scale-[135%]"
+              >
+                <MdContentCopy />
+              </button>
+              <div className="relative right-4">{childContent}</div>
+            </div>
           </button>
         ) : (
-          <div className="text-lg font-robot">
-            {childContent}
-          </div>
+          <div className="text-lg font-robot">{childContent}</div>
         )}
       </div>
     </div>
