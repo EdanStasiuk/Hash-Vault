@@ -13,7 +13,6 @@ import { PasswordVisibilityProvider } from './config/contexts/PasswordVisibility
 
 export default function App() {
 
-
   // Make dark mode the default
   useEffect(() => {
     const savedSettings = getSettingsFromLocalStorage();
