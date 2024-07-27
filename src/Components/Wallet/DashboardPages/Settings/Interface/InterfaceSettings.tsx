@@ -113,7 +113,7 @@ export default function InterfaceSettings(): JSX.Element {
     });
   };
 
-  const filteredSettingsConfig = !isElectron() //TODO: Before pushing to prod, remove all negations from isElectron() function calls
+  const filteredSettingsConfig = isElectron()
     ? settingsConfig
     : settingsConfig.filter(
         ({ key }) =>
@@ -121,10 +121,8 @@ export default function InterfaceSettings(): JSX.Element {
       );
 
   return (
-    <div
-      className={`flex flex-wrap ${!isElectron() ? "mx-[10%]" : "mx-[30%]"}`}
-    >
-      <div className={`w-full ${!isElectron() ? "md:w-1/2" : ""}`}>
+    <div className={`flex flex-wrap ${isElectron() ? "mx-[10%]" : "mx-[30%]"}`}>
+      <div className={`w-full ${isElectron() ? "md:w-1/2" : ""}`}>
         <div className="py-3">
           <InterfaceSettingsItem itemText="Currency display preference">
             <DropdownMenu
@@ -142,7 +140,11 @@ export default function InterfaceSettings(): JSX.Element {
                   settings[key]?.period?.toString()) ||
                   "10"
               )}
-              hasSlider={key === "lockOnInactivityPeriod" && !!isElectron()} //TODO: just delete one negation from isElectron()
+              hasSlider={
+                key === "lockOnInactivityPeriod" &&
+                settings[key].activated &&
+                !isElectron()
+              }
               sliderValue={
                 key === "lockOnInactivityPeriod"
                   ? settings[key]?.period
@@ -182,7 +184,7 @@ export default function InterfaceSettings(): JSX.Element {
                 (key === "autosavePeriod" ||
                   key === "lockOnInactivityPeriod") &&
                 settings[key].activated &&
-                !isElectron()
+                isElectron()
               }
               sliderValue={
                 key === "autosavePeriod" || key === "lockOnInactivityPeriod"

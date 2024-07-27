@@ -277,7 +277,7 @@ export function getAccountFromLocalStorage(
 
   if (accountsData) {
     const accounts = JSON.parse(accountsData) as Account[];
-    const account = accounts.find((account) => account.accountId === accountId); //TODO: Make sure there it handles when there is more than 1 account with the same address
+    const account = accounts.find((account) => account.accountId === accountId); //TODO: Make sure it handles when there is more than 1 account with the same address
     return account || undefined;
   }
 

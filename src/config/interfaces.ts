@@ -6,11 +6,6 @@ export interface Account {
   encryptedMnemonic: EncryptedMnemonicSerialized;
 }
 
-export interface Wallet { //TODO: Don't need this, make sure it's not used anywhere before deleting
-  walletId: number; // Add unique identifier for wallet
-  balance: string;
-}
-
 /* GUI */
 export interface BadgeValues {
   leftOfDecimal: number | string,
@@ -48,6 +43,7 @@ export interface EncryptedMnemonicSerialized {
   authTagBase64: string;
   ciphertextBase64: string;
 }
+
 export interface keystoreFileInfo {
   encryptedMnemonic: EncryptedMnemonicSerialized,
   mnemonic: string,
@@ -76,6 +72,7 @@ interface MirrorNodeAccountTokenBalance {
   token_id: string,
   balance: number,
 }
+
 export interface MirrorNodeAccountInfo {
   account: string,
   balance: {
@@ -115,6 +112,7 @@ interface Image {
 interface MarketData {
   current_price: Record<string, number>;
 }
+
 export interface CoinGeckoAPI {
   id: string;
   symbol: string;
@@ -122,6 +120,7 @@ export interface CoinGeckoAPI {
   image: Image;
   market_data: MarketData;
 }
+
 export interface SaucerSwapAPICoinContent {
   id: string;
   name: string;
@@ -129,6 +128,7 @@ export interface SaucerSwapAPICoinContent {
   priceUsd: number;
   symbol: string;
 }
+
 export interface ExchangeRateAPI {
   conversion_rates: Record<string, number>;
 }
