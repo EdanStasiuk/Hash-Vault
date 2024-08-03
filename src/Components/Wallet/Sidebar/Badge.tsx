@@ -12,7 +12,7 @@ import { BadgeValuesContext, LightThemeContext } from "../../../config/contexts/
  */
 export default function Badge(): JSX.Element {
   const lightTheme = useContext(LightThemeContext);
-  const BadgeValues = useContext(BadgeValuesContext); // The selected wallet's information
+  const BadgeValues = useContext(BadgeValuesContext); // The selected wallet's information //TODO: The badge values don't automatically update upon account switch
   
   // Choose logo based on lightTheme setting
   const logoSrc =
