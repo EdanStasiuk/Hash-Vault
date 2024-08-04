@@ -78,7 +78,7 @@ export default function AmountInputField({
               const balance = await getTokenBalance(currentChosenAsset, accountId);
   
               if (balance !== null) {
-                setValue("amount", balance, { // TODO: small numbers get displayed using scientific notation, ex. 2e-8, change so all decimals are shown when displayed
+                setValue("amount", balance, { // TODO: small numbers get displayed using scientific notation, ex. 2e-8, change so all decimals are shown when displayed. This is solved in TransactionInfoBar.tsx, need to convert amount in form to type <number | string> and display as a string.
                   shouldValidate: true,
                   shouldDirty: true,
                 });
