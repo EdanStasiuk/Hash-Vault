@@ -281,7 +281,7 @@ export default function Transactions(): React.JSX.Element {
           onClick={handlePrevPage}
           disabled={currentSetNumber === 1}
         >
-          <IoIosArrowBack className={`scale-150 ${currentSetNumber === 1 ? "text-ghost-900" : "text-secondary-500 dark:text-primary-500"}`} />
+          <IoIosArrowBack className={`scale-150 ${currentSetNumber === 1 ? "text-backgroundLight-400 dark:text-ghost-900" : "text-secondary-500 dark:text-primary-500"}`} />
         </button>
         <div className="flex flex-grow justify-center">
           {renderPageNumbers()}
@@ -291,7 +291,7 @@ export default function Transactions(): React.JSX.Element {
           onClick={handleNextSet}
           disabled={currentSetNumber === totalNumberOfSets}
         >
-          <IoIosArrowForward className={`scale-150 ${currentSetNumber === totalNumberOfSets ? "text-ghost-900" : "text-secondary-500 dark:text-primary-500"}`} />
+          <IoIosArrowForward className={`scale-150 ${currentSetNumber === totalNumberOfSets ? "text-backgroundLight-400 dark:text-ghost-900" : "text-secondary-500 dark:text-primary-500"}`} />
         </button>
       </div>
     </div>
