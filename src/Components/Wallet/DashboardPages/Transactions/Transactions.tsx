@@ -39,7 +39,7 @@ export default function Transactions(): React.JSX.Element {
   const getButtonClassNames = (isActive: boolean) => {
     return `flex items-center justify-center mx-1 min-w-[3rem] px-2 h-12 border rounded-md ${
       isActive
-        ? "border-none bg-primary-500 text-background-500"
+        ? "border-secondary-500 dark:border-primary-500 bg-secondary-500 dark:bg-primary-500 text-white dark:text-background-500"
         : "border-black dark:border-primary-500 text-black dark:text-primary-500"
     }`;
   };
@@ -281,7 +281,7 @@ export default function Transactions(): React.JSX.Element {
           onClick={handlePrevPage}
           disabled={currentSetNumber === 1}
         >
-          <IoIosArrowBack className="scale-150 text-secondary-500 dark:text-primary-500" />
+          <IoIosArrowBack className={`scale-150 ${currentSetNumber === 1 ? "text-ghost-900" : "text-secondary-500 dark:text-primary-500"}`} />
         </button>
         <div className="flex flex-grow justify-center">
           {renderPageNumbers()}
@@ -291,7 +291,7 @@ export default function Transactions(): React.JSX.Element {
           onClick={handleNextSet}
           disabled={currentSetNumber === totalNumberOfSets}
         >
-          <IoIosArrowForward className="scale-150 text-secondary-500 dark:text-primary-500" />
+          <IoIosArrowForward className={`scale-150 ${currentSetNumber === totalNumberOfSets ? "text-ghost-900" : "text-secondary-500 dark:text-primary-500"}`} />
         </button>
       </div>
     </div>
