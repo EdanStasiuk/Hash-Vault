@@ -1,14 +1,13 @@
-import { useState } from "react";
-
 import Header from "../../../components/Header";
 import InputField from "../../../components/InputField";
 import StepInfo from "../../../components/StepInfo";
 import Button from "../../../components/Buttons/DirectoryButton";
+import { useNewWalletFromSoftwareFormContext } from "../../../config/contexts/NewWalletFromSoftwareFormContext";
 
 function NewWalletStepFour() {
-  const [password, setPassword] = useState("");
+  const { walletName, setWalletName } = useNewWalletFromSoftwareFormContext();
+  const isNextButtonDisabled = !walletName;
 
-  const isNextButtonDisabled = !password;
   return (
     <>
       <Header />
@@ -29,10 +28,10 @@ function NewWalletStepFour() {
         <div className="mt-2">
           <InputField
             placeHolder="Wallet name"
-            value={password}
+            value={walletName}
             showInput={true}
             onChange={(e) => {
-              setPassword(e.target.value);
+              setWalletName(e.target.value);
             }}
           />
         </div>
@@ -46,7 +45,7 @@ function NewWalletStepFour() {
         </Button>
         <Button
           intent={isNextButtonDisabled ? "dead" : "solid"}
-          routerPath={"/Wallet/Dashboard"}
+          routerPath={"/NewWallet/Software/CreateWallet"}
           disabled={isNextButtonDisabled}
           history={false}
         >

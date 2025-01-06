@@ -5,8 +5,10 @@ import InputField from "../../../components/InputField";
 import StepInfo from "../../../components/StepInfo";
 import Button from "../../../components/Buttons/DirectoryButton";
 import CheckBox from "../../../components/CheckBox";
+import { useNewWalletFromSoftwareFormContext } from "../../../config/contexts/NewWalletFromSoftwareFormContext";
 
 function NewWalletStepOne() {
+  const { setWalletPassword } = useNewWalletFromSoftwareFormContext();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
@@ -70,6 +72,7 @@ function NewWalletStepOne() {
           routerPath={"/NewWallet/Software/StepTwo"}
           disabled={isNextButtonDisabled}
           history={false}
+          onClickAction={() => {setWalletPassword(password)}}
         >
           Next
         </Button>

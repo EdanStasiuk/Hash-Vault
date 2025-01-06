@@ -7,6 +7,7 @@ interface Props {
   routerPath?: To;
   disabled?: boolean;
   history: boolean;
+  onClickAction?: () => void;
 }
 
 /**
@@ -71,10 +72,14 @@ export default function DirectoryButton({
   routerPath = "",
   disabled = false,
   history,
+  onClickAction,
 }: React.PropsWithChildren<Props & { disabled?: boolean }>): JSX.Element {
   const navigate = useNavigate();
 
   const decideNavigationType = () => {
+    if (onClickAction) {
+      onClickAction();
+    }
     history ? navigate(-1) : navigate(routerPath);
   };
 

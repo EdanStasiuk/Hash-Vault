@@ -2,6 +2,7 @@ import { Mnemonic } from "@hashgraph/sdk";
 
 import SeedPhraseWordField from "./SeedPhraseWordField";
 import { useEffect, useState } from "react";
+import { useNewWalletFromSoftwareFormContext } from "../../config/contexts/NewWalletFromSoftwareFormContext";
 
 interface Props {
   confirmationGrid?: boolean;
@@ -81,6 +82,14 @@ export default function SeedPhraseGrid({
   updateFieldValues = defaultUpdateFieldValues,
 }: React.PropsWithChildren<Props>) {
 
+  const numRows = 6;
+  const numCols = 4;
+  
+  const { setSeedPhrase, setSeedPhraseConfirmed } = useNewWalletFromSoftwareFormContext();
+  const [wordsArray, setWordsArray] = useState<string[]>([]);
+  const [fieldValues, setFieldValues] = useState<string[]>([]);
+  const [randomIntegers, setRandomIntegers] = useState<number[]>([]);
+
   // Throw an error if props aren't being passed properly.
   useEffect(() => {
     if (confirmationGrid && updateFieldValues === null) {
@@ -89,13 +98,6 @@ export default function SeedPhraseGrid({
       );
     }
   }, [confirmationGrid, updateFieldValues]);
-
-  const numRows = 6;
-  const numCols = 4;
-
-  const [wordsArray, setWordsArray] = useState<string[]>([]);
-  const [fieldValues, setFieldValues] = useState<string[]>([]);
-  const [randomIntegers, setRandomIntegers] = useState<number[]>([]);
 
   /**
   * Handles the change of a word at a specified index in the fieldValues array.
@@ -107,6 +109,11 @@ export default function SeedPhraseGrid({
     updatedFieldValues[index] = value;
     setFieldValues(updatedFieldValues);
     updateFieldValues(updatedFieldValues);
+
+    // If all words are confirmed, set confirmation to true
+    if (updatedFieldValues.every(word => word !== "")) {
+      setSeedPhraseConfirmed(true);
+    }
   };
   
   /**
@@ -149,6 +156,7 @@ export default function SeedPhraseGrid({
         if (storedWords) {
           setWordsArray(storedWords);
           setFieldValues(nullifyRandomIndices(storedWords, randomsArray));
+          setSeedPhrase(storedWords)
         } else {
           return generateAndGetWordsArray();
         }
@@ -157,6 +165,7 @@ export default function SeedPhraseGrid({
         if (generatedWords) {
           setWordsArray(generatedWords);
           setFieldValues(nullifyRandomIndices(generatedWords, randomsArray));
+          setSeedPhrase(generatedWords)
         }
       })
       .catch((error) => {
