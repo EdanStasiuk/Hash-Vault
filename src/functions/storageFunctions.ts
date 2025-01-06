@@ -309,15 +309,16 @@ export function getSelectedAccountFromLocalStorage(): Account | undefined {
  *
  * @async
  * @function initAccountInfoInLocalStorage
- * @param {string} password - The password to encrypt the mnemonic.
  * @param {string} accountId - The account ID/address of the new account.
  * @param {string} accountName - The name of the new account.
+ * @param {string} password - The password to encrypt the mnemonic.
  * @returns {Promise<Account>} The newly initialized Account object.
  */
 export async function initAccountInfoInLocalStorage(
-  password: string,
   accountId: string,
-  accountName: string
+  accountName: string,
+  mnemonic: string,
+  password: string,
 ): Promise<Account> {
   const localStorageKey = "accounts";
 
@@ -326,7 +327,7 @@ export async function initAccountInfoInLocalStorage(
 
   const accountNumber = accounts.length + 1;
 
-  const { encryptedMnemonic } = await generateAndEncryptMnemonic(password);
+  const encryptedMnemonic: EncryptedMnemonicSerialized = await encryptMnemonic(password, mnemonic);
 
   const newAccount: Account = {
     accountId: accountId,
